@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Catmagotchi 🐱</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: none;
         }
         body {
             background: #2a2a3e;
@@ -81,10 +87,10 @@
     <script src="phaser.min.js"></script>
 
     <!-- Game scenes -->
-    <script src="src/BootScene.js?v=5"></script>
-    <script src="src/HomeScene.js?v=5"></script>
-    <script src="src/PlatformerScene.js?v=5"></script>
-    <script src="src/game.js?v=5"></script>
+    <script src="src/BootScene.js?v=6"></script>
+    <script src="src/HomeScene.js?v=6"></script>
+    <script src="src/PlatformerScene.js?v=6"></script>
+    <script src="src/game.js?v=6"></script>
 
     <script>
         // Error handling with stack trace

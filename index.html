@@ -2,41 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Catmagotchi 🐱</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        body {
             background: #2a2a3e;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
+            touch-action: none;
         }
         #game-container {
-            box-shadow: 0 0 40px rgba(0,0,0,0.5);
-            border-radius: 8px;
-            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 4/3;
+            position: relative;
         }
-        #loading {
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+        #loading, #error-msg {
             position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             color: #fff;
             font-size: 1.2rem;
+            text-align: center;
             pointer-events: none;
+            z-index: 10;
+        }
+        #error-msg {
+            color: #ff6666;
+            display: none;
+            font-size: 0.9rem;
+            max-width: 80%;
+        }
+        #start-btn {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            background: #ff8c42;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 20;
+            display: none;
+        }
+        #start-btn:active {
+            transform: translate(-50%, -50%) scale(0.95);
         }
     </style>
 </head>
 <body>
-    <div id="loading">Loading Catmagotchi...</div>
-    <div id="game-container"></div>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+    <div id="game-container">
+        <div id="loading">Loading Catmagotchi...</div>
+        <div id="error-msg"></div>
+        <button id="start-btn">Tap to Start! 🐱</button>
+    </div>
+
+    <!-- Phaser engine (local, no CDN dependency) -->
+    <script src="phaser.min.js"></script>
+
+    <!-- Game scenes -->
     <script src="src/BootScene.js"></script>
     <script src="src/HomeScene.js"></script>
     <script src="src/PlatformerScene.js"></script>
     <script src="src/UIScene.js"></script>
     <script src="src/game.js"></script>
+
+    <script>
+        // Error handling
+        window.onerror = function(msg, url, line) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-msg').style.display = 'block';
+            document.getElementById('error-msg').textContent = 'Error: ' + msg + ' (line ' + line + ')';
+            console.error('Game error:', msg, 'at line', line);
+            return true;
+        };
+
+        // Check if Phaser loaded
+        if (typeof Phaser === 'undefined') {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-msg').style.display = 'block';
+            document.getElementById('error-msg').textContent = 'Failed to load game engine. Please check your internet connection and refresh.';
+        }
+
+        // Mobile: show tap-to-start button (required for audio on iOS)
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile && typeof Phaser !== 'undefined') {
+            document.getElementById('loading').style.display = 'none';
+            const btn = document.getElementById('start-btn');
+            btn.style.display = 'block';
+            btn.addEventListener('click', function() {
+                btn.style.display = 'none';
+                // Game already initialized by game.js, but on mobile
+                // we may need to resume audio context
+                if (window.game && window.game.sound && window.game.sound.context) {
+                    window.game.sound.context.resume();
+                }
+            });
+        }
+    </script>
 </body>
 </html>

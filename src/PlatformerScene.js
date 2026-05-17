@@ -48,6 +48,12 @@ class PlatformerScene extends Phaser.Scene {
             strokeThickness: 3
         }).setScrollFactor(0);
 
+        // Copyright watermark
+        this.add.text(400, 580, '© 2025 Helen C. All Rights Reserved.', {
+            fontSize: '12px',
+            color: '#555577'
+        }).setOrigin(0.5).setScrollFactor(0);
+
         // Ground collision
         this.physics.add.collider(this.fishes, this.platforms);
         this.physics.add.collider(this.toys, this.platforms);

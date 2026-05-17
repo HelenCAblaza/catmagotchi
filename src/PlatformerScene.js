@@ -32,19 +32,16 @@ class PlatformerScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.fishes, (p, f) => this.collectFish(p, f));
         this.physics.add.overlap(this.player, this.toys, (p, t) => this.collectToy(p, t));
 
-        // Controls
+        // Keyboard controls (desktop)
         this.cursors = this.input.keyboard.createCursorKeys();
         
-        // Touch / swipe state
-        this.swipe = {
-            active: false,
-            startX: 0,
-            startY: 0,
-            currentX: 0,
-            currentY: 0,
-            jumpQueued: false
-        };
-        this.setupSwipeControls();
+        // Touch state
+        this.touchLeft = false;
+        this.touchRight = false;
+        this.touchJump = false;
+
+        // Mobile touch zones (large, semi-transparent)
+        this.createTouchZones();
 
         // Home button
         this.createButton(100, 50, '\ud83c\udfe0 Home', () => {
@@ -66,21 +63,20 @@ class PlatformerScene extends Phaser.Scene {
             strokeThickness: 3
         }).setScrollFactor(0);
 
-        // Hint text (shows on mobile only, fades after 4s)
-        this.hintText = this.add.text(400, 520, '\ud83d\udc46 Swipe left/right to move  |  Swipe up to jump!', {
-            fontSize: '18px',
-            color: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 3
-        }).setOrigin(0.5).setScrollFactor(0).setAlpha(1);
-        
-        this.time.delayedCall(4000, () => {
-            this.tweens.add({
-                targets: this.hintText,
-                alpha: 0,
-                duration: 1000
+        // Hint text (shows on mobile, fades after 4s)
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            this.hintText = this.add.text(400, 100, '\ud83d\udc46 Touch bottom zones to move & jump!', {
+                fontSize: '16px',
+                color: '#ffffff',
+                stroke: '#000000',
+                strokeThickness: 3
+            }).setOrigin(0.5).setScrollFactor(0);
+            
+            this.time.delayedCall(4000, () => {
+                this.tweens.add({ targets: this.hintText, alpha: 0, duration: 1000 });
             });
-        });
+        }
 
         // Copyright watermark
         this.add.text(400, 580, '\u00a9 2025 Helen C. All Rights Reserved.', {
@@ -93,41 +89,97 @@ class PlatformerScene extends Phaser.Scene {
         this.physics.add.collider(this.toys, this.platforms);
     }
 
-    setupSwipeControls() {
-        // Full-screen invisible zone for swipe detection
-        // (cat area is excluded via pointerdown check)
-        
-        this.input.on('pointerdown', (pointer) => {
-            // Don't capture if clicking UI buttons
-            if (pointer.button !== 0) return;
-            
-            this.swipe.active = true;
-            this.swipe.startX = pointer.x;
-            this.swipe.startY = pointer.y;
-            this.swipe.currentX = pointer.x;
-            this.swipe.currentY = pointer.y;
-            this.swipe.jumpQueued = false;
+    createTouchZones() {
+        const btnAlpha = 0.35;
+        const btnAlphaActive = 0.65;
+        const btnColor = 0x444466;
+        const btnColorActive = 0x6666cc;
+        const yPos = 535;
+
+        // Left zone
+        this.zoneLeft = this.add.rectangle(90, yPos, 140, 75, btnColor, btnAlpha)
+            .setStrokeStyle(2, 0xffffff, 0.3)
+            .setScrollFactor(0)
+            .setInteractive({ useHandCursor: true });
+        this.txtLeft = this.add.text(90, yPos, '\u25c0', {
+            fontSize: '36px', color: '#ffffff', fontStyle: 'bold'
+        }).setOrigin(0.5).setScrollFactor(0).setAlpha(0.7);
+
+        // Right zone
+        this.zoneRight = this.add.rectangle(710, yPos, 140, 75, btnColor, btnAlpha)
+            .setStrokeStyle(2, 0xffffff, 0.3)
+            .setScrollFactor(0)
+            .setInteractive({ useHandCursor: true });
+        this.txtRight = this.add.text(710, yPos, '\u25b6', {
+            fontSize: '36px', color: '#ffffff', fontStyle: 'bold'
+        }).setOrigin(0.5).setScrollFactor(0).setAlpha(0.7);
+
+        // Jump zone (circle, bottom center-right)
+        this.zoneJump = this.add.circle(400, yPos, 42, btnColor, btnAlpha)
+            .setStrokeStyle(2, 0xffffff, 0.3)
+            .setScrollFactor(0)
+            .setInteractive({ useHandCursor: true });
+        this.txtJump = this.add.text(400, yPos, '\u25b2', {
+            fontSize: '36px', color: '#ffffff', fontStyle: 'bold'
+        }).setOrigin(0.5).setScrollFactor(0).setAlpha(0.7);
+
+        // --- Left zone events ---
+        this.zoneLeft.on('pointerdown', () => {
+            this.touchLeft = true;
+            this.zoneLeft.setAlpha(btnAlphaActive);
+            this.zoneLeft.setFillStyle(btnColorActive);
+        });
+        this.zoneLeft.on('pointerup', () => {
+            this.touchLeft = false;
+            this.zoneLeft.setAlpha(btnAlpha);
+            this.zoneLeft.setFillStyle(btnColor);
+        });
+        this.zoneLeft.on('pointerout', () => {
+            this.touchLeft = false;
+            this.zoneLeft.setAlpha(btnAlpha);
+            this.zoneLeft.setFillStyle(btnColor);
         });
 
-        this.input.on('pointermove', (pointer) => {
-            if (!this.swipe.active) return;
-            this.swipe.currentX = pointer.x;
-            this.swipe.currentY = pointer.y;
+        // --- Right zone events ---
+        this.zoneRight.on('pointerdown', () => {
+            this.touchRight = true;
+            this.zoneRight.setAlpha(btnAlphaActive);
+            this.zoneRight.setFillStyle(btnColorActive);
+        });
+        this.zoneRight.on('pointerup', () => {
+            this.touchRight = false;
+            this.zoneRight.setAlpha(btnAlpha);
+            this.zoneRight.setFillStyle(btnColor);
+        });
+        this.zoneRight.on('pointerout', () => {
+            this.touchRight = false;
+            this.zoneRight.setAlpha(btnAlpha);
+            this.zoneRight.setFillStyle(btnColor);
         });
 
-        this.input.on('pointerup', (pointer) => {
-            if (!this.swipe.active) return;
-            
-            const dx = pointer.x - this.swipe.startX;
-            const dy = pointer.y - this.swipe.startY;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            
-            // Detect upward swipe for jump
-            if (dy < -40 && Math.abs(dx) < Math.abs(dy)) {
-                this.swipe.jumpQueued = true;
-            }
-            
-            this.swipe.active = false;
+        // --- Jump zone events ---
+        this.zoneJump.on('pointerdown', () => {
+            this.touchJump = true;
+            this.zoneJump.setAlpha(btnAlphaActive);
+            this.zoneJump.setFillStyle(btnColorActive);
+            // Visual feedback - pulse the jump text
+            this.tweens.add({
+                targets: this.txtJump,
+                scaleX: 1.3,
+                scaleY: 1.3,
+                duration: 100,
+                yoyo: true
+            });
+        });
+        this.zoneJump.on('pointerup', () => {
+            this.touchJump = false;
+            this.zoneJump.setAlpha(btnAlpha);
+            this.zoneJump.setFillStyle(btnColor);
+        });
+        this.zoneJump.on('pointerout', () => {
+            this.touchJump = false;
+            this.zoneJump.setAlpha(btnAlpha);
+            this.zoneJump.setFillStyle(btnColor);
         });
     }
 
@@ -176,49 +228,24 @@ class PlatformerScene extends Phaser.Scene {
         this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
         this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
         
-        // Movement input sources
-        const keyboardLeft = this.cursors.left.isDown;
-        const keyboardRight = this.cursors.right.isDown;
-        const keyboardJump = this.cursors.up.isDown;
+        // Movement - keyboard OR touch zones
+        const left = this.cursors.left.isDown || this.touchLeft;
+        const right = this.cursors.right.isDown || this.touchRight;
+        const jump = this.cursors.up.isDown || this.touchJump;
         
-        // Swipe movement: drag distance determines speed
-        let targetVelocityX = 0;
-        let jumpPressed = keyboardJump || this.swipe.jumpQueued;
-        
-        if (this.swipe.active) {
-            const dx = this.swipe.currentX - this.swipe.startX;
-            
-            // Horizontal movement based on drag distance
-            if (Math.abs(dx) > 10) {
-                const sensitivity = 3; // speed multiplier
-                targetVelocityX = Math.max(-220, Math.min(220, dx * sensitivity));
-            }
-            
-            // Upward drag for jump (live while dragging up)
-            const dy = this.swipe.currentY - this.swipe.startY;
-            if (dy < -50 && Math.abs(dx) < 40) {
-                jumpPressed = true;
-            }
-        }
-        
-        // Apply movement
-        if (keyboardLeft) {
+        if (left) {
             this.player.setVelocityX(-200);
             this.player.setFlipX(true);
-        } else if (keyboardRight) {
+        } else if (right) {
             this.player.setVelocityX(200);
             this.player.setFlipX(false);
-        } else if (this.swipe.active) {
-            this.player.setVelocityX(targetVelocityX);
-            this.player.setFlipX(targetVelocityX < 0);
         } else {
             this.player.setVelocityX(0);
         }
 
         // Jump
-        if (jumpPressed && this.player.body.touching.down) {
+        if (jump && this.player.body.touching.down) {
             this.player.setVelocityY(-400);
-            this.swipe.jumpQueued = false; // consume the queued jump
         }
 
         // Energy drain from running

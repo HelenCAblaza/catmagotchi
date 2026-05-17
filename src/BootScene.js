@@ -50,9 +50,11 @@ class BootScene extends Phaser.Scene {
             // Ears
             gfx.fillTriangle(w*0.3, h*0.35, w*0.4, h*0.45, w*0.25, h*0.5);
             gfx.fillTriangle(w*0.7, h*0.35, w*0.6, h*0.45, w*0.75, h*0.5);
-            // Zzz
-            gfx.fillStyle(0xffffff, 1);
-            gfx.fillText('Z', w*0.7, h*0.3);
+            // Zzz indicator (small circles)
+            gfx.fillStyle(0xffffff, 0.8);
+            gfx.fillCircle(w*0.7, h*0.25, 2);
+            gfx.fillCircle(w*0.75, h*0.2, 3);
+            gfx.fillCircle(w*0.8, h*0.15, 4);
         } else if (shape === 'fish') {
             gfx.fillStyle(0xff5555, 1);
             gfx.fillEllipse(w*0.5, h*0.5, w*0.6, h*0.4);

@@ -19,7 +19,9 @@ class BootScene extends Phaser.Scene {
         this.createTexture('ground', '#4a7a3a', 32, 32, 'rect');
         this.createTexture('sky', '#87CEEB', 800, 600, 'rect');
         
-        document.getElementById('loading').style.display = 'none';
+        // Hide loading screen safely
+        const loading = document.getElementById('loading');
+        if (loading) loading.style.display = 'none';
     }
 
     createTexture(key, color, w, h, shape) {

@@ -34,21 +34,27 @@ class PlatformerScene extends Phaser.Scene {
 
         // Controls
         this.cursors = this.input.keyboard.createCursorKeys();
+        
+        // Touch input state
+        this.touchInput = { left: false, right: false, jump: false };
+        
+        // Create mobile touch controls
+        this.createMobileControls();
 
         // Home button
-        this.createButton(100, 50, '🏠 Home', () => {
+        this.createButton(100, 50, '\ud83c\udfe0 Home', () => {
             this.scene.start('HomeScene');
         });
 
         // Inventory display (directly in scene)
-        this.fishText = this.add.text(10, 10, '🐟: 0', {
+        this.fishText = this.add.text(10, 10, '\ud83d\udc1f: 0', {
             fontSize: '18px',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
         }).setScrollFactor(0);
         
-        this.toyText = this.add.text(10, 35, '🧶: 0', {
+        this.toyText = this.add.text(10, 35, '\ud83e\uddf6: 0', {
             fontSize: '18px',
             color: '#ffffff',
             stroke: '#000000',
@@ -56,7 +62,7 @@ class PlatformerScene extends Phaser.Scene {
         }).setScrollFactor(0);
 
         // Instructions
-        this.add.text(400, 50, '← → Move  |  ↑ Jump  |  Collect 🐟 and 🧶!', {
+        this.add.text(400, 50, '\u2190 \u2192 Move  |  \u2191 Jump  |  Collect \ud83d\udc1f and \ud83e\uddf6!', {
             fontSize: '18px',
             color: '#ffffff',
             stroke: '#000000',
@@ -64,7 +70,7 @@ class PlatformerScene extends Phaser.Scene {
         }).setScrollFactor(0);
 
         // Copyright watermark
-        this.add.text(400, 580, '© 2025 Helen C. All Rights Reserved.', {
+        this.add.text(400, 580, '\u00a9 2025 Helen C. All Rights Reserved.', {
             fontSize: '12px',
             color: '#555577'
         }).setOrigin(0.5).setScrollFactor(0);
@@ -72,6 +78,86 @@ class PlatformerScene extends Phaser.Scene {
         // Ground collision
         this.physics.add.collider(this.fishes, this.platforms);
         this.physics.add.collider(this.toys, this.platforms);
+    }
+
+    createMobileControls() {
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (!isMobile) return; // Don't show on desktop
+
+        const btnSize = 70;
+        const btnAlpha = 0.5;
+        const btnColor = 0x444466;
+        const btnColorActive = 0x6666aa;
+        const yPos = 520;
+
+        // Left button
+        this.leftBtn = this.add.rectangle(80, yPos, btnSize, btnSize, btnColor, btnAlpha)
+            .setStrokeStyle(2, 0xffffff, 0.5)
+            .setScrollFactor(0)
+            .setInteractive();
+        this.leftArrow = this.add.text(80, yPos, '\u25c0', {
+            fontSize: '32px', color: '#ffffff'
+        }).setOrigin(0.5).setScrollFactor(0);
+
+        // Right button
+        this.rightBtn = this.add.rectangle(170, yPos, btnSize, btnSize, btnColor, btnAlpha)
+            .setStrokeStyle(2, 0xffffff, 0.5)
+            .setScrollFactor(0)
+            .setInteractive();
+        this.rightArrow = this.add.text(170, yPos, '\u25b6', {
+            fontSize: '32px', color: '#ffffff'
+        }).setOrigin(0.5).setScrollFactor(0);
+
+        // Jump button (big, roundish, bottom-right)
+        this.jumpBtn = this.add.circle(720, yPos, 45, btnColor, btnAlpha)
+            .setStrokeStyle(2, 0xffffff, 0.5)
+            .setScrollFactor(0)
+            .setInteractive();
+        this.jumpText = this.add.text(720, yPos, '\u25b2', {
+            fontSize: '36px', color: '#ffffff'
+        }).setOrigin(0.5).setScrollFactor(0);
+
+        // Touch events for Left
+        this.leftBtn.on('pointerdown', () => {
+            this.touchInput.left = true;
+            this.leftBtn.setFillStyle(btnColorActive, 0.7);
+        });
+        this.leftBtn.on('pointerup', () => {
+            this.touchInput.left = false;
+            this.leftBtn.setFillStyle(btnColor, btnAlpha);
+        });
+        this.leftBtn.on('pointerout', () => {
+            this.touchInput.left = false;
+            this.leftBtn.setFillStyle(btnColor, btnAlpha);
+        });
+
+        // Touch events for Right
+        this.rightBtn.on('pointerdown', () => {
+            this.touchInput.right = true;
+            this.rightBtn.setFillStyle(btnColorActive, 0.7);
+        });
+        this.rightBtn.on('pointerup', () => {
+            this.touchInput.right = false;
+            this.rightBtn.setFillStyle(btnColor, btnAlpha);
+        });
+        this.rightBtn.on('pointerout', () => {
+            this.touchInput.right = false;
+            this.rightBtn.setFillStyle(btnColor, btnAlpha);
+        });
+
+        // Touch events for Jump
+        this.jumpBtn.on('pointerdown', () => {
+            this.touchInput.jump = true;
+            this.jumpBtn.setFillStyle(btnColorActive, 0.7);
+        });
+        this.jumpBtn.on('pointerup', () => {
+            this.touchInput.jump = false;
+            this.jumpBtn.setFillStyle(btnColor, btnAlpha);
+        });
+        this.jumpBtn.on('pointerout', () => {
+            this.touchInput.jump = false;
+            this.jumpBtn.setFillStyle(btnColor, btnAlpha);
+        });
     }
 
     createLevel() {
@@ -118,14 +204,18 @@ class PlatformerScene extends Phaser.Scene {
         
         // Update inventory display
         const inv = this.registry.get('inventory');
-        this.fishText.setText(`🐟: ${inv.fish}`);
-        this.toyText.setText(`🧶: ${inv.toys}`);
+        this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
+        this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
         
-        // Movement
-        if (this.cursors.left.isDown) {
+        // Movement - keyboard OR touch
+        const left = this.cursors.left.isDown || this.touchInput.left;
+        const right = this.cursors.right.isDown || this.touchInput.right;
+        const jump = this.cursors.up.isDown || this.touchInput.jump;
+        
+        if (left) {
             this.player.setVelocityX(-200);
             this.player.setFlipX(true);
-        } else if (this.cursors.right.isDown) {
+        } else if (right) {
             this.player.setVelocityX(200);
             this.player.setFlipX(false);
         } else {
@@ -133,7 +223,7 @@ class PlatformerScene extends Phaser.Scene {
         }
 
         // Jump
-        if (this.cursors.up.isDown && this.player.body.touching.down) {
+        if (jump && this.player.body.touching.down) {
             this.player.setVelocityY(-400);
         }
 
@@ -149,7 +239,7 @@ class PlatformerScene extends Phaser.Scene {
         const inv = this.registry.get('inventory');
         inv.fish++;
         this.registry.set('inventory', inv);
-        this.showFloatingText(player.x, player.y - 30, '🐟 +1');
+        this.showFloatingText(player.x, player.y - 30, '\ud83d\udc1f +1');
     }
 
     collectToy(player, toy) {
@@ -160,7 +250,7 @@ class PlatformerScene extends Phaser.Scene {
         const stats = this.registry.get('stats');
         stats.happiness = Math.min(100, stats.happiness + 5);
         this.registry.set('stats', stats);
-        this.showFloatingText(player.x, player.y - 30, '🧶 +1');
+        this.showFloatingText(player.x, player.y - 30, '\ud83e\uddf6 +1');
     }
 
     createButton(x, y, text, callback) {

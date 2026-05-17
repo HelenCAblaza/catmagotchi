@@ -46,6 +46,21 @@ class HomeScene extends Phaser.Scene {
         this.createStatBar(150, 180, 'Energy', 'energy', 0x55ff55);
         this.createStatBar(150, 220, 'Clean', 'hygiene', 0x55ccff);
 
+        // Inventory display
+        this.fishText = this.add.text(650, 100, '🐟: 0', {
+            fontSize: '18px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        });
+        
+        this.toyText = this.add.text(650, 125, '🧶: 0', {
+            fontSize: '18px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        });
+
         // Action buttons
         this.createButton(200, 520, '🛏️ Sleep', () => this.sleep());
         this.createButton(400, 520, '🍗 Feed', () => this.feed());
@@ -91,6 +106,11 @@ class HomeScene extends Phaser.Scene {
         this.updateBar('happiness', stats.happiness);
         this.updateBar('energy', stats.energy);
         this.updateBar('hygiene', stats.hygiene);
+
+        // Update inventory display
+        const inv = this.registry.get('inventory');
+        this.fishText.setText(`🐟: ${inv.fish}`);
+        this.toyText.setText(`🧶: ${inv.toys}`);
     }
 
     updateBar(key, value) {
@@ -165,9 +185,12 @@ class HomeScene extends Phaser.Scene {
         this.cat.setTexture('cat_sleep');
         this.showFloatingText(this.cat.x, this.cat.y - 40, '💤 Zzz...');
         
-        setTimeout(() => {
-            this.cat.setTexture('cat_idle');
-        }, 2000);
+        // Use Phaser timer so it auto-cancels if scene stops
+        this.time.delayedCall(2000, () => {
+            if (this.cat && this.cat.active) {
+                this.cat.setTexture('cat_idle');
+            }
+        });
     }
 
     decayStats() {

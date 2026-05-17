@@ -35,18 +35,23 @@ class PlatformerScene extends Phaser.Scene {
         // Controls
         this.cursors = this.input.keyboard.createCursorKeys();
         
-        // Touch input state
-        this.touchInput = { left: false, right: false, jump: false };
-        
-        // Create mobile touch controls
-        this.createMobileControls();
+        // Touch / swipe state
+        this.swipe = {
+            active: false,
+            startX: 0,
+            startY: 0,
+            currentX: 0,
+            currentY: 0,
+            jumpQueued: false
+        };
+        this.setupSwipeControls();
 
         // Home button
         this.createButton(100, 50, '\ud83c\udfe0 Home', () => {
             this.scene.start('HomeScene');
         });
 
-        // Inventory display (directly in scene)
+        // Inventory display
         this.fishText = this.add.text(10, 10, '\ud83d\udc1f: 0', {
             fontSize: '18px',
             color: '#ffffff',
@@ -61,13 +66,21 @@ class PlatformerScene extends Phaser.Scene {
             strokeThickness: 3
         }).setScrollFactor(0);
 
-        // Instructions
-        this.add.text(400, 50, '\u2190 \u2192 Move  |  \u2191 Jump  |  Collect \ud83d\udc1f and \ud83e\uddf6!', {
+        // Hint text (shows on mobile only, fades after 4s)
+        this.hintText = this.add.text(400, 520, '\ud83d\udc46 Swipe left/right to move  |  Swipe up to jump!', {
             fontSize: '18px',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
-        }).setScrollFactor(0);
+        }).setOrigin(0.5).setScrollFactor(0).setAlpha(1);
+        
+        this.time.delayedCall(4000, () => {
+            this.tweens.add({
+                targets: this.hintText,
+                alpha: 0,
+                duration: 1000
+            });
+        });
 
         // Copyright watermark
         this.add.text(400, 580, '\u00a9 2025 Helen C. All Rights Reserved.', {
@@ -80,93 +93,49 @@ class PlatformerScene extends Phaser.Scene {
         this.physics.add.collider(this.toys, this.platforms);
     }
 
-    createMobileControls() {
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (!isMobile) return; // Don't show on desktop
-
-        const btnSize = 70;
-        const btnAlpha = 0.5;
-        const btnColor = 0x444466;
-        const btnColorActive = 0x6666aa;
-        const yPos = 520;
-
-        // Left button
-        this.leftBtn = this.add.rectangle(80, yPos, btnSize, btnSize, btnColor, btnAlpha)
-            .setStrokeStyle(2, 0xffffff, 0.5)
-            .setScrollFactor(0)
-            .setInteractive();
-        this.leftArrow = this.add.text(80, yPos, '\u25c0', {
-            fontSize: '32px', color: '#ffffff'
-        }).setOrigin(0.5).setScrollFactor(0);
-
-        // Right button
-        this.rightBtn = this.add.rectangle(170, yPos, btnSize, btnSize, btnColor, btnAlpha)
-            .setStrokeStyle(2, 0xffffff, 0.5)
-            .setScrollFactor(0)
-            .setInteractive();
-        this.rightArrow = this.add.text(170, yPos, '\u25b6', {
-            fontSize: '32px', color: '#ffffff'
-        }).setOrigin(0.5).setScrollFactor(0);
-
-        // Jump button (big, roundish, bottom-right)
-        this.jumpBtn = this.add.circle(720, yPos, 45, btnColor, btnAlpha)
-            .setStrokeStyle(2, 0xffffff, 0.5)
-            .setScrollFactor(0)
-            .setInteractive();
-        this.jumpText = this.add.text(720, yPos, '\u25b2', {
-            fontSize: '36px', color: '#ffffff'
-        }).setOrigin(0.5).setScrollFactor(0);
-
-        // Touch events for Left
-        this.leftBtn.on('pointerdown', () => {
-            this.touchInput.left = true;
-            this.leftBtn.setFillStyle(btnColorActive, 0.7);
-        });
-        this.leftBtn.on('pointerup', () => {
-            this.touchInput.left = false;
-            this.leftBtn.setFillStyle(btnColor, btnAlpha);
-        });
-        this.leftBtn.on('pointerout', () => {
-            this.touchInput.left = false;
-            this.leftBtn.setFillStyle(btnColor, btnAlpha);
+    setupSwipeControls() {
+        // Full-screen invisible zone for swipe detection
+        // (cat area is excluded via pointerdown check)
+        
+        this.input.on('pointerdown', (pointer) => {
+            // Don't capture if clicking UI buttons
+            if (pointer.button !== 0) return;
+            
+            this.swipe.active = true;
+            this.swipe.startX = pointer.x;
+            this.swipe.startY = pointer.y;
+            this.swipe.currentX = pointer.x;
+            this.swipe.currentY = pointer.y;
+            this.swipe.jumpQueued = false;
         });
 
-        // Touch events for Right
-        this.rightBtn.on('pointerdown', () => {
-            this.touchInput.right = true;
-            this.rightBtn.setFillStyle(btnColorActive, 0.7);
-        });
-        this.rightBtn.on('pointerup', () => {
-            this.touchInput.right = false;
-            this.rightBtn.setFillStyle(btnColor, btnAlpha);
-        });
-        this.rightBtn.on('pointerout', () => {
-            this.touchInput.right = false;
-            this.rightBtn.setFillStyle(btnColor, btnAlpha);
+        this.input.on('pointermove', (pointer) => {
+            if (!this.swipe.active) return;
+            this.swipe.currentX = pointer.x;
+            this.swipe.currentY = pointer.y;
         });
 
-        // Touch events for Jump
-        this.jumpBtn.on('pointerdown', () => {
-            this.touchInput.jump = true;
-            this.jumpBtn.setFillStyle(btnColorActive, 0.7);
-        });
-        this.jumpBtn.on('pointerup', () => {
-            this.touchInput.jump = false;
-            this.jumpBtn.setFillStyle(btnColor, btnAlpha);
-        });
-        this.jumpBtn.on('pointerout', () => {
-            this.touchInput.jump = false;
-            this.jumpBtn.setFillStyle(btnColor, btnAlpha);
+        this.input.on('pointerup', (pointer) => {
+            if (!this.swipe.active) return;
+            
+            const dx = pointer.x - this.swipe.startX;
+            const dy = pointer.y - this.swipe.startY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            // Detect upward swipe for jump
+            if (dy < -40 && Math.abs(dx) < Math.abs(dy)) {
+                this.swipe.jumpQueued = true;
+            }
+            
+            this.swipe.active = false;
         });
     }
 
     createLevel() {
-        // Ground
         for (let x = 0; x < 1700; x += 32) {
             this.platforms.create(x, 568, 'ground').setScale(1).refreshBody();
         }
         
-        // Platforms
         this.platforms.create(200, 450, 'platform');
         this.platforms.create(350, 380, 'platform');
         this.platforms.create(500, 300, 'platform');
@@ -207,24 +176,49 @@ class PlatformerScene extends Phaser.Scene {
         this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
         this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
         
-        // Movement - keyboard OR touch
-        const left = this.cursors.left.isDown || this.touchInput.left;
-        const right = this.cursors.right.isDown || this.touchInput.right;
-        const jump = this.cursors.up.isDown || this.touchInput.jump;
+        // Movement input sources
+        const keyboardLeft = this.cursors.left.isDown;
+        const keyboardRight = this.cursors.right.isDown;
+        const keyboardJump = this.cursors.up.isDown;
         
-        if (left) {
+        // Swipe movement: drag distance determines speed
+        let targetVelocityX = 0;
+        let jumpPressed = keyboardJump || this.swipe.jumpQueued;
+        
+        if (this.swipe.active) {
+            const dx = this.swipe.currentX - this.swipe.startX;
+            
+            // Horizontal movement based on drag distance
+            if (Math.abs(dx) > 10) {
+                const sensitivity = 3; // speed multiplier
+                targetVelocityX = Math.max(-220, Math.min(220, dx * sensitivity));
+            }
+            
+            // Upward drag for jump (live while dragging up)
+            const dy = this.swipe.currentY - this.swipe.startY;
+            if (dy < -50 && Math.abs(dx) < 40) {
+                jumpPressed = true;
+            }
+        }
+        
+        // Apply movement
+        if (keyboardLeft) {
             this.player.setVelocityX(-200);
             this.player.setFlipX(true);
-        } else if (right) {
+        } else if (keyboardRight) {
             this.player.setVelocityX(200);
             this.player.setFlipX(false);
+        } else if (this.swipe.active) {
+            this.player.setVelocityX(targetVelocityX);
+            this.player.setFlipX(targetVelocityX < 0);
         } else {
             this.player.setVelocityX(0);
         }
 
         // Jump
-        if (jump && this.player.body.touching.down) {
+        if (jumpPressed && this.player.body.touching.down) {
             this.player.setVelocityY(-400);
+            this.swipe.jumpQueued = false; // consume the queued jump
         }
 
         // Energy drain from running

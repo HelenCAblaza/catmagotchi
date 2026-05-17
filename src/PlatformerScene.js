@@ -40,6 +40,21 @@ class PlatformerScene extends Phaser.Scene {
             this.scene.start('HomeScene');
         });
 
+        // Inventory display (directly in scene)
+        this.fishText = this.add.text(10, 10, '🐟: 0', {
+            fontSize: '18px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setScrollFactor(0);
+        
+        this.toyText = this.add.text(10, 35, '🧶: 0', {
+            fontSize: '18px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setScrollFactor(0);
+
         // Instructions
         this.add.text(400, 50, '← → Move  |  ↑ Jump  |  Collect 🐟 and 🧶!', {
             fontSize: '18px',
@@ -100,6 +115,11 @@ class PlatformerScene extends Phaser.Scene {
 
     update() {
         const stats = this.registry.get('stats');
+        
+        // Update inventory display
+        const inv = this.registry.get('inventory');
+        this.fishText.setText(`🐟: ${inv.fish}`);
+        this.toyText.setText(`🧶: ${inv.toys}`);
         
         // Movement
         if (this.cursors.left.isDown) {

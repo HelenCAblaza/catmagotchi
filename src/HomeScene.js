@@ -14,6 +14,12 @@ class HomeScene extends Phaser.Scene {
             fontFamily: 'monospace'
         }).setOrigin(0.5);
 
+        // Copyright watermark
+        this.add.text(400, 580, '© 2025 Helen C. All Rights Reserved.', {
+            fontSize: '12px',
+            color: '#555577'
+        }).setOrigin(0.5);
+
         // Cat
         this.cat = this.add.sprite(400, 320, 'cat_idle');
         this.cat.setScale(3);
@@ -91,7 +97,6 @@ class HomeScene extends Phaser.Scene {
         const bar = this[`bar_${key}`];
         if (bar) {
             bar.width = Math.max(0, value * 2);
-            // Change color if low
             if (value < 30) bar.setFillStyle(0xff0000);
         }
     }
@@ -137,7 +142,6 @@ class HomeScene extends Phaser.Scene {
             inv.toys++;
             this.showFloatingText(this.cat.x, this.cat.y - 40, '😸 Fun!');
             
-            // Cat jumps
             this.tweens.add({
                 targets: this.cat,
                 y: 250,

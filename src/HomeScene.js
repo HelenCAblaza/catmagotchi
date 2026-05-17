@@ -24,10 +24,23 @@ class HomeScene extends Phaser.Scene {
         this.cat = this.add.sprite(400, 320, 'cat_idle');
         this.cat.setScale(3);
         
+        // Make cat clickable to clean!
+        this.cat.setInteractive({ useHandCursor: true });
+        this.cat.on('pointerdown', () => this.cleanCat());
+        
+        // Cooldown for cleaning
+        this.canClean = true;
+        
         // Cat name
         this.add.text(400, 240, 'Mittens', {
             fontSize: '24px',
             color: '#ffcc88'
+        }).setOrigin(0.5);
+
+        // Hint text under cat
+        this.add.text(400, 380, '👆 Tap cat to clean!', {
+            fontSize: '14px',
+            color: '#aaaaaa'
         }).setOrigin(0.5);
 
         // Home items
@@ -190,6 +203,55 @@ class HomeScene extends Phaser.Scene {
             if (this.cat && this.cat.active) {
                 this.cat.setTexture('cat_idle');
             }
+        });
+    }
+
+    cleanCat() {
+        if (!this.canClean) {
+            this.showFloatingText(this.cat.x, this.cat.y - 50, '⏳ Wait...');
+            return;
+        }
+
+        const stats = this.registry.get('stats');
+        if (stats.hygiene >= 100) {
+            this.showFloatingText(this.cat.x, this.cat.y - 50, '✨ Already clean!');
+            return;
+        }
+
+        // Increase hygiene
+        stats.hygiene = Math.min(100, stats.hygiene + 25);
+        stats.happiness = Math.min(100, stats.happiness + 5);
+        this.registry.set('stats', stats);
+
+        // Visual feedback
+        this.showFloatingText(this.cat.x, this.cat.y - 50, '👅 Clean!');
+
+        // Licking animation - little scale wobble
+        this.tweens.add({
+            targets: this.cat,
+            scaleX: 3.2,
+            scaleY: 2.8,
+            duration: 150,
+            yoyo: true,
+            repeat: 2
+        });
+
+        // Sparkle effect
+        const sparkle = this.add.text(this.cat.x + 30, this.cat.y - 30, '✨', {
+            fontSize: '24px'
+        }).setOrigin(0.5);
+        this.tweens.add({
+            targets: sparkle,
+            y: sparkle.y - 30,
+            alpha: 0,
+            duration: 800,
+            onComplete: () => sparkle.destroy()
+        });
+
+        // Cooldown
+        this.canClean = false;
+        this.time.delayedCall(3000, () => {
+            this.canClean = true;
         });
     }
 

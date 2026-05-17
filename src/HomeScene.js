@@ -155,6 +155,7 @@ class HomeScene extends Phaser.Scene {
         if (inv.fish > 0) {
             stats.hunger = Math.min(100, stats.hunger + 20);
             stats.energy = Math.min(100, stats.energy + 5);
+            stats.hygiene = Math.max(0, stats.hygiene - 10); // Eating makes cat messy!
             inv.fish--;
             this.showFloatingText(this.cat.x, this.cat.y - 40, '😋 Yum!');
         } else {
@@ -172,6 +173,7 @@ class HomeScene extends Phaser.Scene {
         if (stats.energy > 10) {
             stats.happiness = Math.min(100, stats.happiness + 15);
             stats.energy = Math.max(0, stats.energy - 10);
+            stats.hygiene = Math.max(0, stats.hygiene - 15); // Playing gets cat dirty!
             inv.toys++;
             this.showFloatingText(this.cat.x, this.cat.y - 40, '😸 Fun!');
             

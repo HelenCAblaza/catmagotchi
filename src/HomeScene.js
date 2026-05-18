@@ -45,7 +45,7 @@ class HomeScene extends Phaser.Scene {
         // Copyright watermark
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
             fontSize: '10px',
-            color: '#cc99cc',
+            color: '#887799',
             fontFamily: '"Poppins", sans-serif'
         }).setOrigin(0.5);
 

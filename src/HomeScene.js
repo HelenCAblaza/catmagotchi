@@ -84,7 +84,7 @@ class HomeScene extends Phaser.Scene {
         // === CAT AREA ===
         const catY = H * 0.40;
         this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
-        this.cat.setScale(3.5);
+        this.cat.setScale(2);
 
         // Make cat clickable to clean!
         this.cat.setInteractive({ useHandCursor: true });

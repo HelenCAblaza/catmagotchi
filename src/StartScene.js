@@ -43,7 +43,7 @@ class StartScene extends Phaser.Scene {
 
         // Cat sprite (large, centered) - uses real pixel-art PNG!
         const cat = this.add.sprite(W / 2, H * 0.42, 'cat_idle')
-            .setScale(5)
+            .setScale(3)
             .setOrigin(0.5);
 
         // Gentle bob animation

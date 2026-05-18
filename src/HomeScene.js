@@ -36,7 +36,7 @@ class HomeScene extends Phaser.Scene {
         this.add.text(W / 2, 28, '\u2728 Catmagotchi \u2728', {
             fontSize: '28px',
             color: '#ffffff',
-            fontFamily: 'monospace',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#ff88cc',
             strokeThickness: 2
         }).setOrigin(0.5);
@@ -44,7 +44,8 @@ class HomeScene extends Phaser.Scene {
         // Copyright watermark
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
             fontSize: '10px',
-            color: '#cc99cc'
+            color: '#cc99cc',
+            fontFamily: '"Poppins", sans-serif'
         }).setOrigin(0.5);
 
         // === STATS AREA ===
@@ -67,6 +68,7 @@ class HomeScene extends Phaser.Scene {
         this.fishText = this.add.text(W - 10, statY1, '\ud83d\udc1f: 0', {
             fontSize: '15px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(1, 0.5);
@@ -74,6 +76,7 @@ class HomeScene extends Phaser.Scene {
         this.toyText = this.add.text(W - 10, statY2, '\ud83e\uddf6: 0', {
             fontSize: '15px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(1, 0.5);
@@ -94,13 +97,15 @@ class HomeScene extends Phaser.Scene {
         this.add.text(W / 2, catY - 60, '\u2606 Mittens \u2606', {
             fontSize: '22px',
             color: '#ffcc88',
+            fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
         // Hint text under cat
         this.add.text(W / 2, catY + 60, '\ud83d\udc46 Tap cat to clean!', {
             fontSize: '13px',
-            color: '#8877aa'
+            color: '#8877aa',
+            fontFamily: '"Poppins", sans-serif'
         }).setOrigin(0.5);
 
         // Decorative items around cat
@@ -206,6 +211,7 @@ class HomeScene extends Phaser.Scene {
         this.add.text(labelX, labelY, label, {
             fontSize: '12px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(1, 0.5);
     }
@@ -246,6 +252,7 @@ class HomeScene extends Phaser.Scene {
         const lbl = this.add.text(x, y, text, {
             fontSize: '15px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
@@ -361,7 +368,8 @@ class HomeScene extends Phaser.Scene {
         });
 
         const sparkle = this.add.text(this.cat.x + 30, this.cat.y - 30, '\u2728', {
-            fontSize: '22px'
+            fontSize: '22px',
+            fontFamily: '"Poppins", sans-serif'
         }).setOrigin(0.5);
         this.tweens.add({
             targets: sparkle,
@@ -411,6 +419,7 @@ class HomeScene extends Phaser.Scene {
         const txt = this.add.text(x, y, text, {
             fontSize: '16px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(0.5);

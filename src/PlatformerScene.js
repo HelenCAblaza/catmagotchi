@@ -84,6 +84,7 @@ class PlatformerScene extends Phaser.Scene {
         this.fishText = this.add.text(10, 10, '\ud83d\udc1f: 0', {
             fontSize: '15px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
         }).setScrollFactor(0);
@@ -91,6 +92,7 @@ class PlatformerScene extends Phaser.Scene {
         this.toyText = this.add.text(10, 32, '\ud83e\uddf6: 0', {
             fontSize: '15px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
         }).setScrollFactor(0);
@@ -100,6 +102,7 @@ class PlatformerScene extends Phaser.Scene {
             this.hintText = this.add.text(W / 2, 70, '\ud83c\udfae Drag round controller to move & jump!', {
                 fontSize: '13px',
                 color: '#ffffff',
+                fontFamily: '"Poppins", sans-serif',
                 stroke: '#000000',
                 strokeThickness: 3
             }).setOrigin(0.5).setScrollFactor(0);
@@ -112,7 +115,8 @@ class PlatformerScene extends Phaser.Scene {
         // Copyright watermark
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
             fontSize: '10px',
-            color: '#555577'
+            color: '#555577',
+            fontFamily: '"Poppins", sans-serif'
         }).setOrigin(0.5).setScrollFactor(0);
 
         // Ground collision
@@ -146,6 +150,7 @@ class PlatformerScene extends Phaser.Scene {
             fontSize: '18px',
             color: '#ffffff',
             align: 'center',
+            fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5).setScrollFactor(0).setVisible(false).setDepth(100).setAlpha(0.35);
 
@@ -417,7 +422,8 @@ class PlatformerScene extends Phaser.Scene {
 
         const lbl = this.add.text(x, y, text, {
             fontSize: '14px',
-            color: '#ffffff'
+            color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif'
         }).setOrigin(0.5).setScrollFactor(0);
 
         btn.on('pointerover', () => btn.setFillStyle(0x7777cc));
@@ -429,6 +435,7 @@ class PlatformerScene extends Phaser.Scene {
         const txt = this.add.text(x, y, text, {
             fontSize: '18px',
             color: '#ffff00',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(0.5);

@@ -8,6 +8,7 @@ class UIScene extends Phaser.Scene {
         this.fishText = this.add.text(10, 10, '🐟: 0', {
             fontSize: '18px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
         });
@@ -15,6 +16,7 @@ class UIScene extends Phaser.Scene {
         this.toyText = this.add.text(10, 35, '🧶: 0', {
             fontSize: '18px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
         });
@@ -23,6 +25,7 @@ class UIScene extends Phaser.Scene {
         this.warningText = this.add.text(400, 100, '', {
             fontSize: '24px',
             color: '#ff0000',
+            fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 4
         }).setOrigin(0.5);

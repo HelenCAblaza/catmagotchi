@@ -49,8 +49,8 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // === STATS AREA ===
-        const statY1 = 58;
-        const statY2 = 94;
+        const statY1 = 68;
+        const statY2 = 104;
         const barW = 110;
         const barH = 14;
         const labelX = 52;
@@ -67,7 +67,7 @@ class HomeScene extends Phaser.Scene {
         // Inventory - far right, aligned with stat rows
         this.fishText = this.add.text(W - 10, statY1, '\ud83d\udc1f: 0', {
             fontSize: '15px',
-            color: '#ffffff',
+            color: '#cccccc',
             fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
@@ -75,7 +75,7 @@ class HomeScene extends Phaser.Scene {
 
         this.toyText = this.add.text(W - 10, statY2, '\ud83e\uddf6: 0', {
             fontSize: '15px',
-            color: '#ffffff',
+            color: '#cccccc',
             fontFamily: '"Poppins", sans-serif',
             stroke: '#000000',
             strokeThickness: 3
@@ -210,7 +210,7 @@ class HomeScene extends Phaser.Scene {
         // Label
         this.add.text(labelX, labelY, label, {
             fontSize: '12px',
-            color: '#ffffff',
+            color: '#cccccc',
             fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(1, 0.5);

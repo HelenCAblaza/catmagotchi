@@ -95,19 +95,8 @@ class HomeScene extends Phaser.Scene {
         this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
         this.cat.setScale(2);
 
-        // Make cat clickable to clean!
-        this.cat.setInteractive({ useHandCursor: true });
-        this.cat.on('pointerdown', () => this.cleanCat());
-
-        // Cooldown for cleaning
+        // Cooldown for cleaning (via Bath button)
         this.canClean = true;
-
-        // Hint text under cat
-        this.add.text(W / 2, catY + 60, '\ud83d\udc46 Tap cat to clean!', {
-            fontSize: '13px',
-            color: '#8877aa',
-            fontFamily: '"Poppins", sans-serif'
-        }).setOrigin(0.5);
 
         // Decorative items around cat
         const decoY = catY + 20;
@@ -126,7 +115,7 @@ class HomeScene extends Phaser.Scene {
         this.createPillButton(W * 0.25, btnY1, '\ud83d\udecf\ufe0f Sleep', () => this.sleep(), btnW, btnH, btnRadius, 0x9999dd);
         this.createPillButton(W * 0.75, btnY1, '\ud83c\udf57 Feed', () => this.feed(), btnW, btnH, btnRadius, 0xdd9999);
         this.createPillButton(W * 0.25, btnY2, '\ud83e\uddf6 Play', () => this.play(), btnW, btnH, btnRadius, 0xdd99dd);
-        this.createPillButton(W * 0.75, btnY2, '\ud83d\udebf Bath', () => this.cleanCat(), btnW, btnH, btnRadius, 0x77bbdd);
+        this.createPillButton(W * 0.75, btnY2, '\ud83e\udde7 Bath', () => this.cleanCat(), btnW, btnH, btnRadius, 0x77bbdd);
 
         // === ADVENTURE BUTTON - round pastel world button at bottom right ===
         this.createAdventureButton(W - 55, H - 55);
@@ -409,7 +398,7 @@ class HomeScene extends Phaser.Scene {
         stats.happiness = Math.min(100, stats.happiness + 5);
         this.registry.set('stats', stats);
 
-        this.showFloatingText(this.cat.x, this.cat.y - 50, '\ud83d\udc45 Clean!');
+        this.showFloatingText(this.cat.x, this.cat.y - 50, '\ud83e\udde7 Clean!');
         this.spawnBurst(this.cat.x, this.cat.y - 30, 'star', 4);
 
         this.tweens.add({

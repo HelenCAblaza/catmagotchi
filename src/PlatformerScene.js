@@ -17,12 +17,12 @@ class PlatformerScene extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.createLevel();
 
-        // Cat player - 64x64 sprite at 1x scale so it fits under platforms
+        // Cat player - 32x32 sprite at 2x scale = 64px tall (fits under platforms)
         this.player = this.physics.add.sprite(100, 500, 'cat_idle');
-        this.player.setScale(1);
-        // Set physics body to match the visible cat (32x48, centered)
-        this.player.body.setSize(32, 48);
-        this.player.body.setOffset(16, 8);
+        this.player.setScale(2);
+        // Physics body matches the visible cat within the 32x32 sprite
+        this.player.body.setSize(16, 20);
+        this.player.body.setOffset(8, 6);
         this.player.setBounce(0.1);
         this.player.setCollideWorldBounds(true);
         this.physics.add.collider(this.player, this.platforms);
@@ -349,10 +349,10 @@ class PlatformerScene extends Phaser.Scene {
         let velocityX = 0;
         if (left) {
             velocityX = this.joyActive ? -200 * Math.abs(this.joyX) : -200;
-            this.player.setFlipX(true);
+            this.player.setFlipX(false);  // face left (default sprite direction)
         } else if (right) {
             velocityX = this.joyActive ? 200 * Math.abs(this.joyX) : 200;
-            this.player.setFlipX(false);
+            this.player.setFlipX(true);   // flip to face right
         }
         this.player.setVelocityX(velocityX);
 

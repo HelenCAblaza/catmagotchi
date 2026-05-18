@@ -19,27 +19,45 @@
             touch-action: none;
         }
         body {
-            background: #2a2a3e;
+            background: #1a1a2e;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            min-height: 100dvh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             touch-action: none;
         }
         #game-container {
             width: 100%;
-            max-width: 800px;
-            aspect-ratio: 4/3;
+            height: 100vh;
+            height: 100dvh;
+            max-width: 100vw;
             position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Desktop: keep nice aspect ratio with max width */
+        @media (min-width: 801px) {
+            #game-container {
+                max-width: 900px;
+                height: auto;
+                aspect-ratio: 4/3;
+            }
         }
         canvas {
             display: block;
             width: 100% !important;
             height: 100% !important;
-            border-radius: 8px;
+            border-radius: 0;
             box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+        @media (min-width: 801px) {
+            canvas {
+                border-radius: 8px;
+            }
         }
         #loading, #error-msg {
             position: absolute;
@@ -76,9 +94,49 @@
         #start-btn:active {
             transform: translate(-50%, -50%) scale(0.95);
         }
+        /* Rotate device overlay for portrait mobile */
+        #rotate-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #1a1a2e;
+            color: #fff;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            gap: 20px;
+        }
+        #rotate-overlay .phone-icon {
+            font-size: 4rem;
+            animation: rotatePhone 2s ease-in-out infinite;
+        }
+        @keyframes rotatePhone {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+        }
+        @media (max-width: 800px) and (orientation: portrait) {
+            #rotate-overlay {
+                display: flex;
+            }
+            #game-container {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <div id="rotate-overlay">
+        <div class="phone-icon">📱</div>
+        <h2>Rotate your device!</h2>
+        <p>Catmagotchi works best in landscape mode 🐱</p>
+    </div>
+
     <div id="game-container">
         <div id="loading">Loading Catmagotchi...</div>
         <div id="error-msg"></div>
@@ -89,10 +147,10 @@
     <script src="phaser.min.js"></script>
 
     <!-- Game scenes -->
-    <script src="src/BootScene.js?v=9"></script>
-    <script src="src/HomeScene.js?v=9"></script>
-    <script src="src/PlatformerScene.js?v=9"></script>
-    <script src="src/game.js?v=9"></script>
+    <script src="src/BootScene.js?v=10"></script>
+    <script src="src/HomeScene.js?v=10"></script>
+    <script src="src/PlatformerScene.js?v=10"></script>
+    <script src="src/game.js?v=10"></script>
 
     <script>
         // Error handling with stack trace

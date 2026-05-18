@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>64x64 Preview</title>
+<head><meta charset="UTF-8"><title>Preview</title>
 <style>body{background:#222;color:#fff;font-family:sans-serif;padding:20px;}img{image-rendering:pixelated;border:2px solid #555;margin:10px;background:#87CEEB;}.c{display:inline-block;text-align:center;margin:15px;}</style>
 </head>
 <body>
-<h2>64x64 Mittens — Smaller Eyes!</h2>
+<h2>Rounder face, smaller eyes, whiskers near cheeks!</h2>
 <div id="s"></div>
 <script>
-[{src:'cat-idle.png',l:'Idle (Home: 2x)'},{src:'cat-run.png',l:'Run (Game: 1x)'},{src:'cat-sleep.png',l:'Sleep'}].forEach(s=>{
+[{src:'cat-idle.png',l:'Idle'},{src:'cat-run.png',l:'Run'},{src:'cat-sleep.png',l:'Sleep'}].forEach(s=>{
   const d=document.createElement('div');d.className='c';
   d.innerHTML='<div>'+s.l+'</div><img src="'+s.src+'" style="width:256px;height:256px;">';
   document.getElementById('s').appendChild(d);

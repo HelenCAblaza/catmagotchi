@@ -21,396 +21,295 @@ function createCanvas() {
   c.width = SIZE;
   c.height = SIZE;
   const ctx = c.getContext('2d');
-  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingEnabled = false;
   return { c, ctx };
 }
 
-// Draw a white cat facing forward (idle)
+// Helper: draw a pixelated filled circle
+function fillCircle(ctx, cx, cy, r, color) {
+  ctx.fillStyle = color;
+  for (let y = -r; y <= r; y++) {
+    for (let x = -r; x <= r; x++) {
+      if (x * x + y * y <= r * r + 1) {
+        ctx.fillRect(cx + x, cy + y, 1, 1);
+      }
+    }
+  }
+}
+
+// Helper: draw a thick pixelated line
+function drawLine(ctx, x1, y1, x2, y2, color, thickness) {
+  ctx.fillStyle = color;
+  const dx = Math.abs(x2 - x1);
+  const dy = Math.abs(y2 - y1);
+  const sx = x1 < x2 ? 1 : -1;
+  const sy = y1 < y2 ? 1 : -1;
+  let err = dx - dy;
+  let x = x1;
+  let y = y1;
+
+  while (true) {
+    for (let ty = -Math.floor(thickness / 2); ty <= Math.floor(thickness / 2); ty++) {
+      for (let tx = -Math.floor(thickness / 2); tx <= Math.floor(thickness / 2); tx++) {
+        ctx.fillRect(x + tx, y + ty, 1, 1);
+      }
+    }
+    if (x === x2 && y === y2) break;
+    const e2 = 2 * err;
+    if (e2 > -dy) { err -= dy; x += sx; }
+    if (e2 < dx) { err += dx; y += sy; }
+  }
+}
+
+// Draw a cute white cat in the reference style (idle - standing, facing front-left)
 function drawIdleCat(ctx) {
-  const cx = SIZE / 2;
-  const cy = SIZE / 2;
+  // Cute proportions: big head, small body
 
-  // === EARS (pointed triangles on top) ===
-  // Left ear
+  // === TAIL (curled up behind) ===
+  // Tail base
+  fillCircle(ctx, 48, 28, 4, '#ffffff');
+  // Tail curl up
+  drawLine(ctx, 48, 24, 52, 16, '#ffffff', 4);
+  drawLine(ctx, 52, 16, 52, 8, '#ffffff', 4);
+  drawLine(ctx, 52, 8, 46, 4, '#ffffff', 4);
+  // Tail tip
+  fillCircle(ctx, 46, 4, 3, '#ffffff');
+
+  // === BODY (small chubby body under head) ===
+  fillCircle(ctx, 28, 42, 10, '#ffffff');
+  fillCircle(ctx, 36, 44, 9, '#ffffff');
+  // Belly highlight
+  fillCircle(ctx, 32, 44, 6, '#f8f8f8');
+
+  // === LEGS/PAWS ===
+  // Front left leg
+  fillCircle(ctx, 20, 50, 4, '#ffffff');
+  fillCircle(ctx, 20, 54, 3, '#ffffff');
+  // Front right leg
+  fillCircle(ctx, 34, 52, 4, '#ffffff');
+  fillCircle(ctx, 34, 56, 3, '#ffffff');
+  // Back legs
+  fillCircle(ctx, 42, 52, 3, '#ffffff');
+  fillCircle(ctx, 46, 50, 3, '#ffffff');
+  // Pink paws
+  fillCircle(ctx, 20, 56, 2, '#ffb6c1');
+  fillCircle(ctx, 34, 58, 2, '#ffb6c1');
+
+  // === HEAD (big round head) ===
+  fillCircle(ctx, 24, 20, 18, '#ffffff');
+  // Darker outline/shadow around head bottom-right
+  drawLine(ctx, 30, 34, 38, 28, '#e0e0e0', 1);
+  drawLine(ctx, 38, 28, 40, 20, '#e0e0e0', 1);
+
+  // === EARS (large triangles on top) ===
+  // Left ear outer
   ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.moveTo(cx - 18, cy - 18);
-  ctx.lineTo(cx - 24, cy - 36);
-  ctx.lineTo(cx - 6, cy - 26);
-  ctx.closePath();
-  ctx.fill();
-  ctx.strokeStyle = '#ddd';
-  ctx.lineWidth = 0.5;
-  ctx.stroke();
-
-  // Right ear
-  ctx.beginPath();
-  ctx.moveTo(cx + 18, cy - 18);
-  ctx.lineTo(cx + 24, cy - 36);
-  ctx.lineTo(cx + 6, cy - 26);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  // Inner ear pink
+  for (let y = 0; y < 10; y++) {
+    const width = Math.floor((10 - y) * 0.6);
+    for (let x = -width; x <= width; x++) {
+      ctx.fillRect(10 + x, 6 + y, 1, 1);
+    }
+  }
+  // Left ear inner (pink)
   ctx.fillStyle = '#ffb6c1';
-  ctx.beginPath();
-  ctx.moveTo(cx - 17, cy - 20);
-  ctx.lineTo(cx - 21, cy - 32);
-  ctx.lineTo(cx - 10, cy - 24);
-  ctx.closePath();
-  ctx.fill();
+  for (let y = 2; y < 8; y++) {
+    const width = Math.floor((8 - y) * 0.4);
+    for (let x = -width; x <= width; x++) {
+      ctx.fillRect(10 + x, 8 + y, 1, 1);
+    }
+  }
 
-  ctx.beginPath();
-  ctx.moveTo(cx + 17, cy - 20);
-  ctx.lineTo(cx + 21, cy - 32);
-  ctx.lineTo(cx + 10, cy - 24);
-  ctx.closePath();
-  ctx.fill();
-
-  // === HEAD (round) ===
+  // Right ear outer
   ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.arc(cx, cy - 8, 18, 0, Math.PI * 2);
-  ctx.fill();
+  for (let y = 0; y < 10; y++) {
+    const width = Math.floor((10 - y) * 0.6);
+    for (let x = -width; x <= width; x++) {
+      ctx.fillRect(36 + x, 6 + y, 1, 1);
+    }
+  }
+  // Right ear inner (pink)
+  ctx.fillStyle = '#ffb6c1';
+  for (let y = 2; y < 8; y++) {
+    const width = Math.floor((8 - y) * 0.4);
+    for (let x = -width; x <= width; x++) {
+      ctx.fillRect(36 + x, 8 + y, 1, 1);
+    }
+  }
 
-  // Subtle head outline
-  ctx.strokeStyle = '#eee';
-  ctx.lineWidth = 0.5;
-  ctx.stroke();
-
-  // === EYES (large black circles with white shine) ===
-  // Left eye
-  ctx.fillStyle = '#222';
-  ctx.beginPath();
-  ctx.ellipse(cx - 7, cy - 10, 3.5, 5, 0, 0, Math.PI * 2);
-  ctx.fill();
+  // === EYES (big sparkly eyes like reference) ===
+  // Left eye - big dark brown circle
+  fillCircle(ctx, 18, 20, 6, '#3d2b1f');
+  // Left eye white shine (big highlight top-left)
+  fillCircle(ctx, 15, 16, 3, '#ffffff');
+  // Left eye small white shine bottom-right
+  fillCircle(ctx, 20, 22, 1.5, '#ffffff');
 
   // Right eye
-  ctx.beginPath();
-  ctx.ellipse(cx + 7, cy - 10, 3.5, 5, 0, 0, Math.PI * 2);
-  ctx.fill();
+  fillCircle(ctx, 32, 22, 6, '#3d2b1f');
+  // Right eye white shine
+  fillCircle(ctx, 29, 18, 3, '#ffffff');
+  // Right eye small white shine
+  fillCircle(ctx, 34, 24, 1.5, '#ffffff');
 
-  // Eye shine (white dots)
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.arc(cx - 5.5, cy - 12, 1.2, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(cx + 8.5, cy - 12, 1.2, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === NOSE (tiny pink triangle) ===
-  ctx.fillStyle = '#ff99aa';
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - 4);
-  ctx.lineTo(cx - 2.5, cy);
-  ctx.lineTo(cx + 2.5, cy);
-  ctx.closePath();
-  ctx.fill();
-
-  // === MOUTH (small smile) ===
-  ctx.strokeStyle = '#888';
-  ctx.lineWidth = 0.8;
-  ctx.beginPath();
-  ctx.arc(cx - 2, cy + 0.5, 2, 0, Math.PI);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(cx + 2, cy + 0.5, 2, 0, Math.PI);
-  ctx.stroke();
-
-  // === WHISKERS ===
-  ctx.strokeStyle = '#bbb';
-  ctx.lineWidth = 0.6;
-  // Left whiskers
-  ctx.beginPath();
-  ctx.moveTo(cx - 10, cy - 2);
-  ctx.lineTo(cx - 22, cy - 4);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx - 10, cy);
-  ctx.lineTo(cx - 23, cy);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx - 10, cy + 2);
-  ctx.lineTo(cx - 22, cy + 4);
-  ctx.stroke();
-
-  // Right whiskers
-  ctx.beginPath();
-  ctx.moveTo(cx + 10, cy - 2);
-  ctx.lineTo(cx + 22, cy - 4);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx + 10, cy);
-  ctx.lineTo(cx + 23, cy);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx + 10, cy + 2);
-  ctx.lineTo(cx + 22, cy + 4);
-  ctx.stroke();
-
-  // === BODY (chubby oval below head) ===
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 16, 16, 14, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === BELLY (slightly lighter area) ===
-  ctx.fillStyle = '#f8f8f8';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 20, 10, 8, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === FRONT PAWS ===
-  ctx.fillStyle = '#ffffff';
-  // Left paw
-  ctx.beginPath();
-  ctx.ellipse(cx - 8, cy + 28, 5, 4, 0, 0, Math.PI * 2);
-  ctx.fill();
-  // Right paw
-  ctx.beginPath();
-  ctx.ellipse(cx + 8, cy + 28, 5, 4, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Pink paw pads
-  ctx.fillStyle = '#ffb6c1';
-  ctx.beginPath();
-  ctx.arc(cx - 8, cy + 29, 1.5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(cx + 8, cy + 29, 1.5, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === COLLAR (pink band around neck) ===
-  ctx.strokeStyle = '#ff7799';
-  ctx.lineWidth = 2.5;
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 6, 12, 3, 0, 0, Math.PI);
-  ctx.stroke();
-
-  // Bell
-  ctx.fillStyle = '#ffd700';
-  ctx.beginPath();
-  ctx.arc(cx, cy + 9, 2.5, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#daa520';
-  ctx.lineWidth = 0.5;
-  ctx.stroke();
-
-  // === TAIL (curved up behind body) ===
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 6;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(cx + 14, cy + 22);
-  ctx.quadraticCurveTo(cx + 26, cy + 18, cx + 24, cy + 6);
-  ctx.stroke();
-}
-
-// Draw a white cat in side profile running (run)
-function drawRunCat(ctx) {
-  const cx = SIZE / 2;
-  const cy = SIZE / 2 + 2;
-
-  // === TAIL (curved up) ===
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 5;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(cx + 14, cy + 4);
-  ctx.quadraticCurveTo(cx + 26, cy - 2, cx + 22, cy - 14);
-  ctx.stroke();
-
-  // === BACK LEG (stretched back) ===
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.ellipse(cx + 6, cy + 14, 5, 10, -0.6, 0, Math.PI * 2);
-  ctx.fill();
-  // Back paw
-  ctx.beginPath();
-  ctx.ellipse(cx + 2, cy + 22, 4, 3, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === FRONT LEG (stretched forward) ===
-  ctx.beginPath();
-  ctx.ellipse(cx - 6, cy + 14, 5, 10, 0.6, 0, Math.PI * 2);
-  ctx.fill();
-  // Front paw
-  ctx.beginPath();
-  ctx.ellipse(cx - 10, cy + 22, 4, 3, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === BODY (horizontal oval) ===
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 2, 18, 12, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === HEAD (circle, slightly forward) ===
-  ctx.beginPath();
-  ctx.arc(cx - 14, cy - 8, 14, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === EAR (pointed, facing left) ===
-  ctx.beginPath();
-  ctx.moveTo(cx - 22, cy - 18);
-  ctx.lineTo(cx - 28, cy - 30);
-  ctx.lineTo(cx - 14, cy - 22);
-  ctx.closePath();
-  ctx.fill();
-
-  // Inner ear
-  ctx.fillStyle = '#ffb6c1';
-  ctx.beginPath();
-  ctx.moveTo(cx - 21, cy - 20);
-  ctx.lineTo(cx - 25, cy - 27);
-  ctx.lineTo(cx - 17, cy - 21);
-  ctx.closePath();
-  ctx.fill();
-
-  // === PROFILE FACE ===
-  ctx.fillStyle = '#222';
-  // Eye (facing left)
-  ctx.beginPath();
-  ctx.ellipse(cx - 20, cy - 10, 3, 4.5, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Eye shine
-  ctx.fillStyle = '#fff';
-  ctx.beginPath();
-  ctx.arc(cx - 19, cy - 12, 1, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Nose (small pink, leftmost)
-  ctx.fillStyle = '#ff99aa';
-  ctx.beginPath();
-  ctx.arc(cx - 26, cy - 4, 2, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Mouth line
-  ctx.strokeStyle = '#888';
-  ctx.lineWidth = 0.8;
-  ctx.beginPath();
-  ctx.moveTo(cx - 24, cy - 2);
-  ctx.lineTo(cx - 20, cy + 1);
-  ctx.stroke();
-
-  // === BELLY HIGHLIGHT ===
-  ctx.fillStyle = '#f8f8f8';
-  ctx.beginPath();
-  ctx.ellipse(cx - 2, cy + 4, 10, 6, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === COLLAR ===
-  ctx.strokeStyle = '#ff7799';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(cx - 10, cy + 2, 8, 0.3, Math.PI - 0.3);
-  ctx.stroke();
-
-  // === PINK PAW PADS ===
-  ctx.fillStyle = '#ffb6c1';
-  ctx.beginPath();
-  ctx.arc(cx - 10, cy + 23, 1.2, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(cx + 2, cy + 23, 1.2, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-// Draw a sleeping curled-up cat (sleep)
-function drawSleepCat(ctx) {
-  const cx = SIZE / 2;
-  const cy = SIZE / 2 + 2;
-
-  // === BODY (large curled oval) ===
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + 4, 22, 16, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === HEAD (tucked on left side) ===
-  ctx.beginPath();
-  ctx.arc(cx - 12, cy - 2, 14, 0, Math.PI * 2);
-  ctx.fill();
-
-  // === EAR (pointed, visible from top) ===
-  ctx.beginPath();
-  ctx.moveTo(cx - 18, cy - 12);
-  ctx.lineTo(cx - 24, cy - 22);
-  ctx.lineTo(cx - 10, cy - 16);
-  ctx.closePath();
-  ctx.fill();
-
-  // Inner ear
-  ctx.fillStyle = '#ffb6c1';
-  ctx.beginPath();
-  ctx.moveTo(cx - 17, cy - 14);
-  ctx.lineTo(cx - 21, cy - 20);
-  ctx.lineTo(cx - 12, cy - 15);
-  ctx.closePath();
-  ctx.fill();
-
-  // === CLOSED EYES (sleeping lines) ===
-  ctx.strokeStyle = '#666';
-  ctx.lineWidth = 1.2;
-  ctx.beginPath();
-  ctx.moveTo(cx - 18, cy - 4);
-  ctx.quadraticCurveTo(cx - 16, cy - 2, cx - 14, cy - 4);
-  ctx.stroke();
+  // === PINK BLUSH on cheeks ===
+  fillCircle(ctx, 12, 26, 3, '#ffb6c1');
+  fillCircle(ctx, 38, 28, 3, '#ffb6c1');
 
   // === NOSE ===
-  ctx.fillStyle = '#ff99aa';
-  ctx.beginPath();
-  ctx.arc(cx - 22, cy + 1, 1.8, 0, Math.PI * 2);
-  ctx.fill();
+  fillCircle(ctx, 24, 24, 2, '#ff99aa');
 
-  // === TAIL (wrapped around body from right) ===
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 7;
-  ctx.lineCap = 'round';
-  ctx.beginPath();
-  ctx.moveTo(cx + 20, cy + 10);
-  ctx.quadraticCurveTo(cx + 28, cy + 2, cx + 20, cy - 6);
-  ctx.quadraticCurveTo(cx + 10, cy - 14, cx + 2, cy - 10);
-  ctx.stroke();
+  // === HAPPY MOUTH (open with tongue) ===
+  // Mouth outline (happy smile)
+  drawLine(ctx, 20, 28, 24, 32, '#cc6666', 1);
+  drawLine(ctx, 24, 32, 28, 28, '#cc6666', 1);
+  // Tongue inside
+  fillCircle(ctx, 24, 30, 2.5, '#ff7799');
 
-  // === BELLY ===
-  ctx.fillStyle = '#f8f8f8';
-  ctx.beginPath();
-  ctx.ellipse(cx + 2, cy + 6, 14, 10, 0, 0, Math.PI * 2);
-  ctx.fill();
+  // === WHISKERS (dark, short, angled) ===
+  // Left whiskers
+  drawLine(ctx, 8, 22, 2, 18, '#5a3a20', 1);
+  drawLine(ctx, 8, 24, 1, 24, '#5a3a20', 1);
+  drawLine(ctx, 8, 26, 2, 30, '#5a3a20', 1);
+  // Right whiskers
+  drawLine(ctx, 40, 24, 46, 20, '#5a3a20', 1);
+  drawLine(ctx, 40, 26, 47, 26, '#5a3a20', 1);
+  drawLine(ctx, 40, 28, 46, 32, '#5a3a20', 1);
+}
 
-  // === PAWS (tucked under) ===
+// Draw a running side-profile cat
+function drawRunCat(ctx) {
+  // === TAIL (curved up) ===
+  drawLine(ctx, 48, 22, 54, 12, '#ffffff', 3);
+  drawLine(ctx, 54, 12, 52, 6, '#ffffff', 3);
+  fillCircle(ctx, 52, 6, 2, '#ffffff');
+
+  // === BODY ===
+  fillCircle(ctx, 32, 34, 9, '#ffffff');
+  fillCircle(ctx, 40, 32, 8, '#ffffff');
+
+  // === BACK LEGS ===
+  // Back leg stretched back
+  drawLine(ctx, 42, 38, 46, 46, '#ffffff', 4);
+  fillCircle(ctx, 46, 48, 3, '#ffffff');
+  // Other back leg
+  drawLine(ctx, 38, 40, 40, 48, '#ffffff', 3);
+  fillCircle(ctx, 40, 50, 2, '#ffffff');
+
+  // === FRONT LEGS ===
+  // Front leg stretched forward
+  drawLine(ctx, 22, 38, 14, 46, '#ffffff', 4);
+  fillCircle(ctx, 12, 48, 3, '#ffffff');
+  // Other front leg
+  drawLine(ctx, 26, 40, 24, 48, '#ffffff', 3);
+  fillCircle(ctx, 24, 50, 2, '#ffffff');
+
+  // Pink paws
+  fillCircle(ctx, 12, 50, 1.5, '#ffb6c1');
+  fillCircle(ctx, 46, 50, 1.5, '#ffb6c1');
+
+  // === HEAD (facing left) ===
+  fillCircle(ctx, 20, 22, 14, '#ffffff');
+
+  // === EAR (left-facing) ===
   ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.ellipse(cx - 6, cy + 16, 5, 3, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.beginPath();
-  ctx.ellipse(cx + 10, cy + 16, 5, 3, 0, 0, Math.PI * 2);
-  ctx.fill();
+  for (let y = 0; y < 8; y++) {
+    const width = Math.floor((8 - y) * 0.6);
+    for (let x = -width; x <= width; x++) {
+      ctx.fillRect(10 + x, 10 + y, 1, 1);
+    }
+  }
+  // Inner ear
+  ctx.fillStyle = '#ffb6c1';
+  for (let y = 2; y < 6; y++) {
+    const width = Math.floor((6 - y) * 0.4);
+    for (let x = -width; x <= width; x++) {
+      ctx.fillRect(10 + x, 12 + y, 1, 1);
+    }
+  }
 
-  // === ZZZ (sleep bubbles) ===
+  // === EYE (big sparkly) ===
+  fillCircle(ctx, 14, 20, 5, '#3d2b1f');
+  fillCircle(ctx, 11, 16, 2.5, '#ffffff');
+  fillCircle(ctx, 16, 22, 1, '#ffffff');
+
+  // === BLUSH ===
+  fillCircle(ctx, 10, 26, 2.5, '#ffb6c1');
+
+  // === NOSE ===
+  fillCircle(ctx, 8, 24, 1.5, '#ff99aa');
+
+  // === MOUTH ===
+  drawLine(ctx, 8, 27, 10, 29, '#cc6666', 1);
+
+  // === WHISKERS ===
+  drawLine(ctx, 6, 22, 1, 18, '#5a3a20', 1);
+  drawLine(ctx, 6, 24, 0, 24, '#5a3a20', 1);
+  drawLine(ctx, 6, 26, 1, 30, '#5a3a20', 1);
+}
+
+// Draw a sleeping curled-up cat
+function drawSleepCat(ctx) {
+  // === BODY (large round ball) ===
+  fillCircle(ctx, 32, 36, 18, '#ffffff');
+
+  // === HEAD (tucked on left) ===
+  fillCircle(ctx, 20, 28, 14, '#ffffff');
+
+  // === EAR (sticking up) ===
+  ctx.fillStyle = '#ffffff';
+  for (let y = 0; y < 8; y++) {
+    const width = Math.floor((8 - y) * 0.6);
+    for (let x = -width; x <= width; x++) {
+      ctx.fillRect(16 + x, 14 + y, 1, 1);
+    }
+  }
+  ctx.fillStyle = '#ffb6c1';
+  for (let y = 2; y < 6; y++) {
+    const width = Math.floor((6 - y) * 0.4);
+    for (let x = -width; x <= width; x++) {
+      ctx.fillRect(16 + x, 16 + y, 1, 1);
+    }
+  }
+
+  // === CLOSED EYES ===
+  drawLine(ctx, 12, 26, 16, 28, '#5a3a20', 1);
+  drawLine(ctx, 18, 28, 22, 26, '#5a3a20', 1);
+
+  // === BLUSH ===
+  fillCircle(ctx, 10, 30, 2.5, '#ffb6c1');
+
+  // === NOSE ===
+  fillCircle(ctx, 14, 30, 1.5, '#ff99aa');
+
+  // === MOUTH (small smile) ===
+  drawLine(ctx, 14, 32, 18, 32, '#cc6666', 1);
+
+  // === TAIL (wrapped around) ===
+  drawLine(ctx, 46, 40, 50, 30, '#ffffff', 4);
+  drawLine(ctx, 50, 30, 48, 20, '#ffffff', 4);
+  drawLine(ctx, 48, 20, 38, 16, '#ffffff', 4);
+  fillCircle(ctx, 38, 16, 3, '#ffffff');
+
+  // === PAWS (tucked in) ===
+  fillCircle(ctx, 24, 48, 3, '#ffffff');
+  fillCircle(ctx, 36, 50, 3, '#ffffff');
+
+  // === ZZZ ===
   ctx.fillStyle = '#88bbee';
-  ctx.font = 'bold 8px sans-serif';
-  ctx.fillText('z', cx + 6, cy - 14);
+  ctx.font = 'bold 8px monospace';
+  ctx.fillText('z', 40, 14);
   ctx.fillStyle = '#6699cc';
-  ctx.font = 'bold 6px sans-serif';
-  ctx.fillText('z', cx + 12, cy - 20);
+  ctx.font = 'bold 6px monospace';
+  ctx.fillText('z', 46, 10);
   ctx.fillStyle = '#4477aa';
-  ctx.font = 'bold 5px sans-serif';
-  ctx.fillText('z', cx + 16, cy - 24);
+  ctx.font = 'bold 5px monospace';
+  ctx.fillText('z', 50, 6);
 }
 
 function generateSprite(drawFn) {
   const { c, ctx } = createCanvas();
-
-  // Fill transparent background
   ctx.clearRect(0, 0, SIZE, SIZE);
-
   drawFn(ctx);
-
   return c;
 }
 
@@ -429,7 +328,6 @@ const spritesDiv = document.getElementById('sprites');
   label.textContent = s.name + ' (64x64)';
   div.appendChild(label);
 
-  // Preview at 4x
   s.c.style.width = '256px';
   s.c.style.height = '256px';
   s.c.style.imageRendering = 'pixelated';
@@ -446,7 +344,7 @@ const spritesDiv = document.getElementById('sprites');
   spritesDiv.appendChild(div);
 });
 
-console.log('Cat sprites generated!');
+console.log('Cute cat sprites generated!');
 </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Mittens Sprites Preview</title>
+<title>Mittens 32x32 Sprites Preview</title>
 <style>
 body { background: #222; color: #fff; font-family: sans-serif; padding: 20px; }
 canvas { image-rendering: pixelated; border: 2px solid #555; margin: 10px; }
@@ -10,13 +10,13 @@ canvas { image-rendering: pixelated; border: 2px solid #555; margin: 10px; }
 </style>
 </head>
 <body>
-<h2>Mittens the Cat — Sprite Preview</h2>
+<h2>Mittens the Cat — 32x32 Sprite Preview</h2>
 <div id="sprites"></div>
 
 <script>
 const SPRITES = [
-  { name: 'cat-idle.png', src: 'cat-idle.png', label: 'Idle (sitting, front-facing)' },
-  { name: 'cat-run.png', src: 'cat-run.png', label: 'Run (side profile, running)' },
+  { name: 'cat-idle.png', src: 'cat-idle.png', label: 'Idle (sitting, front-facing) — Home: 3x scale' },
+  { name: 'cat-run.png', src: 'cat-run.png', label: 'Run (side profile) — Game: 1.5x scale' },
   { name: 'cat-sleep.png', src: 'cat-sleep.png', label: 'Sleep (curled up with Zzz)' }
 ];
 
@@ -25,15 +25,14 @@ const div = document.getElementById('sprites');
 SPRITES.forEach(s => {
   const container = document.createElement('div');
   container.className = 'sprite-container';
-
   const label = document.createElement('div');
   label.textContent = s.label;
   container.appendChild(label);
 
   const img = document.createElement('img');
   img.src = s.src;
-  img.style.width = '256px';
-  img.style.height = '256px';
+  img.style.width = '192px';
+  img.style.height = '192px';
   img.style.imageRendering = 'pixelated';
   img.style.border = '2px solid #555';
   container.appendChild(img);

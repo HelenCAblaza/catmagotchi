@@ -18,8 +18,8 @@ class PlatformerScene extends Phaser.Scene {
         this.createLevel();
 
         // Cat player
-        this.player = this.physics.add.sprite(100, 450, 'cat_run');
-        this.player.setScale(2);
+        this.player = this.physics.add.sprite(100, 520, 'cat_run');
+        this.player.setScale(1.5);
         this.player.setBounce(0.1);
         this.player.setCollideWorldBounds(true);
         this.physics.add.collider(this.player, this.platforms);

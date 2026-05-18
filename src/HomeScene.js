@@ -115,8 +115,9 @@ class HomeScene extends Phaser.Scene {
         this.add.image(W / 2, decoY + 40, 'yarn').setScale(1.8);
 
         // === BUTTONS (bottom area) - rounded pill shape ===
-        const btnY1 = H * 0.72;
-        const btnY2 = btnY1 + 56;
+        const btnY1 = H * 0.70;
+        const btnY2 = btnY1 + 52;
+        const btnY3 = btnY2 + 52;
         const btnW = 160;
         const btnH = 44;
         const btnRadius = 22;
@@ -124,9 +125,10 @@ class HomeScene extends Phaser.Scene {
         this.createPillButton(W * 0.25, btnY1, '\ud83d\udecf\ufe0f Sleep', () => this.sleep(), btnW, btnH, btnRadius, 0x9999dd);
         this.createPillButton(W * 0.75, btnY1, '\ud83c\udf57 Feed', () => this.feed(), btnW, btnH, btnRadius, 0xdd9999);
         this.createPillButton(W * 0.25, btnY2, '\ud83e\uddf6 Play', () => this.play(), btnW, btnH, btnRadius, 0xdd99dd);
-        this.createPillButton(W * 0.75, btnY2, '\ud83c\udf0d Adventure', () => {
-            this.scene.start('PlatformerScene');
-        }, btnW, btnH, btnRadius, 0x88ccaa);
+        this.createPillButton(W * 0.75, btnY2, '\ud83d\udebf Bath', () => this.cleanCat(), btnW, btnH, btnRadius, 0x77bbdd);
+
+        // === ADVENTURE BUTTON - pastel world style at bottom right ===
+        this.createAdventureButton(W - 100, btnY3 + 10);
 
         // Stats update loop
         this.time.addEvent({
@@ -276,6 +278,50 @@ class HomeScene extends Phaser.Scene {
         const g = Math.min(255, ((color >> 8) & 0xFF) + ((amount >> 8) & 0xFF));
         const b = Math.min(255, (color & 0xFF) + (amount & 0xFF));
         return (r << 16) | (g << 8) | b;
+    }
+
+    createAdventureButton(x, y) {
+        const w = 140;
+        const h = 50;
+        const radius = 25;
+
+        const btn = this.add.graphics();
+        btn.fillStyle(0xaaddcc, 1);
+        btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+        btn.setInteractive(
+            new Phaser.Geom.Rectangle(x - w / 2, y - h / 2, w, h),
+            Phaser.Geom.Rectangle.Contains
+        );
+        btn.setScrollFactor(0);
+
+        // Pastel world icon on top
+        const icon = this.add.text(x, y - 10, '\ud83c\udf0d', {
+            fontSize: '18px',
+            fontFamily: '"Poppins", sans-serif'
+        }).setOrigin(0.5).setScrollFactor(0);
+
+        // Adventure text below
+        const lbl = this.add.text(x, y + 8, 'Adventure', {
+            fontSize: '13px',
+            color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif',
+            fontStyle: 'bold'
+        }).setOrigin(0.5).setScrollFactor(0);
+
+        // Hover effect
+        btn.on('pointerover', () => {
+            btn.clear();
+            btn.fillStyle(0xbbeecc, 1);
+            btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+        });
+        btn.on('pointerout', () => {
+            btn.clear();
+            btn.fillStyle(0xaaddcc, 1);
+            btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+        });
+        btn.on('pointerdown', () => {
+            this.scene.start('PlatformerScene');
+        });
     }
 
     feed() {

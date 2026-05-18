@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>32x32 Cat Sprites</title>
+<title>64x64 Cat Sprite Generator</title>
 <style>
 body { background: #222; color: #fff; font-family: sans-serif; padding: 20px; }
 canvas { image-rendering: pixelated; border: 2px solid #555; margin: 10px; background: #87CEEB; }
@@ -10,11 +10,11 @@ canvas { image-rendering: pixelated; border: 2px solid #555; margin: 10px; backg
 </style>
 </head>
 <body>
-<h2>32x32 Mittens Sprites</h2>
+<h2>64x64 Mittens Sprites</h2>
 <div id="sprites"></div>
 
 <script>
-const SIZE = 32;
+const SIZE = 64;
 
 function createCanvas() {
   const c = document.createElement('canvas');
@@ -26,12 +26,13 @@ function createCanvas() {
 }
 
 function setPixel(ctx, x, y, color) {
-  if (x >= 0 && x < SIZE && y >= 0 && y < SIZE) {
+  if (x >= 0 && x < SIZE && y >= 0 && y < SIZE && color) {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, 1, 1);
   }
 }
 
+// Fill a rectangle
 function fillRect(ctx, x, y, w, h, color) {
   for (let py = y; py < y + h; py++) {
     for (let px = x; px < x + w; px++) {
@@ -40,6 +41,7 @@ function fillRect(ctx, x, y, w, h, color) {
   }
 }
 
+// Fill a circle (pixelated)
 function fillCircle(ctx, cx, cy, r, color) {
   for (let y = -r; y <= r; y++) {
     for (let x = -r; x <= r; x++) {
@@ -50,219 +52,379 @@ function fillCircle(ctx, cx, cy, r, color) {
   }
 }
 
-// === IDLE CAT (front-facing, sitting) ===
+// Draw a line
+function drawLine(ctx, x1, y1, x2, y2, color) {
+  const dx = Math.abs(x2 - x1);
+  const dy = Math.abs(y2 - y1);
+  const sx = x1 < x2 ? 1 : -1;
+  const sy = y1 < y2 ? 1 : -1;
+  let err = dx - dy;
+  let x = x1, y = y1;
+  while (true) {
+    setPixel(ctx, x, y, color);
+    if (x === x2 && y === y2) break;
+    const e2 = 2 * err;
+    if (e2 > -dy) { err -= dy; x += sx; }
+    if (e2 < dx) { err += dx; y += sy; }
+  }
+}
+
+// === IDLE CAT (front-facing, standing, like reference) ===
 function drawIdleCat(ctx) {
-  // Clear transparent
   ctx.clearRect(0, 0, SIZE, SIZE);
 
-  // --- BODY (small oval at bottom center) ---
-  fillCircle(ctx, 16, 26, 5, '#ffffff');
-  fillCircle(ctx, 16, 24, 4, '#f0f0f0');
+  // Colors
+  const W = '#ffffff';      // white fur
+  const S = '#f5f5f5';      // shadow white
+  const D = '#e0e0e0';      // darker shadow
+  const P = '#ffb6c1';      // pink inner ear / blush
+  const E = '#4a3020';      // dark brown eye
+  const B = '#ff8899';      // nose / tongue
+  const M = '#cc5566';      // mouth line
+  const K = '#5a3a20';      // whiskers
+  const G = '#dddddd';      // light gray outline
 
-  // --- LEGS (short stubs) ---
-  fillRect(ctx, 11, 27, 3, 4, '#ffffff');
-  fillRect(ctx, 18, 27, 3, 4, '#ffffff');
-  // Pink paw pads
-  setPixel(ctx, 12, 30, '#ffb6c1');
-  setPixel(ctx, 19, 30, '#ffb6c1');
+  // --- TAIL (curled up on right side) ---
+  const tailPixels = [
+    [48,38],[49,37],[50,36],[51,35],[52,34],[53,33],[54,32],[55,31],
+    [56,30],[56,29],[56,28],[56,27],[55,26],[54,25],[53,24],[52,24],
+    [51,24],[50,25],[49,26],[48,27],[47,28],[46,29]
+  ];
+  tailPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  // Tail outline/shadow
+  setPixel(ctx, 57, 30, S); setPixel(ctx, 57, 29, S); setPixel(ctx, 57, 28, S);
+  setPixel(ctx, 55, 23, S); setPixel(ctx, 54, 23, S);
 
-  // --- HEAD (big circle, upper portion) ---
-  fillCircle(ctx, 16, 14, 11, '#ffffff');
-  // Head shadow
-  fillCircle(ctx, 18, 16, 9, '#f5f5f5');
+  // --- BODY (chubby oval, center-bottom) ---
+  for (let y = 32; y <= 50; y++) {
+    for (let x = 14; x <= 46; x++) {
+      const dx = x - 30;
+      const dy = y - 40;
+      if (dx*dx/180 + dy*dy/90 <= 1.2) {
+        setPixel(ctx, x, y, W);
+      }
+    }
+  }
+  // Body shadow (bottom-right)
+  for (let y = 42; y <= 50; y++) {
+    for (let x = 32; x <= 46; x++) {
+      const dx = x - 30;
+      const dy = y - 40;
+      if (dx*dx/180 + dy*dy/90 <= 1.2 && dx > 5) {
+        setPixel(ctx, x, y, S);
+      }
+    }
+  }
+
+  // --- LEGS (4 short stubby legs) ---
+  // Front left
+  fillRect(ctx, 18, 48, 5, 8, W);
+  fillRect(ctx, 19, 55, 3, 2, P); // paw
+  // Front right
+  fillRect(ctx, 37, 48, 5, 8, W);
+  fillRect(ctx, 38, 55, 3, 2, P); // paw
+  // Back left (slightly behind)
+  fillRect(ctx, 22, 46, 4, 7, S);
+  // Back right
+  fillRect(ctx, 34, 46, 4, 7, S);
+
+  // --- HEAD (big round head, centered upper) ---
+  for (let y = 8; y <= 38; y++) {
+    for (let x = 12; x <= 48; x++) {
+      const dx = x - 30;
+      const dy = y - 22;
+      if (dx*dx + dy*dy <= 280) {
+        setPixel(ctx, x, y, W);
+      }
+    }
+  }
+  // Head shadow (bottom right)
+  for (let y = 25; y <= 36; y++) {
+    for (let x = 36; x <= 48; x++) {
+      const dx = x - 30;
+      const dy = y - 22;
+      if (dx*dx + dy*dy <= 280 && dx > 8) {
+        setPixel(ctx, x, y, S);
+      }
+    }
+  }
 
   // --- EARS (triangles on top) ---
-  // Left ear outer
-  setPixel(ctx, 7, 5, '#ffffff');
-  setPixel(ctx, 6, 6, '#ffffff');
-  setPixel(ctx, 7, 6, '#ffffff');
-  setPixel(ctx, 8, 6, '#ffffff');
-  setPixel(ctx, 5, 7, '#ffffff');
-  setPixel(ctx, 6, 7, '#ffffff');
-  setPixel(ctx, 7, 7, '#ffb6c1');
-  setPixel(ctx, 8, 7, '#ffffff');
-  setPixel(ctx, 9, 7, '#ffffff');
-  setPixel(ctx, 6, 8, '#ffffff');
-  setPixel(ctx, 7, 8, '#ffb6c1');
-  setPixel(ctx, 8, 8, '#ffffff');
-  // Right ear outer
-  setPixel(ctx, 25, 5, '#ffffff');
-  setPixel(ctx, 24, 6, '#ffffff');
-  setPixel(ctx, 25, 6, '#ffffff');
-  setPixel(ctx, 26, 6, '#ffffff');
-  setPixel(ctx, 23, 7, '#ffffff');
-  setPixel(ctx, 24, 7, '#ffffff');
-  setPixel(ctx, 25, 7, '#ffb6c1');
-  setPixel(ctx, 26, 7, '#ffffff');
-  setPixel(ctx, 27, 7, '#ffffff');
-  setPixel(ctx, 24, 8, '#ffffff');
-  setPixel(ctx, 25, 8, '#ffb6c1');
-  setPixel(ctx, 26, 8, '#ffffff');
+  // Left ear
+  const leftEar = [
+    [14,10],[15,9],[16,8],[17,7],[18,6],[19,5],[20,4],
+    [13,11],[14,11],[15,11],[16,11],[17,11],[18,11],[19,11],[20,11],[21,11],
+    [12,12],[13,12],[14,12],[15,12],[16,12],[17,12],[18,12],[19,12],[20,12],[21,12],[22,12],
+    [13,13],[14,13],[15,13],[16,13],[17,13],[18,13],[19,13],[20,13],[21,13]
+  ];
+  leftEar.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  // Left ear inner pink
+  const leftEarInner = [
+    [16,9],[17,8],[18,7],
+    [15,10],[16,10],[17,10],[18,10],[19,10],
+    [15,11],[16,11],[17,11],[18,11],[19,11],
+    [16,12],[17,12],[18,12]
+  ];
+  leftEarInner.forEach(([x,y]) => setPixel(ctx, x, y, P));
 
-  // --- EYES (big sparkly) ---
-  // Left eye (dark brown)
-  fillCircle(ctx, 11, 13, 3, '#3d2b1f');
-  // Left eye white shine (top-left highlight)
-  fillCircle(ctx, 10, 11, 1, '#ffffff');
-  setPixel(ctx, 12, 14, '#ffffff');
+  // Right ear
+  const rightEar = [
+    [46,10],[45,9],[44,8],[43,7],[42,6],[41,5],[40,4],
+    [47,11],[46,11],[45,11],[44,11],[43,11],[42,11],[41,11],[40,11],[39,11],
+    [48,12],[47,12],[46,12],[45,12],[44,12],[43,12],[42,12],[41,12],[40,12],[39,12],[38,12],
+    [47,13],[46,13],[45,13],[44,13],[43,13],[42,13],[41,13],[40,13],[39,13]
+  ];
+  rightEar.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  // Right ear inner pink
+  const rightEarInner = [
+    [44,9],[43,8],[42,7],
+    [45,10],[44,10],[43,10],[42,10],[41,10],
+    [45,11],[44,11],[43,11],[42,11],[41,11],
+    [44,12],[43,12],[42,12]
+  ];
+  rightEarInner.forEach(([x,y]) => setPixel(ctx, x, y, P));
+
+  // --- EYES (big sparkly, like reference) ---
+  // Left eye (dark brown circles with white highlights)
+  fillCircle(ctx, 20, 20, 6, E);
+  fillCircle(ctx, 17, 16, 3, W);  // big white shine
+  fillCircle(ctx, 22, 22, 1.5, W); // small shine
 
   // Right eye
-  fillCircle(ctx, 21, 13, 3, '#3d2b1f');
-  // Right eye white shine
-  fillCircle(ctx, 20, 11, 1, '#ffffff');
-  setPixel(ctx, 22, 14, '#ffffff');
+  fillCircle(ctx, 40, 20, 6, E);
+  fillCircle(ctx, 37, 16, 3, W);
+  fillCircle(ctx, 42, 22, 1.5, W);
 
   // --- PINK BLUSH on cheeks ---
-  fillCircle(ctx, 8, 17, 2, '#ffb6c1');
-  fillCircle(ctx, 24, 17, 2, '#ffb6c1');
+  fillCircle(ctx, 14, 26, 4, P);
+  fillCircle(ctx, 46, 26, 4, P);
 
-  // --- NOSE (tiny pink triangle) ---
-  setPixel(ctx, 16, 17, '#ff8899');
-  setPixel(ctx, 15, 18, '#ff8899');
-  setPixel(ctx, 17, 18, '#ff8899');
+  // --- NOSE (small pink) ---
+  setPixel(ctx, 30, 24, B);
+  setPixel(ctx, 29, 25, B);
+  setPixel(ctx, 30, 25, B);
+  setPixel(ctx, 31, 25, B);
 
-  // --- MOUTH (happy open) ---
-  setPixel(ctx, 15, 19, '#cc5555');
-  setPixel(ctx, 16, 20, '#ff7799');
-  setPixel(ctx, 17, 19, '#cc5555');
+  // --- MOUTH (happy open with tongue) ---
+  // Mouth shape
+  setPixel(ctx, 28, 27, M);
+  setPixel(ctx, 29, 28, M);
+  setPixel(ctx, 30, 29, B); // tongue center
+  setPixel(ctx, 31, 28, M);
+  setPixel(ctx, 32, 27, M);
+  // Tongue
+  fillRect(ctx, 29, 29, 3, 3, B);
+  setPixel(ctx, 30, 30, '#ff99aa');
 
-  // --- WHISKERS (thin dark lines) ---
-  // Left
-  setPixel(ctx, 5, 15, '#666');
-  setPixel(ctx, 4, 16, '#666');
-  setPixel(ctx, 3, 17, '#666');
-  setPixel(ctx, 5, 17, '#666');
-  setPixel(ctx, 4, 18, '#666');
-  // Right
-  setPixel(ctx, 27, 15, '#666');
-  setPixel(ctx, 28, 16, '#666');
-  setPixel(ctx, 29, 17, '#666');
-  setPixel(ctx, 27, 17, '#666');
-  setPixel(ctx, 28, 18, '#666');
-
-  // --- TAIL (curved up on right) ---
-  setPixel(ctx, 26, 23, '#ffffff');
-  setPixel(ctx, 27, 22, '#ffffff');
-  setPixel(ctx, 28, 21, '#ffffff');
-  setPixel(ctx, 28, 20, '#ffffff');
-  setPixel(ctx, 27, 19, '#ffffff');
-  setPixel(ctx, 26, 18, '#ffffff');
+  // --- WHISKERS ---
+  // Left whiskers (3 lines)
+  drawLine(ctx, 8, 22, 2, 20, K);
+  drawLine(ctx, 8, 25, 1, 25, K);
+  drawLine(ctx, 8, 28, 2, 30, K);
+  // Right whiskers
+  drawLine(ctx, 52, 22, 58, 20, K);
+  drawLine(ctx, 52, 25, 59, 25, K);
+  drawLine(ctx, 52, 28, 58, 30, K);
 }
 
 // === RUN CAT (side profile, facing left) ===
 function drawRunCat(ctx) {
   ctx.clearRect(0, 0, SIZE, SIZE);
 
+  const W = '#ffffff';
+  const S = '#f5f5f5';
+  const P = '#ffb6c1';
+  const E = '#4a3020';
+  const B = '#ff8899';
+  const M = '#cc5566';
+  const K = '#5a3a20';
+
+  // --- TAIL (curved up behind) ---
+  const tailPixels = [
+    [48,32],[50,30],[52,28],[54,26],[55,24],[56,22],[56,20],[55,18],[53,17],[51,18]
+  ];
+  tailPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
+
   // --- BODY (horizontal oval) ---
-  fillCircle(ctx, 18, 22, 6, '#ffffff');
-  fillCircle(ctx, 22, 21, 5, '#ffffff');
+  for (let y = 26; y <= 42; y++) {
+    for (let x = 18; x <= 50; x++) {
+      const dx = x - 34;
+      const dy = y - 34;
+      if (dx*dx/220 + dy*dy/80 <= 1.2) {
+        setPixel(ctx, x, y, W);
+      }
+    }
+  }
+  // Body shadow
+  for (let y = 34; y <= 42; y++) {
+    for (let x = 40; x <= 50; x++) {
+      const dx = x - 34;
+      const dy = y - 34;
+      if (dx*dx/220 + dy*dy/80 <= 1.2 && dx > 5) {
+        setPixel(ctx, x, y, S);
+      }
+    }
+  }
 
   // --- LEGS (running pose) ---
   // Back leg (stretched back)
-  setPixel(ctx, 24, 25, '#ffffff');
-  setPixel(ctx, 25, 26, '#ffffff');
-  setPixel(ctx, 26, 27, '#ffffff');
-  setPixel(ctx, 27, 28, '#ffffff');
-  setPixel(ctx, 27, 29, '#ffb6c1');
+  fillRect(ctx, 44, 40, 3, 7, W);
+  fillRect(ctx, 46, 46, 3, 4, W);
+  fillRect(ctx, 47, 49, 2, 2, P);
   // Front leg (stretched forward)
-  setPixel(ctx, 12, 25, '#ffffff');
-  setPixel(ctx, 11, 26, '#ffffff');
-  setPixel(ctx, 10, 27, '#ffffff');
-  setPixel(ctx, 9, 28, '#ffffff');
-  setPixel(ctx, 9, 29, '#ffb6c1');
-  // Other legs tucked
-  setPixel(ctx, 20, 27, '#ffffff');
-  setPixel(ctx, 16, 27, '#ffffff');
+  fillRect(ctx, 18, 40, 3, 7, W);
+  fillRect(ctx, 14, 46, 4, 4, W);
+  fillRect(ctx, 15, 49, 2, 2, P);
+  // Other back leg tucked
+  fillRect(ctx, 38, 42, 3, 5, S);
+  // Other front leg tucked
+  fillRect(ctx, 24, 42, 3, 5, S);
 
   // --- HEAD (round, facing left) ---
-  fillCircle(ctx, 12, 14, 9, '#ffffff');
+  for (let y = 10; y <= 36; y++) {
+    for (let x = 6; x <= 30; x++) {
+      const dx = x - 18;
+      const dy = y - 22;
+      if (dx*dx + dy*dy <= 200) {
+        setPixel(ctx, x, y, W);
+      }
+    }
+  }
+  // Head shadow
+  for (let y = 24; y <= 34; y++) {
+    for (let x = 22; x <= 30; x++) {
+      const dx = x - 18;
+      const dy = y - 22;
+      if (dx*dx + dy*dy <= 200 && dx > 5) {
+        setPixel(ctx, x, y, S);
+      }
+    }
+  }
 
   // --- EAR (pointed, top-left) ---
-  setPixel(ctx, 6, 6, '#ffffff');
-  setPixel(ctx, 5, 7, '#ffffff');
-  setPixel(ctx, 6, 7, '#ffb6c1');
-  setPixel(ctx, 7, 7, '#ffffff');
-  setPixel(ctx, 6, 8, '#ffb6c1');
-  setPixel(ctx, 7, 8, '#ffffff');
+  const earPixels = [
+    [10,6],[11,5],[12,4],[13,3],
+    [9,7],[10,7],[11,7],[12,7],[13,7],[14,7],
+    [9,8],[10,8],[11,8],[12,8],[13,8],[14,8],[15,8],
+    [10,9],[11,9],[12,9],[13,9],[14,9]
+  ];
+  earPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  // Ear inner
+  const earInner = [
+    [11,6],[12,5],
+    [11,7],[12,7],[13,7],
+    [11,8],[12,8],[13,8]
+  ];
+  earInner.forEach(([x,y]) => setPixel(ctx, x, y, P));
 
-  // --- EYE (big, facing left) ---
-  fillCircle(ctx, 8, 13, 3, '#3d2b1f');
-  fillCircle(ctx, 7, 11, 1, '#ffffff');
-  setPixel(ctx, 9, 14, '#ffffff');
+  // --- EYE (big sparkly, facing left) ---
+  fillCircle(ctx, 12, 18, 5, E);
+  fillCircle(ctx, 10, 15, 2.5, W);
+  fillCircle(ctx, 14, 20, 1, W);
 
   // --- BLUSH ---
-  fillCircle(ctx, 6, 17, 2, '#ffb6c1');
+  fillCircle(ctx, 8, 24, 3, P);
 
   // --- NOSE ---
-  setPixel(ctx, 4, 16, '#ff8899');
+  setPixel(ctx, 6, 22, B);
+  setPixel(ctx, 5, 23, B);
 
   // --- MOUTH ---
-  setPixel(ctx, 5, 18, '#cc5555');
-  setPixel(ctx, 6, 19, '#ff7799');
+  setPixel(ctx, 7, 25, M);
+  setPixel(ctx, 8, 26, B);
+  setPixel(ctx, 9, 25, M);
 
   // --- WHISKERS ---
-  setPixel(ctx, 2, 14, '#666');
-  setPixel(ctx, 1, 15, '#666');
-  setPixel(ctx, 2, 16, '#666');
-  setPixel(ctx, 1, 17, '#666');
-
-  // --- TAIL (curved up) ---
-  setPixel(ctx, 26, 20, '#ffffff');
-  setPixel(ctx, 28, 18, '#ffffff');
-  setPixel(ctx, 29, 16, '#ffffff');
-  setPixel(ctx, 28, 14, '#ffffff');
-  setPixel(ctx, 26, 13, '#ffffff');
+  drawLine(ctx, 2, 18, 6, 20, K);
+  drawLine(ctx, 1, 22, 6, 22, K);
+  drawLine(ctx, 2, 26, 6, 24, K);
 }
 
-// === SLEEP CAT (curled ball) ===
+// === SLEEP CAT (curled up ball) ===
 function drawSleepCat(ctx) {
   ctx.clearRect(0, 0, SIZE, SIZE);
 
-  // --- BODY (big round ball) ---
-  fillCircle(ctx, 18, 20, 10, '#ffffff');
-  fillCircle(ctx, 16, 22, 9, '#f5f5f5');
+  const W = '#ffffff';
+  const S = '#f5f5f5';
+  const P = '#ffb6c1';
+  const E = '#5a5a5a'; // closed eye color
+  const B = '#ff8899';
 
-  // --- HEAD (tucked on left side) ---
-  fillCircle(ctx, 10, 18, 8, '#ffffff');
+  // --- BODY (large round ball) ---
+  for (let y = 16; y <= 48; y++) {
+    for (let x = 12; x <= 52; x++) {
+      const dx = x - 32;
+      const dy = y - 32;
+      if (dx*dx + dy*dy <= 360) {
+        setPixel(ctx, x, y, W);
+      }
+    }
+  }
+  // Shadow bottom-right
+  for (let y = 36; y <= 48; y++) {
+    for (let x = 40; x <= 52; x++) {
+      const dx = x - 32;
+      const dy = y - 32;
+      if (dx*dx + dy*dy <= 360 && dx > 5) {
+        setPixel(ctx, x, y, S);
+      }
+    }
+  }
+
+  // --- HEAD (tucked on left) ---
+  for (let y = 16; y <= 36; y++) {
+    for (let x = 8; x <= 26; x++) {
+      const dx = x - 17;
+      const dy = y - 26;
+      if (dx*dx + dy*dy <= 100) {
+        setPixel(ctx, x, y, W);
+      }
+    }
+  }
 
   // --- EAR (sticking up) ---
-  setPixel(ctx, 6, 10, '#ffffff');
-  setPixel(ctx, 5, 11, '#ffffff');
-  setPixel(ctx, 6, 11, '#ffb6c1');
-  setPixel(ctx, 7, 11, '#ffffff');
-  setPixel(ctx, 6, 12, '#ffb6c1');
+  const earPixels = [
+    [12,10],[13,9],[14,8],[15,7],
+    [11,11],[12,11],[13,11],[14,11],[15,11],[16,11],
+    [12,12],[13,12],[14,12],[15,12],[16,12],
+    [13,13],[14,13],[15,13]
+  ];
+  earPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  const earInner = [
+    [13,10],[14,9],
+    [13,11],[14,11],[15,11],
+    [14,12],[15,12]
+  ];
+  earInner.forEach(([x,y]) => setPixel(ctx, x, y, P));
 
   // --- CLOSED EYES (sleeping ^ ^) ---
-  setPixel(ctx, 7, 17, '#666');
-  setPixel(ctx, 8, 16, '#666');
-  setPixel(ctx, 9, 17, '#666');
-  setPixel(ctx, 11, 17, '#666');
-  setPixel(ctx, 12, 16, '#666');
-  setPixel(ctx, 13, 17, '#666');
+  drawLine(ctx, 10, 24, 14, 26, E);
+  drawLine(ctx, 16, 26, 20, 24, E);
 
   // --- BLUSH ---
-  fillCircle(ctx, 6, 20, 2, '#ffb6c1');
+  fillCircle(ctx, 10, 28, 3, P);
 
   // --- NOSE ---
-  setPixel(ctx, 4, 19, '#ff8899');
+  setPixel(ctx, 8, 26, B);
 
   // --- TAIL (wrapped around from right) ---
-  setPixel(ctx, 26, 24, '#ffffff');
-  setPixel(ctx, 28, 22, '#ffffff');
-  setPixel(ctx, 29, 19, '#ffffff');
-  setPixel(ctx, 28, 16, '#ffffff');
-  setPixel(ctx, 25, 14, '#ffffff');
-  setPixel(ctx, 22, 13, '#ffffff');
+  const tailPixels = [
+    [50,42],[52,40],[54,38],[55,36],[56,34],[56,32],[55,30],[53,28],[51,26],[48,24],[44,22]
+  ];
+  tailPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
+
+  // --- PAWS (tucked in) ---
+  fillRect(ctx, 22, 44, 5, 3, S);
+  fillRect(ctx, 38, 44, 5, 3, S);
 
   // --- Zzz ---
-  setPixel(ctx, 24, 8, '#88bbee');
-  setPixel(ctx, 25, 7, '#88bbee');
-  setPixel(ctx, 26, 8, '#88bbee');
-  setPixel(ctx, 25, 9, '#88bbee');
-  setPixel(ctx, 27, 6, '#6699cc');
-  setPixel(ctx, 28, 5, '#6699cc');
-  setPixel(ctx, 29, 6, '#6699cc');
-  setPixel(ctx, 28, 7, '#6699cc');
+  // Blue pixels for Z
+  const z1 = [[36,10],[37,9],[38,8],[38,10],[36,12],[37,12],[38,12]];
+  const z2 = [[42,6],[43,5],[44,4],[44,6],[42,8],[43,8],[44,8]];
+  const z3 = [[46,3],[47,2],[48,1],[48,3],[46,5],[47,5],[48,5]];
+  z1.forEach(([x,y]) => setPixel(ctx, x, y, '#88bbee'));
+  z2.forEach(([x,y]) => setPixel(ctx, x, y, '#6699cc'));
+  z3.forEach(([x,y]) => setPixel(ctx, x, y, '#4477aa'));
 }
 
 function generateSprite(drawFn) {
@@ -283,7 +445,7 @@ const spritesDiv = document.getElementById('sprites');
   const div = document.createElement('div');
   div.className = 'sprite-container';
   const label = document.createElement('div');
-  label.textContent = s.name + ' (32x32)';
+  label.textContent = s.name + ' (64x64)';
   div.appendChild(label);
 
   s.c.style.width = '256px';
@@ -302,7 +464,7 @@ const spritesDiv = document.getElementById('sprites');
   spritesDiv.appendChild(div);
 });
 
-console.log('32x32 sprites generated!');
+console.log('64x64 sprites generated!');
 </script>
 </body>
 </html>

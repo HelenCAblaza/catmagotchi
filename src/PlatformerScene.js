@@ -17,12 +17,18 @@ class PlatformerScene extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.createLevel();
 
-        // Cat player
-        this.player = this.physics.add.sprite(100, 520, 'cat_run');
-        this.player.setScale(1.5);
+        // Cat player - 64x64 sprite at 1x scale so it fits under platforms
+        this.player = this.physics.add.sprite(100, 500, 'cat_idle');
+        this.player.setScale(1);
+        // Set physics body to match the visible cat (32x48, centered)
+        this.player.body.setSize(32, 48);
+        this.player.body.setOffset(16, 8);
         this.player.setBounce(0.1);
         this.player.setCollideWorldBounds(true);
         this.physics.add.collider(this.player, this.platforms);
+
+        // Switch to run texture when moving
+        this.playerRunTexture = false;
 
         // Camera follow
         this.cameras.main.startFollow(this.player);
@@ -349,6 +355,16 @@ class PlatformerScene extends Phaser.Scene {
             this.player.setFlipX(false);
         }
         this.player.setVelocityX(velocityX);
+
+        // Switch texture based on movement
+        const isMoving = Math.abs(velocityX) > 10;
+        if (isMoving && !this.playerRunTexture) {
+            this.player.setTexture('cat_run');
+            this.playerRunTexture = true;
+        } else if (!isMoving && this.playerRunTexture) {
+            this.player.setTexture('cat_idle');
+            this.playerRunTexture = false;
+        }
 
         if (jump && this.player.body.touching.down) {
             this.player.setVelocityY(-400);

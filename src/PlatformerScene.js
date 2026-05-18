@@ -32,34 +32,194 @@ class PlatformerScene extends Phaser.Scene {
         this.physics.add.overlap(this.player, this.fishes, (p, f) => this.collectFish(p, f));
         this.physics.add.overlap(this.player, this.toys, (p, t) => this.collectToy(p, t));
 
-        // Controls
+        // Keyboard controls (desktop)
         this.cursors = this.input.keyboard.createCursorKeys();
+        
+        // Virtual joystick (mobile/touch)
+        this.createVirtualJoystick();
 
         // Home button
-        this.createButton(100, 50, '🏠 Home', () => {
+        this.createButton(100, 50, '\ud83c\udfe0 Home', () => {
             this.scene.start('HomeScene');
         });
 
-        // Instructions
-        this.add.text(400, 50, '← → Move  |  ↑ Jump  |  Collect 🐟 and 🧶!', {
+        // Inventory display
+        this.fishText = this.add.text(10, 10, '\ud83d\udc1f: 0', {
+            fontSize: '18px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setScrollFactor(0);
+        
+        this.toyText = this.add.text(10, 35, '\ud83e\uddf6: 0', {
             fontSize: '18px',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
         }).setScrollFactor(0);
 
+        // Hint text (shows on mobile, fades after 4s)
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            this.hintText = this.add.text(400, 100, '\ud83c\udfae Drag the round controller to move & jump!', {
+                fontSize: '16px',
+                color: '#ffffff',
+                stroke: '#000000',
+                strokeThickness: 3
+            }).setOrigin(0.5).setScrollFactor(0);
+            
+            this.time.delayedCall(4000, () => {
+                this.tweens.add({ targets: this.hintText, alpha: 0, duration: 1000 });
+            });
+        }
+
+        // Copyright watermark
+        this.add.text(400, 580, '\u00a9 2025 Helen C. All Rights Reserved.', {
+            fontSize: '12px',
+            color: '#555577'
+        }).setOrigin(0.5).setScrollFactor(0);
+
         // Ground collision
         this.physics.add.collider(this.fishes, this.platforms);
         this.physics.add.collider(this.toys, this.platforms);
     }
 
+    createVirtualJoystick() {
+        const maxDrag = 55;        // how far the nub can move from center
+        const baseRadius = 70;     // visible base circle radius
+        const nubRadius = 26;      // visible nub radius
+        
+        // Joystick state
+        this.joyActive = false;
+        this.joyBaseX = 0;
+        this.joyBaseY = 0;
+        this.joyX = 0;  // -1 to 1
+        this.joyY = 0;  // -1 to 1
+        this.joyJumpTriggered = false;
+        
+        // --- Visuals (hidden until active) ---
+        // Outer ring (base) with subtle cross lines
+        this.joyBase = this.add.circle(0, 0, baseRadius, 0x444466, 0.22)
+            .setStrokeStyle(3, 0xffffff, 0.35)
+            .setScrollFactor(0)
+            .setVisible(false)
+            .setDepth(100);
+        
+        // Direction hint arrows on the base
+        this.joyArrows = this.add.text(0, 0, '\u25c0  \u25b6\n\u25b2', {
+            fontSize: '18px',
+            color: '#ffffff',
+            align: 'center',
+            fontStyle: 'bold'
+        }).setOrigin(0.5).setScrollFactor(0).setVisible(false).setDepth(100).setAlpha(0.35);
+            
+        // Inner nub (the draggable thumb stick)
+        this.joyNub = this.add.circle(0, 0, nubRadius, 0x7777dd, 0.55)
+            .setStrokeStyle(2, 0xffffff, 0.5)
+            .setScrollFactor(0)
+            .setVisible(false)
+            .setDepth(101);
+            
+        // Nub highlight for a subtle 3D effect
+        this.joyNubGlow = this.add.circle(0, 0, nubRadius * 0.55, 0xaaaaff, 0.35)
+            .setScrollFactor(0)
+            .setVisible(false)
+            .setDepth(101);
+
+        // --- Input handling ---
+        // Activate joystick when touching bottom half of screen (avoid UI top area)
+        this.input.on('pointerdown', (pointer) => {
+            if (pointer.y > 380 && !this.joyActive) {
+                this.joyActive = true;
+                this.joyBaseX = pointer.x;
+                this.joyBaseY = pointer.y;
+                this.joyX = 0;
+                this.joyY = 0;
+                
+                // Position visuals
+                this.joyBase.setPosition(this.joyBaseX, this.joyBaseY);
+                this.joyArrows.setPosition(this.joyBaseX, this.joyBaseY);
+                this.joyNub.setPosition(this.joyBaseX, this.joyBaseY);
+                this.joyNubGlow.setPosition(this.joyBaseX - 3, this.joyBaseY - 3);
+                
+                // Show visuals
+                this.joyBase.setVisible(true);
+                this.joyArrows.setVisible(true);
+                this.joyNub.setVisible(true);
+                this.joyNubGlow.setVisible(true);
+                
+                // Pop-in animation
+                this.joyBase.setScale(0.4);
+                this.joyNub.setScale(0.4);
+                this.joyArrows.setScale(0.4);
+                this.tweens.add({
+                    targets: [this.joyBase, this.joyNub, this.joyArrows],
+                    scaleX: 1,
+                    scaleY: 1,
+                    duration: 180,
+                    ease: 'Back.easeOut'
+                });
+            }
+        });
+        
+        // Update nub position during drag
+        this.input.on('pointermove', (pointer) => {
+            if (this.joyActive && pointer.isDown) {
+                const dx = pointer.x - this.joyBaseX;
+                const dy = pointer.y - this.joyBaseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                
+                // Clamp nub to maxDrag radius
+                let nubX, nubY;
+                if (dist > maxDrag) {
+                    const angle = Math.atan2(dy, dx);
+                    nubX = this.joyBaseX + Math.cos(angle) * maxDrag;
+                    nubY = this.joyBaseY + Math.sin(angle) * maxDrag;
+                } else {
+                    nubX = pointer.x;
+                    nubY = pointer.y;
+                }
+                
+                this.joyNub.setPosition(nubX, nubY);
+                this.joyNubGlow.setPosition(nubX - 3, nubY - 3);
+                
+                // Normalize joystick values (-1 to 1)
+                this.joyX = Phaser.Math.Clamp(dx / maxDrag, -1, 1);
+                this.joyY = Phaser.Math.Clamp(dy / maxDrag, -1, 1);
+            }
+        });
+        
+        // Release
+        this.input.on('pointerup', () => {
+            if (this.joyActive) {
+                this.joyActive = false;
+                this.joyX = 0;
+                this.joyY = 0;
+                this.joyJumpTriggered = false;
+                
+                // Pop-out animation then hide
+                this.tweens.add({
+                    targets: [this.joyBase, this.joyNub, this.joyArrows, this.joyNubGlow],
+                    scaleX: 0.3,
+                    scaleY: 0.3,
+                    alpha: 0,
+                    duration: 150,
+                    onComplete: () => {
+                        this.joyBase.setVisible(false).setAlpha(1).setScale(1);
+                        this.joyNub.setVisible(false).setAlpha(1).setScale(1);
+                        this.joyArrows.setVisible(false).setAlpha(1).setScale(1);
+                        this.joyNubGlow.setVisible(false).setAlpha(1).setScale(1);
+                    }
+                });
+            }
+        });
+    }
+
     createLevel() {
-        // Ground
         for (let x = 0; x < 1700; x += 32) {
             this.platforms.create(x, 568, 'ground').setScale(1).refreshBody();
         }
         
-        // Platforms
         this.platforms.create(200, 450, 'platform');
         this.platforms.create(350, 380, 'platform');
         this.platforms.create(500, 300, 'platform');
@@ -95,20 +255,59 @@ class PlatformerScene extends Phaser.Scene {
     update() {
         const stats = this.registry.get('stats');
         
-        // Movement
-        if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-200);
-            this.player.setFlipX(true);
-        } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(200);
-            this.player.setFlipX(false);
-        } else {
-            this.player.setVelocityX(0);
+        // Update inventory display
+        const inv = this.registry.get('inventory');
+        this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
+        this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
+        
+        // Movement - keyboard OR joystick
+        let left = this.cursors.left.isDown;
+        let right = this.cursors.right.isDown;
+        let jump = this.cursors.up.isDown;
+        
+        // Add joystick input
+        if (this.joyActive) {
+            // Horizontal: use analog joystick value with a deadzone
+            if (Math.abs(this.joyX) > 0.15) {
+                if (this.joyX < 0) left = true;
+                else right = true;
+            }
+            
+            // Vertical: pull up to jump (threshold -0.4)
+            if (this.joyY < -0.4 && !this.joyJumpTriggered) {
+                jump = true;
+                this.joyJumpTriggered = true;
+            }
+            // Reset jump trigger when pulling back down
+            if (this.joyY > -0.2) {
+                this.joyJumpTriggered = false;
+            }
         }
+        
+        // Apply movement with analog speed when using joystick
+        let velocityX = 0;
+        if (left) {
+            velocityX = this.joyActive ? -200 * Math.abs(this.joyX) : -200;
+            this.player.setFlipX(true);
+        } else if (right) {
+            velocityX = this.joyActive ? 200 * Math.abs(this.joyX) : 200;
+            this.player.setFlipX(false);
+        }
+        this.player.setVelocityX(velocityX);
 
         // Jump
-        if (this.cursors.up.isDown && this.player.body.touching.down) {
+        if (jump && this.player.body.touching.down) {
             this.player.setVelocityY(-400);
+            // Visual feedback on nub
+            if (this.joyActive) {
+                this.tweens.add({
+                    targets: this.joyNub,
+                    scaleX: 1.35,
+                    scaleY: 1.35,
+                    duration: 100,
+                    yoyo: true
+                });
+            }
         }
 
         // Energy drain from running
@@ -123,7 +322,7 @@ class PlatformerScene extends Phaser.Scene {
         const inv = this.registry.get('inventory');
         inv.fish++;
         this.registry.set('inventory', inv);
-        this.showFloatingText(player.x, player.y - 30, '🐟 +1');
+        this.showFloatingText(player.x, player.y - 30, '\ud83d\udc1f +1');
     }
 
     collectToy(player, toy) {
@@ -134,7 +333,7 @@ class PlatformerScene extends Phaser.Scene {
         const stats = this.registry.get('stats');
         stats.happiness = Math.min(100, stats.happiness + 5);
         this.registry.set('stats', stats);
-        this.showFloatingText(player.x, player.y - 30, '🧶 +1');
+        this.showFloatingText(player.x, player.y - 30, '\ud83e\uddf6 +1');
     }
 
     createButton(x, y, text, callback) {

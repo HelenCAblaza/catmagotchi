@@ -14,14 +14,33 @@ class HomeScene extends Phaser.Scene {
             fontFamily: 'monospace'
         }).setOrigin(0.5);
 
+        // Copyright watermark
+        this.add.text(400, 580, '© 2025 Helen C. All Rights Reserved.', {
+            fontSize: '12px',
+            color: '#555577'
+        }).setOrigin(0.5);
+
         // Cat
         this.cat = this.add.sprite(400, 320, 'cat_idle');
         this.cat.setScale(3);
+        
+        // Make cat clickable to clean!
+        this.cat.setInteractive({ useHandCursor: true });
+        this.cat.on('pointerdown', () => this.cleanCat());
+        
+        // Cooldown for cleaning
+        this.canClean = true;
         
         // Cat name
         this.add.text(400, 240, 'Mittens', {
             fontSize: '24px',
             color: '#ffcc88'
+        }).setOrigin(0.5);
+
+        // Hint text under cat
+        this.add.text(400, 380, '👆 Tap cat to clean!', {
+            fontSize: '14px',
+            color: '#aaaaaa'
         }).setOrigin(0.5);
 
         // Home items
@@ -39,6 +58,21 @@ class HomeScene extends Phaser.Scene {
         this.createStatBar(150, 140, 'Happy', 'happiness', 0xffcc00);
         this.createStatBar(150, 180, 'Energy', 'energy', 0x55ff55);
         this.createStatBar(150, 220, 'Clean', 'hygiene', 0x55ccff);
+
+        // Inventory display
+        this.fishText = this.add.text(650, 100, '🐟: 0', {
+            fontSize: '18px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        });
+        
+        this.toyText = this.add.text(650, 125, '🧶: 0', {
+            fontSize: '18px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        });
 
         // Action buttons
         this.createButton(200, 520, '🛏️ Sleep', () => this.sleep());
@@ -85,13 +119,17 @@ class HomeScene extends Phaser.Scene {
         this.updateBar('happiness', stats.happiness);
         this.updateBar('energy', stats.energy);
         this.updateBar('hygiene', stats.hygiene);
+
+        // Update inventory display
+        const inv = this.registry.get('inventory');
+        this.fishText.setText(`🐟: ${inv.fish}`);
+        this.toyText.setText(`🧶: ${inv.toys}`);
     }
 
     updateBar(key, value) {
         const bar = this[`bar_${key}`];
         if (bar) {
             bar.width = Math.max(0, value * 2);
-            // Change color if low
             if (value < 30) bar.setFillStyle(0xff0000);
         }
     }
@@ -117,6 +155,7 @@ class HomeScene extends Phaser.Scene {
         if (inv.fish > 0) {
             stats.hunger = Math.min(100, stats.hunger + 20);
             stats.energy = Math.min(100, stats.energy + 5);
+            stats.hygiene = Math.max(0, stats.hygiene - 10); // Eating makes cat messy!
             inv.fish--;
             this.showFloatingText(this.cat.x, this.cat.y - 40, '😋 Yum!');
         } else {
@@ -134,10 +173,10 @@ class HomeScene extends Phaser.Scene {
         if (stats.energy > 10) {
             stats.happiness = Math.min(100, stats.happiness + 15);
             stats.energy = Math.max(0, stats.energy - 10);
+            stats.hygiene = Math.max(0, stats.hygiene - 15); // Playing gets cat dirty!
             inv.toys++;
             this.showFloatingText(this.cat.x, this.cat.y - 40, '😸 Fun!');
             
-            // Cat jumps
             this.tweens.add({
                 targets: this.cat,
                 y: 250,
@@ -161,9 +200,61 @@ class HomeScene extends Phaser.Scene {
         this.cat.setTexture('cat_sleep');
         this.showFloatingText(this.cat.x, this.cat.y - 40, '💤 Zzz...');
         
-        setTimeout(() => {
-            this.cat.setTexture('cat_idle');
-        }, 2000);
+        // Use Phaser timer so it auto-cancels if scene stops
+        this.time.delayedCall(2000, () => {
+            if (this.cat && this.cat.active) {
+                this.cat.setTexture('cat_idle');
+            }
+        });
+    }
+
+    cleanCat() {
+        if (!this.canClean) {
+            this.showFloatingText(this.cat.x, this.cat.y - 50, '⏳ Wait...');
+            return;
+        }
+
+        const stats = this.registry.get('stats');
+        if (stats.hygiene >= 100) {
+            this.showFloatingText(this.cat.x, this.cat.y - 50, '✨ Already clean!');
+            return;
+        }
+
+        // Increase hygiene
+        stats.hygiene = Math.min(100, stats.hygiene + 25);
+        stats.happiness = Math.min(100, stats.happiness + 5);
+        this.registry.set('stats', stats);
+
+        // Visual feedback
+        this.showFloatingText(this.cat.x, this.cat.y - 50, '👅 Clean!');
+
+        // Licking animation - little scale wobble
+        this.tweens.add({
+            targets: this.cat,
+            scaleX: 3.2,
+            scaleY: 2.8,
+            duration: 150,
+            yoyo: true,
+            repeat: 2
+        });
+
+        // Sparkle effect
+        const sparkle = this.add.text(this.cat.x + 30, this.cat.y - 30, '✨', {
+            fontSize: '24px'
+        }).setOrigin(0.5);
+        this.tweens.add({
+            targets: sparkle,
+            y: sparkle.y - 30,
+            alpha: 0,
+            duration: 800,
+            onComplete: () => sparkle.destroy()
+        });
+
+        // Cooldown
+        this.canClean = false;
+        this.time.delayedCall(3000, () => {
+            this.canClean = true;
+        });
     }
 
     decayStats() {

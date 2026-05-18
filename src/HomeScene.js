@@ -150,7 +150,7 @@ class HomeScene extends Phaser.Scene {
     updateBar(key, value) {
         const bar = this[`bar_${key}`];
         if (bar) {
-            const maxW = bar.parentContainer ? 120 : 110 * 0.8;
+            const maxW = 110;  // full background width
             bar.width = Math.max(0, (value / 100) * maxW);
             if (value < 30) bar.setFillStyle(0xff0000);
         }

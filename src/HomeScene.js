@@ -127,8 +127,8 @@ class HomeScene extends Phaser.Scene {
         this.createPillButton(W * 0.25, btnY2, '\ud83e\uddf6 Play', () => this.play(), btnW, btnH, btnRadius, 0xdd99dd);
         this.createPillButton(W * 0.75, btnY2, '\ud83d\udebf Bath', () => this.cleanCat(), btnW, btnH, btnRadius, 0x77bbdd);
 
-        // === ADVENTURE BUTTON - pastel world style at bottom right ===
-        this.createAdventureButton(W - 100, btnY3 + 10);
+        // === ADVENTURE BUTTON - round pastel world button at bottom right ===
+        this.createAdventureButton(W - 55, H - 55);
 
         // Stats update loop
         this.time.addEvent({
@@ -281,43 +281,37 @@ class HomeScene extends Phaser.Scene {
     }
 
     createAdventureButton(x, y) {
-        const w = 140;
-        const h = 50;
-        const radius = 25;
+        const radius = 45;
 
-        const btn = this.add.graphics();
-        btn.fillStyle(0xaaddcc, 1);
-        btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+        // Main circle button
+        const btn = this.add.circle(x, y, radius, 0xaaddcc, 1);
+        btn.setStrokeStyle(3, 0xffffff, 0.5);
         btn.setInteractive(
-            new Phaser.Geom.Rectangle(x - w / 2, y - h / 2, w, h),
-            Phaser.Geom.Rectangle.Contains
+            new Phaser.Geom.Circle(x, y, radius),
+            Phaser.Geom.Circle.Contains
         );
         btn.setScrollFactor(0);
 
-        // Pastel world icon on top
-        const icon = this.add.text(x, y - 10, '\ud83c\udf0d', {
-            fontSize: '18px',
+        // World icon
+        const icon = this.add.text(x, y - 6, '\ud83c\udf0d', {
+            fontSize: '22px',
             fontFamily: '"Poppins", sans-serif'
         }).setOrigin(0.5).setScrollFactor(0);
 
-        // Adventure text below
-        const lbl = this.add.text(x, y + 8, 'Adventure', {
-            fontSize: '13px',
+        // Adventure text below icon
+        const lbl = this.add.text(x, y + 10, 'Adventure', {
+            fontSize: '10px',
             color: '#ffffff',
             fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5).setScrollFactor(0);
 
-        // Hover effect
+        // Hover effect - brighten
         btn.on('pointerover', () => {
-            btn.clear();
-            btn.fillStyle(0xbbeecc, 1);
-            btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+            btn.setFillStyle(0xbbeecc, 1);
         });
         btn.on('pointerout', () => {
-            btn.clear();
-            btn.fillStyle(0xaaddcc, 1);
-            btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+            btn.setFillStyle(0xaaddcc, 1);
         });
         btn.on('pointerdown', () => {
             this.scene.start('PlatformerScene');

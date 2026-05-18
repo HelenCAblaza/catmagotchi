@@ -85,6 +85,10 @@ class StartScene extends Phaser.Scene {
         const W = this.scale.width;
         const H = this.scale.height;
 
+        // Hide the HTML loading text now that the game is ready
+        const loading = document.getElementById('loading');
+        if (loading) loading.style.display = 'none';
+
         // Soft pastel background
         this.cameras.main.setBackgroundColor('#f5e6ff');
 

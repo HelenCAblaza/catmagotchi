@@ -32,14 +32,15 @@ class HomeScene extends Phaser.Scene {
             callback: () => this.spawnHeart()
         });
 
-        // Title at top center with a cute glow
+        // Title - matching StartScene style
         this.add.text(W / 2, 52, '\u2728 Catmagotchi \u2728', {
-            fontSize: '28px',
+            fontSize: '42px',
             color: '#ffffff',
             fontFamily: '"Poppins", sans-serif',
+            fontStyle: 'bold',
             stroke: '#ff88cc',
-            strokeThickness: 2
-        }).setOrigin(0.5);
+            strokeThickness: 3
+        }).setOrigin(0.5).setShadow(0, 4, '#ff88cc88', 0, true, true);
 
         // Copyright watermark
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {

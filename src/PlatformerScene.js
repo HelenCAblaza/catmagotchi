@@ -9,7 +9,6 @@ class PlatformerScene extends Phaser.Scene {
         const W = this.scale.width;   // 480
         const H = this.scale.height;  // 800
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        this.fontScale = Math.min(W / 480, H / 800);
 
         // World bounds - horizontal scrolling platformer
         this.physics.world.setBounds(0, 0, 1600, 600);
@@ -43,21 +42,22 @@ class PlatformerScene extends Phaser.Scene {
         // Virtual joystick (mobile/touch)
         this.createVirtualJoystick();
 
-        // Home button - top-left
-        this.createButton(W * 0.12, H * 0.05, '\ud83c\udfe0 Home', () => {
+        // === UI (fixed positions, scrollFactor 0) ===
+        // Home button - top right
+        this.createButton(W - 60, 30, '\ud83c\udfe0 Home', () => {
             this.scene.start('HomeScene');
         });
 
-        // Inventory display
-        this.fishText = this.add.text(W * 0.02, H * 0.015, '\ud83d\udc1f: 0', {
-            fontSize: `${Math.round(16 * this.fontScale)}px`,
+        // Inventory display - top left
+        this.fishText = this.add.text(10, 10, '\ud83d\udc1f: 0', {
+            fontSize: '15px',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
         }).setScrollFactor(0);
 
-        this.toyText = this.add.text(W * 0.02, H * 0.015 + 22 * this.fontScale, '\ud83e\uddf6: 0', {
-            fontSize: `${Math.round(16 * this.fontScale)}px`,
+        this.toyText = this.add.text(10, 32, '\ud83e\uddf6: 0', {
+            fontSize: '15px',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
@@ -65,8 +65,8 @@ class PlatformerScene extends Phaser.Scene {
 
         // Hint text (shows on mobile, fades after 4s)
         if (isMobile) {
-            this.hintText = this.add.text(W / 2, H * 0.10, '\ud83c\udfae Drag round controller to move & jump!', {
-                fontSize: `${Math.round(14 * this.fontScale)}px`,
+            this.hintText = this.add.text(W / 2, 70, '\ud83c\udfae Drag round controller to move & jump!', {
+                fontSize: '13px',
                 color: '#ffffff',
                 stroke: '#000000',
                 strokeThickness: 3
@@ -79,7 +79,7 @@ class PlatformerScene extends Phaser.Scene {
 
         // Copyright watermark
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
-            fontSize: `${Math.round(10 * this.fontScale)}px`,
+            fontSize: '10px',
             color: '#555577'
         }).setOrigin(0.5).setScrollFactor(0);
 
@@ -91,9 +91,9 @@ class PlatformerScene extends Phaser.Scene {
     createVirtualJoystick() {
         const W = this.scale.width;
         const H = this.scale.height;
-        const maxDrag = 55 * this.fontScale;
-        const baseRadius = 70 * this.fontScale;
-        const nubRadius = 26 * this.fontScale;
+        const maxDrag = 55;
+        const baseRadius = 70;
+        const nubRadius = 26;
 
         this.joyActive = false;
         this.joyBaseX = 0;
@@ -104,14 +104,14 @@ class PlatformerScene extends Phaser.Scene {
 
         // Outer ring (base)
         this.joyBase = this.add.circle(0, 0, baseRadius, 0x444466, 0.22)
-            .setStrokeStyle(Math.max(2, Math.round(3 * this.fontScale)), 0xffffff, 0.35)
+            .setStrokeStyle(3, 0xffffff, 0.35)
             .setScrollFactor(0)
             .setVisible(false)
             .setDepth(100);
 
         // Direction hint arrows
         this.joyArrows = this.add.text(0, 0, '\u25c0  \u25b6\n\u25b2', {
-            fontSize: `${Math.round(18 * this.fontScale)}px`,
+            fontSize: '18px',
             color: '#ffffff',
             align: 'center',
             fontStyle: 'bold'
@@ -119,7 +119,7 @@ class PlatformerScene extends Phaser.Scene {
 
         // Inner nub (draggable thumb stick)
         this.joyNub = this.add.circle(0, 0, nubRadius, 0x7777dd, 0.55)
-            .setStrokeStyle(Math.max(2, Math.round(2 * this.fontScale)), 0xffffff, 0.5)
+            .setStrokeStyle(2, 0xffffff, 0.5)
             .setScrollFactor(0)
             .setVisible(false)
             .setDepth(101);
@@ -250,17 +250,13 @@ class PlatformerScene extends Phaser.Scene {
 
     update() {
         const stats = this.registry.get('stats');
-        const W = this.scale.width;
-        const H = this.scale.height;
 
+        // Update inventory display
         const inv = this.registry.get('inventory');
         this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
         this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
 
-        // Reposition UI on resize
-        this.fishText.setPosition(W * 0.02, H * 0.015);
-        this.toyText.setPosition(W * 0.02, H * 0.015 + 22 * this.fontScale);
-
+        // Movement - keyboard OR joystick
         let left = this.cursors.left.isDown;
         let right = this.cursors.right.isDown;
         let jump = this.cursors.up.isDown;
@@ -329,14 +325,12 @@ class PlatformerScene extends Phaser.Scene {
     }
 
     createButton(x, y, text, callback) {
-        const w = Math.round(100 * this.fontScale);
-        const h = Math.round(40 * this.fontScale);
-        const btn = this.add.rectangle(x, y, w, h, 0x5555aa)
+        const btn = this.add.rectangle(x, y, 100, 36, 0x5555aa)
             .setInteractive({ useHandCursor: true })
             .setScrollFactor(0);
 
         const lbl = this.add.text(x, y, text, {
-            fontSize: `${Math.round(16 * this.fontScale)}px`,
+            fontSize: '14px',
             color: '#ffffff'
         }).setOrigin(0.5).setScrollFactor(0);
 
@@ -347,7 +341,7 @@ class PlatformerScene extends Phaser.Scene {
 
     showFloatingText(x, y, text) {
         const txt = this.add.text(x, y, text, {
-            fontSize: `${Math.round(20 * this.fontScale)}px`,
+            fontSize: '18px',
             color: '#ffff00',
             stroke: '#000000',
             strokeThickness: 3
@@ -355,7 +349,7 @@ class PlatformerScene extends Phaser.Scene {
 
         this.tweens.add({
             targets: txt,
-            y: y - 40 * this.fontScale,
+            y: y - 40,
             alpha: 0,
             duration: 1000,
             onComplete: () => txt.destroy()

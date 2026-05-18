@@ -7,55 +7,62 @@ class HomeScene extends Phaser.Scene {
         const W = this.scale.width;   // 480
         const H = this.scale.height;  // 800
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const fontScale = Math.min(W / 480, H / 800);
 
-        // Background - scaled to fill
+        // Background
         const bg = this.add.image(W / 2, H / 2, 'bg_home');
         bg.setDisplaySize(W, H);
 
-        // Title at top
-        this.add.text(W / 2, H * 0.04, '\ud83d\udc31 Catmagotchi \ud83d\udc31', {
-            fontSize: `${Math.round(32 * fontScale)}px`,
+        // Title at top center
+        this.add.text(W / 2, 30, '\ud83d\udc31 Catmagotchi \ud83d\udc31', {
+            fontSize: '28px',
             color: '#ffffff',
             fontFamily: 'monospace'
         }).setOrigin(0.5);
 
         // Copyright watermark
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
-            fontSize: `${Math.round(10 * fontScale)}px`,
+            fontSize: '10px',
             color: '#555577'
         }).setOrigin(0.5);
 
-        // Stats bars - top section, two columns
-        const statY = H * 0.10;
-        const statGap = H * 0.045;
-        const barW = W * 0.35;
-        const barH = Math.max(10, Math.round(14 * fontScale));
+        // === STATS AREA (top section, y=60 to y=140) ===
+        // Layout: 2 columns of stats, inventory tucked on far right
+        const statY1 = 62;
+        const statY2 = 102;
+        const barW = 110;   // bar width
+        const barH = 14;
+        const labelX = 55;  // label right-edge (text origin 1,0.5 extends left)
+        const barX = 60;    // bar starts here
 
-        this.createStatBar(W * 0.05, statY, 'Hunger', 'hunger', 0xff5555, barW, barH, fontScale);
-        this.createStatBar(W * 0.55, statY, 'Happy', 'happiness', 0xffcc00, barW, barH, fontScale);
-        this.createStatBar(W * 0.05, statY + statGap, 'Energy', 'energy', 0x55ff55, barW, barH, fontScale);
-        this.createStatBar(W * 0.55, statY + statGap, 'Clean', 'hygiene', 0x55ccff, barW, barH, fontScale);
+        // Left column: Hunger & Energy
+        this.createStatBar(labelX, statY1, 'Hunger', 'hunger', 0xff5555, barX, barW, barH);
+        this.createStatBar(labelX, statY2, 'Energy', 'energy', 0x55ff55, barX, barW, barH);
 
-        // Inventory display - right of stats
-        this.fishText = this.add.text(W * 0.92, statY, '\ud83d\udc1f: 0', {
-            fontSize: `${Math.round(16 * fontScale)}px`,
+        // Right column: Happy & Clean
+        const rightLabelX = 245;
+        const rightBarX = 250;
+        this.createStatBar(rightLabelX, statY1, 'Happy', 'happiness', 0xffcc00, rightBarX, barW, barH);
+        this.createStatBar(rightLabelX, statY2, 'Clean', 'hygiene', 0x55ccff, rightBarX, barW, barH);
+
+        // Inventory - far right, aligned with stat rows
+        this.fishText = this.add.text(W - 10, statY1, '\ud83d\udc1f: 0', {
+            fontSize: '15px',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(1, 0.5);
 
-        this.toyText = this.add.text(W * 0.92, statY + statGap, '\ud83e\uddf6: 0', {
-            fontSize: `${Math.round(16 * fontScale)}px`,
+        this.toyText = this.add.text(W - 10, statY2, '\ud83e\uddf6: 0', {
+            fontSize: '15px',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(1, 0.5);
 
-        // Cat - centered vertically in the middle of the screen
+        // === CAT AREA (center) ===
         const catY = H * 0.40;
         this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
-        this.cat.setScale(3.5 * fontScale);
+        this.cat.setScale(3.5);
 
         // Make cat clickable to clean!
         this.cat.setInteractive({ useHandCursor: true });
@@ -65,36 +72,35 @@ class HomeScene extends Phaser.Scene {
         this.canClean = true;
 
         // Cat name
-        this.add.text(W / 2, catY - 55 * fontScale, 'Mittens', {
-            fontSize: `${Math.round(24 * fontScale)}px`,
+        this.add.text(W / 2, catY - 60, 'Mittens', {
+            fontSize: '22px',
             color: '#ffcc88'
         }).setOrigin(0.5);
 
         // Hint text under cat
-        this.add.text(W / 2, catY + 55 * fontScale, '\ud83d\udc46 Tap cat to clean!', {
-            fontSize: `${Math.round(14 * fontScale)}px`,
+        this.add.text(W / 2, catY + 60, '\ud83d\udc46 Tap cat to clean!', {
+            fontSize: '13px',
             color: '#aaaaaa'
         }).setOrigin(0.5);
 
-        // Home items - decorative, around cat
-        const decoY = catY + 20 * fontScale;
-        this.add.image(W * 0.15, decoY, 'bed').setScale(1.8 * fontScale);
-        this.add.image(W * 0.85, decoY, 'bowl').setScale(1.8 * fontScale);
-        this.add.image(W * 0.5, decoY + 35 * fontScale, 'yarn').setScale(1.8 * fontScale);
+        // Decorative items around cat
+        const decoY = catY + 20;
+        this.add.image(W * 0.15, decoY, 'bed').setScale(1.8);
+        this.add.image(W * 0.85, decoY, 'bowl').setScale(1.8);
+        this.add.image(W / 2, decoY + 40, 'yarn').setScale(1.8);
 
-        // Action buttons - bottom area, stacked or in a compact row
-        const btnY = H * 0.72;
-        const btnGap = H * 0.065;
-        const btnW = W * 0.38;
-        const btnH = Math.max(36, Math.round(42 * fontScale));
-        const btnFont = `${Math.round(15 * fontScale)}px`;
+        // === BUTTONS (bottom area) ===
+        const btnY1 = H * 0.72;
+        const btnY2 = btnY1 + 60;
+        const btnW = 160;
+        const btnH = 42;
 
-        this.createButton(W * 0.25, btnY, '\ud83d\udecf\ufe0f Sleep', () => this.sleep(), btnW, btnH, btnFont);
-        this.createButton(W * 0.75, btnY, '\ud83c\udf57 Feed', () => this.feed(), btnW, btnH, btnFont);
-        this.createButton(W * 0.25, btnY + btnGap, '\ud83e\uddf6 Play', () => this.play(), btnW, btnH, btnFont);
-        this.createButton(W * 0.75, btnY + btnGap, '\ud83c\udf0d Adventure', () => {
+        this.createButton(W * 0.25, btnY1, '\ud83d\udecf\ufe0f Sleep', () => this.sleep(), btnW, btnH);
+        this.createButton(W * 0.75, btnY1, '\ud83c\udf57 Feed', () => this.feed(), btnW, btnH);
+        this.createButton(W * 0.25, btnY2, '\ud83e\uddf6 Play', () => this.play(), btnW, btnH);
+        this.createButton(W * 0.75, btnY2, '\ud83c\udf0d Adventure', () => {
             this.scene.start('PlatformerScene');
-        }, btnW, btnH, btnFont, 0x00cc88);
+        }, btnW, btnH, 0x00cc88);
 
         // Stats update loop
         this.time.addEvent({
@@ -106,22 +112,24 @@ class HomeScene extends Phaser.Scene {
         // Cat idle animation - gentle bob
         this.tweens.add({
             targets: this.cat,
-            y: catY - 8 * fontScale,
+            y: catY - 8,
             duration: 1000,
             yoyo: true,
             repeat: -1
         });
     }
 
-    createStatBar(x, y, label, key, color, barWidth, barHeight, fontScale) {
-        const labelW = Math.round(50 * fontScale);
-        const bg = this.add.rectangle(x + labelW, y, barWidth, barHeight, 0x333344).setOrigin(0, 0.5);
-        const bar = this.add.rectangle(x + labelW, y, barWidth * 0.8, barHeight * 0.75, color).setOrigin(0, 0.5);
-
-        this.add.text(x, y, label, {
-            fontSize: `${Math.round(12 * fontScale)}px`,
+    createStatBar(labelX, labelY, label, key, color, barX, barWidth, barHeight) {
+        // Label - right-aligned so it extends left from labelX
+        this.add.text(labelX, labelY, label, {
+            fontSize: '12px',
             color: '#ffffff'
         }).setOrigin(1, 0.5);
+
+        // Bar background
+        const bg = this.add.rectangle(barX, labelY, barWidth, barHeight, 0x333344).setOrigin(0, 0.5);
+        // Bar fill
+        const bar = this.add.rectangle(barX, labelY, barWidth * 0.8, barHeight * 0.75, color).setOrigin(0, 0.5);
 
         this[`bar_${key}`] = bar;
     }
@@ -142,17 +150,18 @@ class HomeScene extends Phaser.Scene {
     updateBar(key, value) {
         const bar = this[`bar_${key}`];
         if (bar) {
-            bar.width = Math.max(0, (value / 100) * bar.parent?.width * 0.8 || 120);
+            const maxW = bar.parentContainer ? 120 : 110 * 0.8;
+            bar.width = Math.max(0, (value / 100) * maxW);
             if (value < 30) bar.setFillStyle(0xff0000);
         }
     }
 
-    createButton(x, y, text, callback, w = 140, h = 40, fontSize = '16px', color = 0x5555aa) {
+    createButton(x, y, text, callback, w = 160, h = 42, color = 0x5555aa) {
         const btn = this.add.rectangle(x, y, w, h, color)
             .setInteractive({ useHandCursor: true });
 
         const lbl = this.add.text(x, y, text, {
-            fontSize: fontSize,
+            fontSize: '15px',
             color: '#ffffff'
         }).setOrigin(0.5);
 
@@ -248,7 +257,7 @@ class HomeScene extends Phaser.Scene {
         });
 
         const sparkle = this.add.text(this.cat.x + 30, this.cat.y - 30, '\u2728', {
-            fontSize: `${Math.round(24 * Math.min(this.scale.width / 480, this.scale.height / 800))}px`
+            fontSize: '22px'
         }).setOrigin(0.5);
         this.tweens.add({
             targets: sparkle,
@@ -274,9 +283,8 @@ class HomeScene extends Phaser.Scene {
     }
 
     showFloatingText(x, y, text) {
-        const fontScale = Math.min(this.scale.width / 480, this.scale.height / 800);
         const txt = this.add.text(x, y, text, {
-            fontSize: `${Math.round(18 * fontScale)}px`,
+            fontSize: '16px',
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
@@ -284,7 +292,7 @@ class HomeScene extends Phaser.Scene {
 
         this.tweens.add({
             targets: txt,
-            y: y - 50 * fontScale,
+            y: y - 40,
             alpha: 0,
             duration: 1000,
             onComplete: () => txt.destroy()

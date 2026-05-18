@@ -282,13 +282,18 @@ class HomeScene extends Phaser.Scene {
 
     createAdventureButton(x, y) {
         const radius = 45;
+        const size = radius * 2;
 
-        // Main circle button
-        const btn = this.add.circle(x, y, radius, 0xaaddcc, 1);
-        btn.setStrokeStyle(3, 0xffffff, 0.5);
+        const btn = this.add.graphics();
+        btn.fillStyle(0xaaddcc, 1);
+        btn.fillCircle(0, 0, radius);
+        btn.lineStyle(3, 0xffffff, 0.5);
+        btn.strokeCircle(0, 0, radius);
+        btn.setPosition(x, y);
+        // Rectangle hit area that fully contains the circle
         btn.setInteractive(
-            new Phaser.Geom.Circle(x, y, radius),
-            Phaser.Geom.Circle.Contains
+            new Phaser.Geom.Rectangle(-radius, -radius, size, size),
+            Phaser.Geom.Rectangle.Contains
         );
         btn.setScrollFactor(0);
 
@@ -306,12 +311,20 @@ class HomeScene extends Phaser.Scene {
             fontStyle: 'bold'
         }).setOrigin(0.5).setScrollFactor(0);
 
-        // Hover effect - brighten
+        // Hover effect - brighten (redraw)
         btn.on('pointerover', () => {
-            btn.setFillStyle(0xbbeecc, 1);
+            btn.clear();
+            btn.fillStyle(0xbbeecc, 1);
+            btn.fillCircle(0, 0, radius);
+            btn.lineStyle(3, 0xffffff, 0.5);
+            btn.strokeCircle(0, 0, radius);
         });
         btn.on('pointerout', () => {
-            btn.setFillStyle(0xaaddcc, 1);
+            btn.clear();
+            btn.fillStyle(0xaaddcc, 1);
+            btn.fillCircle(0, 0, radius);
+            btn.lineStyle(3, 0xffffff, 0.5);
+            btn.strokeCircle(0, 0, radius);
         });
         btn.on('pointerdown', () => {
             this.scene.start('PlatformerScene');

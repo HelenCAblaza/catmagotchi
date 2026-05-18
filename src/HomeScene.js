@@ -33,7 +33,7 @@ class HomeScene extends Phaser.Scene {
         });
 
         // Title at top center with a cute glow
-        this.add.text(W / 2, 28, '\u2728 Catmagotchi \u2728', {
+        this.add.text(W / 2, 40, '\u2728 Catmagotchi \u2728', {
             fontSize: '28px',
             color: '#ffffff',
             fontFamily: '"Poppins", sans-serif',
@@ -49,12 +49,20 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // === STATS AREA ===
-        const statY1 = 68;
-        const statY2 = 104;
+        const statY1 = 82;
+        const statY2 = 118;
         const barW = 110;
         const barH = 14;
         const labelX = 52;
         const barX = 56;
+
+        // Cat name above stats
+        this.add.text(W / 2, 64, '\u2606 Mittens \u2606', {
+            fontSize: '22px',
+            color: '#ffcc88',
+            fontFamily: '"Poppins", sans-serif',
+            fontStyle: 'bold'
+        }).setOrigin(0.5);
 
         this.createCapsuleStatBar(labelX, statY1, 'Hunger', 'hunger', 0xff7799, barX, barW, barH);
         this.createCapsuleStatBar(labelX, statY2, 'Energy', 'energy', 0x88dd88, barX, barW, barH);
@@ -92,14 +100,6 @@ class HomeScene extends Phaser.Scene {
 
         // Cooldown for cleaning
         this.canClean = true;
-
-        // Cat name with a cute sparkle
-        this.add.text(W / 2, catY - 60, '\u2606 Mittens \u2606', {
-            fontSize: '22px',
-            color: '#ffcc88',
-            fontFamily: '"Poppins", sans-serif',
-            fontStyle: 'bold'
-        }).setOrigin(0.5);
 
         // Hint text under cat
         this.add.text(W / 2, catY + 60, '\ud83d\udc46 Tap cat to clean!', {
@@ -210,7 +210,7 @@ class HomeScene extends Phaser.Scene {
         // Label
         this.add.text(labelX, labelY, label, {
             fontSize: '12px',
-            color: '#cccccc',
+            color: '#999999',
             fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(1, 0.5);

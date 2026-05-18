@@ -1,36 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>32x32 Cat Preview</title>
-<style>
-body { background: #222; color: #fff; font-family: sans-serif; padding: 20px; }
-img { image-rendering: pixelated; border: 2px solid #555; margin: 10px; background: #87CEEB; }
-.sprite-container { display: inline-block; text-align: center; margin: 15px; }
-</style>
+<head><meta charset="UTF-8"><title>64x64 Preview</title>
+<style>body{background:#222;color:#fff;font-family:sans-serif;padding:20px;}img{image-rendering:pixelated;border:2px solid #555;margin:10px;background:#87CEEB;}.c{display:inline-block;text-align:center;margin:15px;}</style>
 </head>
 <body>
-<h2>32x32 Mittens Preview</h2>
-<div id="sprites"></div>
+<h2>64x64 Mittens — Smaller Eyes!</h2>
+<div id="s"></div>
 <script>
-const SPRITES = [
-  { src: 'cat-idle.png', label: 'Idle (Home: 4x)' },
-  { src: 'cat-run.png', label: 'Run (Game: 2x)' },
-  { src: 'cat-sleep.png', label: 'Sleep' }
-];
-const div = document.getElementById('sprites');
-SPRITES.forEach(s => {
-  const container = document.createElement('div');
-  container.className = 'sprite-container';
-  const label = document.createElement('div');
-  label.textContent = s.label;
-  container.appendChild(label);
-  const img = document.createElement('img');
-  img.src = s.src;
-  img.style.width = '192px';
-  img.style.height = '192px';
-  container.appendChild(img);
-  div.appendChild(container);
+[{src:'cat-idle.png',l:'Idle (Home: 2x)'},{src:'cat-run.png',l:'Run (Game: 1x)'},{src:'cat-sleep.png',l:'Sleep'}].forEach(s=>{
+  const d=document.createElement('div');d.className='c';
+  d.innerHTML='<div>'+s.l+'</div><img src="'+s.src+'" style="width:256px;height:256px;">';
+  document.getElementById('s').appendChild(d);
 });
 </script>
 </body>

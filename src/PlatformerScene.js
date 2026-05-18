@@ -17,12 +17,12 @@ class PlatformerScene extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.createLevel();
 
-        // Cat player - 32x32 sprite at 2x scale = 64px tall (fits under platforms)
+        // Cat player - 64x64 sprite at 1x scale = 64px tall (fits under platforms)
         this.player = this.physics.add.sprite(100, 500, 'cat_idle');
-        this.player.setScale(2);
-        // Physics body matches the visible cat within the 32x32 sprite
-        this.player.body.setSize(16, 20);
-        this.player.body.setOffset(8, 6);
+        this.player.setScale(1);
+        // Physics body matches the visible cat within the 64x64 sprite
+        this.player.body.setSize(32, 40);
+        this.player.body.setOffset(16, 12);
         this.player.setBounce(0.1);
         this.player.setCollideWorldBounds(true);
         this.physics.add.collider(this.player, this.platforms);

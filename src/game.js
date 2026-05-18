@@ -4,6 +4,7 @@ const config = {
     height: 600,
     parent: 'game-container',
     backgroundColor: '#2a2a3e',
+    pixelArt: true,
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH

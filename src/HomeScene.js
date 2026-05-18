@@ -50,7 +50,7 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Cat name above stats - smaller, left aligned, no stars, darker grey
-        this.add.text(20, 92, 'Mittens', {
+        this.add.text(40, 102, 'Mittens', {
             fontSize: '18px',
             color: '#555555',
             fontFamily: '"Poppins", sans-serif',
@@ -58,23 +58,23 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(0, 0.5);
 
         // === STATS AREA ===
-        const statY1 = 120;
-        const statY2 = 156;
+        const statY1 = 130;
+        const statY2 = 166;
         const barW = 110;
         const barH = 14;
-        const labelX = 20;     // aligned with name
-        const barX = 70;       // after labels
+        const labelX = 40;     // aligned with buttons left edge
+        const barX = 90;       // after labels
 
         this.createCapsuleStatBar(labelX, statY1, 'Hunger', 'hunger', 0xff7799, barX, barW, barH);
         this.createCapsuleStatBar(labelX, statY2, 'Energy', 'energy', 0x88dd88, barX, barW, barH);
 
-        const rightLabelX = 260;
-        const rightBarX = 300;
+        const rightLabelX = 250;
+        const rightBarX = 290;
         this.createCapsuleStatBar(rightLabelX, statY1, 'Happy', 'happiness', 0xffcc66, rightBarX, barW, barH);
         this.createCapsuleStatBar(rightLabelX, statY2, 'Clean', 'hygiene', 0x77ccff, rightBarX, barW, barH);
 
-        // Inventory - far right, aligned with stat rows
-        this.fishText = this.add.text(W - 10, statY1, '\ud83d\udc1f: 0', {
+        // Inventory - aligned right with buttons right edge
+        this.fishText = this.add.text(440, statY1, '\ud83d\udc1f: 0', {
             fontSize: '15px',
             color: '#cccccc',
             fontFamily: '"Poppins", sans-serif',
@@ -82,7 +82,7 @@ class HomeScene extends Phaser.Scene {
             strokeThickness: 3
         }).setOrigin(1, 0.5);
 
-        this.toyText = this.add.text(W - 10, statY2, '\ud83e\uddf6: 0', {
+        this.toyText = this.add.text(440, statY2, '\ud83e\uddf6: 0', {
             fontSize: '15px',
             color: '#cccccc',
             fontFamily: '"Poppins", sans-serif',

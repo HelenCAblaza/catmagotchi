@@ -138,11 +138,14 @@ class BootScene extends Phaser.Scene {
         gfx.fillStyle(0xffaacc, 0.4);
         gfx.fillCircle(w * 0.26, h * 0.48, 2.5);
 
-        // Zzz
+        // Zzz (drawn as cute little shapes since gfx has no fillText)
         gfx.fillStyle(0xffffff, 0.9);
-        gfx.fillText('Z', w * 0.55, h * 0.30, 'bold 8px monospace');
-        gfx.fillText('z', w * 0.65, h * 0.25, 'bold 6px monospace');
-        gfx.fillText('z', w * 0.72, h * 0.20, 'bold 5px monospace');
+        // Big Z
+        this.drawZ(gfx, w * 0.55, h * 0.30, 4);
+        // Medium z
+        this.drawZ(gfx, w * 0.65, h * 0.25, 3);
+        // Small z
+        this.drawZ(gfx, w * 0.72, h * 0.20, 2);
 
         // Tail wrapped around
         gfx.fillStyle(baseColor, 1);
@@ -407,6 +410,17 @@ class BootScene extends Phaser.Scene {
         }
         gfx.generateTexture(key, w, h);
         gfx.destroy();
+    }
+
+    drawZ(gfx, x, y, size) {
+        // Draw a cute Z shape using lines
+        gfx.lineStyle(size * 0.3, 0xffffff, 0.9);
+        gfx.beginPath();
+        gfx.moveTo(x - size, y - size);
+        gfx.lineTo(x + size, y - size);
+        gfx.lineTo(x - size, y + size);
+        gfx.lineTo(x + size, y + size);
+        gfx.strokePath();
     }
 
     create() {

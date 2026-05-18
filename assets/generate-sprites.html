@@ -10,27 +10,32 @@ canvas { image-rendering: pixelated; border: 2px solid #444; margin: 10px; backg
 </style>
 </head>
 <body>
-<h2>Cat Sprite Generator</h2>
+<h2>Premium Cat Sprite Generator</h2>
 <div id="sprites"></div>
 
 <script>
+// Color palette matching the reference white cat
 const PALETTE = {
-  W: '#ffffff',      // white fur
-  w: '#f0f0f0',      // light shadow
-  G: '#e8e8e8',      // gray shadow
-  g: '#d0d0d0',      // darker shadow
-  P: '#ffb6c1',      // pink (ears, nose, blush)
-  p: '#ff8da1',      // darker pink
-  B: '#2a1a10',      // dark brown eye
-  b: '#5a3a20',      // medium brown
-  K: '#000000',      // black outline
-  k: '#3a3a3a',      // dark gray
-  T: '#ff8888',      // tongue
-  O: '#ffaaaa',      // mouth interior
-  _: 'transparent'   // transparent
+  _: 'transparent',
+  ' ': 'transparent',
+  W: '#ffffff',   // pure white fur
+  L: '#f8f8f8',   // light fur
+  S: '#e8e8e8',   // shadow
+  D: '#cccccc',   // dark shadow/outline
+  P: '#ffb6c1',   // pink inner ear
+  R: '#ff8da1',   // darker pink (nose)
+  C: '#ffcccc',   // cheek blush
+  E: '#3d2817',   // dark brown eye
+  B: '#6b4423',   // medium brown eye
+  H: '#ffffff',   // eye highlight
+  h: '#ffd700',   // golden eye shine
+  K: '#333333',   // outline
+  T: '#ff7777',   // tongue
+  O: '#ffaaaa',   // mouth interior
+  M: '#ff99aa',   // mouth line
 };
 
-// 32x32 pixel art cat - IDLE (front-facing, happy)
+// 32x32 - IDLE (front-facing cute white cat, based on reference)
 const CAT_IDLE = [
   "________________________________",
   "______________KKKK______________",
@@ -39,34 +44,34 @@ const CAT_IDLE = [
   "__________KWWWWWWWWWWK__________",
   "_________KWWWWWWWWWWWWK_________",
   "________KWWWKWWWWWKWWWK_________",
-  "_______KWWWKKWWWWWKKWWWK________",
-  "______KWWWKPWWWWWWWPWWWKK_______",
-  "______KWWKPWWWWWWWWWPWWWKK______",
-  "______KWWWPWWWWWWWWWWPWWWK______",
-  "______KWWWWWWWWWWWWWWWWWWK______",
-  "______KWWWWWWWWWWWWWWWWWWK______",
-  "______KWWWWWWWWWWWWWWWWWWK______",
-  "______KWWWKWWWWWWWWWKWWWWK______",
+  "_______KWWWKPWWWWWPWWWK________",
+  "______KWWWKPPWWWWWPPWWWK_______",
+  "______KWWWKPWWWWWWWWPWWWK______",
+  "______KWWWWWWWWWWWWWWWWWK______",
+  "______KWWWWWWWWWWWWWWWWWK______",
+  "______KWWWWWWWWWWWWWWWWWK______",
+  "______KWWWKWWWWWWWWWKWWWK______",
   "_______KWWKWWWWWWWWWKWWWK_______",
-  "________KWKWWBBBBWWWKWKK________",
-  "_________KWWBWWWWBWWWK__________",
-  "__________KWBWBBBWBBWK__________",
-  "__________KWWBWWWWBWWK__________",
-  "___________KWWWBWBWWWK___________",
-  "___________KKWWPPWWKK___________",
-  "___________KPPPPTPPPK___________",
-  "___________KPPTTTTPPK___________",
-  "___________KPPPTTPPPK___________",
-  "____________KPPPPPPPK____________",
+  "________KWKWWEEEEWWWKWK________",
+  "_________KWWBHHHHHBWWWK_________",
+  "__________KWBHHHHHBWBWK__________",
+  "__________KWWBHHHHBWWK__________",
+  "___________KWWWBHBWWWK___________",
+  "___________KKWWRRWWKK___________",
+  "___________KCCCRTRCCK___________",
+  "___________KCRTTTTRCK___________",
+  "___________KCCCRTRCCK___________",
+  "____________KCCRRRCCK____________",
   "____________KKWWWWKK____________",
   "______________KWWK______________",
   "_______________KK_______________",
   "________________________________",
   "________________________________",
+  "________________________________",
   "________________________________"
 ];
 
-// 32x32 - WALKING/RUNNING (side view)
+// 32x32 - RUN (side view, walking)
 const CAT_RUN = [
   "________________________________",
   "______________KKKK______________",
@@ -75,23 +80,22 @@ const CAT_RUN = [
   "__________KWWWWWWWWWWK__________",
   "_________KWWWWWWWWWWWWK_________",
   "________KWWWKWWWWWKWWWK_________",
-  "_______KWWWKKWWWWWKKWWWK________",
-  "______KWWWKPWWWWWWWPWWWKK_______",
-  "______KWWKPWWWWWWWWWPWWWKK______",
-  "______KWWWPWWWWWWWWWWPWWWK______",
-  "______KWWWWWWWWWWWWWWWWWWK______",
-  "______KWWWWWWWWWWWWWWWWWWK______",
-  "______KWWWWWWWWWWWWWWWWWWK______",
-  "_______KWWWWWWWWWWWWWWWWWK______",
-  "________KWWWWWKWWWWKWWWWK_______",
-  "_________KWWWWKWWWWKWWWK________",
-  "__________KWWWKWWWWKWWK_________",
-  "___________KWWWWBBBBWWK__________",
-  "____________KWWWBBBWWK__________",
-  "_____________KWWBBBWWK__________",
-  "______________KWWPPWK____________",
+  "_______KWWWKPWWWWWPWWWK________",
+  "______KWWWKPPWWWWWPPWWWK_______",
+  "______KWWWKPWWWWWWWWPWWWK______",
+  "______KWWWWWWWWWWWWWWWWWK______",
+  "______KWWWWWWWWWWWWWWWWWK______",
+  "______KWWWWWWWWWWWWWWWWWK______",
+  "_______KWWWWWWWWWWWWWWWWK_______",
+  "________KWWWWWKWWWWKWWWK________",
+  "_________KWWWWKWWWWKWWK_________",
+  "__________KWWWKWWWWKWWK__________",
+  "___________KWWWWEEEEWWK__________",
+  "____________KWWWBBHHWWK___________",
+  "_____________KWWBHHBWWK___________",
+  "______________KWWRRWK____________",
   "_______________KPPPK_____________",
-  "_______________KPPPK_____________",
+  "_______________KTTTK_____________",
   "______________KWKKKWK____________",
   "______________KW___WK____________",
   "_______________K___K_____________",
@@ -99,10 +103,11 @@ const CAT_RUN = [
   "________________________________",
   "________________________________",
   "________________________________",
+  "________________________________",
   "________________________________"
 ];
 
-// 32x32 - SLEEPING (curled up)
+// 32x32 - SLEEP (curled up, peaceful)
 const CAT_SLEEP = [
   "________________________________",
   "________________________________",
@@ -138,7 +143,7 @@ const CAT_SLEEP = [
   "________________________________"
 ];
 
-function renderSprite(pixelMap, scale = 4) {
+function renderSprite(pixelMap, scale = 1) {
   const size = 32;
   const canvas = document.createElement('canvas');
   canvas.width = size * scale;
@@ -149,8 +154,8 @@ function renderSprite(pixelMap, scale = 4) {
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       const ch = pixelMap[y][x];
-      if (ch !== '_' && ch !== ' ') {
-        ctx.fillStyle = PALETTE[ch] || '#f0f';
+      if (ch !== '_' && ch !== ' ' && PALETTE[ch]) {
+        ctx.fillStyle = PALETTE[ch];
         ctx.fillRect(x * scale, y * scale, scale, scale);
       }
     }
@@ -168,9 +173,9 @@ function exportPNG(canvas, filename) {
 
 const spritesDiv = document.getElementById('sprites');
 
-const idleCanvas = renderSprite(CAT_IDLE, 8);
-const runCanvas = renderSprite(CAT_RUN, 8);
-const sleepCanvas = renderSprite(CAT_SLEEP, 8);
+const idleCanvas = renderSprite(CAT_IDLE, 1);
+const runCanvas = renderSprite(CAT_RUN, 1);
+const sleepCanvas = renderSprite(CAT_SLEEP, 1);
 
 [{name:'cat-idle.png', c:idleCanvas}, {name:'cat-run.png', c:runCanvas}, {name:'cat-sleep.png', c:sleepCanvas}].forEach(s => {
   const div = document.createElement('div');
@@ -178,6 +183,8 @@ const sleepCanvas = renderSprite(CAT_SLEEP, 8);
   const label = document.createElement('div');
   label.textContent = s.name;
   div.appendChild(label);
+  s.c.style.width = '192px';
+  s.c.style.height = '192px';
   div.appendChild(s.c);
   const link = exportPNG(s.c, s.name);
   link.style.display = 'block';
@@ -186,28 +193,7 @@ const sleepCanvas = renderSprite(CAT_SLEEP, 8);
   spritesDiv.appendChild(div);
 });
 
-// Also show at actual game scale
-const idleSmall = renderSprite(CAT_IDLE, 1);
-const runSmall = renderSprite(CAT_RUN, 1);
-const sleepSmall = renderSprite(CAT_SLEEP, 1);
-
-[{name:'cat-idle-1x.png', c:idleSmall}, {name:'cat-run-1x.png', c:runSmall}, {name:'cat-sleep-1x.png', c:sleepSmall}].forEach(s => {
-  const div = document.createElement('div');
-  div.className = 'sprite-container';
-  const label = document.createElement('div');
-  label.textContent = s.name + ' (1x)';
-  div.appendChild(label);
-  s.c.style.width = '128px';
-  s.c.style.height = '128px';
-  div.appendChild(s.c);
-  const link = exportPNG(s.c, s.name);
-  link.style.display = 'block';
-  link.style.color = '#6cf';
-  div.appendChild(link);
-  spritesDiv.appendChild(div);
-});
-
-console.log('Sprites generated! Click download links to save.');
+console.log('Premium sprites generated! Click download links to save.');
 </script>
 </body>
 </html>

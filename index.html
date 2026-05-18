@@ -70,41 +70,23 @@
             font-size: 0.9rem;
             max-width: 80%;
         }
-        #start-btn {
-            position: absolute;
-            top: 60%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            background: #ff8c42;
-            color: #fff;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            z-index: 20;
-            display: none;
-        }
-        #start-btn:active {
-            transform: translate(-50%, -50%) scale(0.95);
-        }
     </style>
 </head>
 <body>
     <div id="game-container">
         <div id="loading">Loading Catmagotchi...</div>
         <div id="error-msg"></div>
-        <button id="start-btn">Tap to Start! 🐱</button>
     </div>
 
     <!-- Phaser engine (local, no CDN dependency) -->
     <script src="phaser.min.js"></script>
 
     <!-- Game scenes -->
-    <script src="src/BootScene.js?v=16"></script>
-    <script src="src/HomeScene.js?v=16"></script>
-    <script src="src/PlatformerScene.js?v=16"></script>
-    <script src="src/game.js?v=16"></script>
+    <script src="src/StartScene.js?v=17"></script>
+    <script src="src/BootScene.js?v=17"></script>
+    <script src="src/HomeScene.js?v=17"></script>
+    <script src="src/PlatformerScene.js?v=17"></script>
+    <script src="src/game.js?v=17"></script>
 
     <script>
         // Error handling with stack trace
@@ -125,22 +107,6 @@
             document.getElementById('loading').style.display = 'none';
             document.getElementById('error-msg').style.display = 'block';
             document.getElementById('error-msg').textContent = 'Failed to load game engine. Please check your internet connection and refresh.';
-        }
-
-        // Mobile: show tap-to-start button (required for audio on iOS)
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile && typeof Phaser !== 'undefined') {
-            document.getElementById('loading').style.display = 'none';
-            const btn = document.getElementById('start-btn');
-            btn.style.display = 'block';
-            btn.addEventListener('click', function() {
-                btn.style.display = 'none';
-                // Game already initialized by game.js, but on mobile
-                // we may need to resume audio context
-                if (window.game && window.game.sound && window.game.sound.context) {
-                    window.game.sound.context.resume();
-                }
-            });
         }
     </script>
 </body>

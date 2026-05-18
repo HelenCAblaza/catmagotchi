@@ -17,6 +17,7 @@ const config = {
         }
     },
     scene: [
+        StartScene,
         BootScene,
         HomeScene,
         PlatformerScene

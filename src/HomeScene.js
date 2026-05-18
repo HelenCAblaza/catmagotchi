@@ -48,21 +48,21 @@ class HomeScene extends Phaser.Scene {
             fontFamily: '"Poppins", sans-serif'
         }).setOrigin(0.5);
 
+        // Cat name above stats - smaller, left aligned, no stars, darker grey
+        this.add.text(20, 92, 'Mittens', {
+            fontSize: '18px',
+            color: '#555555',
+            fontFamily: '"Poppins", sans-serif',
+            fontStyle: 'bold'
+        }).setOrigin(0, 0.5);
+
         // === STATS AREA ===
-        const statY1 = 108;
-        const statY2 = 144;
+        const statY1 = 120;
+        const statY2 = 156;
         const barW = 110;
         const barH = 14;
         const labelX = 52;
         const barX = 56;
-
-        // Cat name above stats - smaller, left aligned
-        this.add.text(20, 78, '\u2606 Mittens \u2606', {
-            fontSize: '18px',
-            color: '#ffcc88',
-            fontFamily: '"Poppins", sans-serif',
-            fontStyle: 'bold'
-        }).setOrigin(0, 0.5);
 
         this.createCapsuleStatBar(labelX, statY1, 'Hunger', 'hunger', 0xff7799, barX, barW, barH);
         this.createCapsuleStatBar(labelX, statY2, 'Energy', 'energy', 0x88dd88, barX, barW, barH);

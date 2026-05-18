@@ -6,12 +6,12 @@ class PlatformerScene extends Phaser.Scene {
     create() {
         this.cameras.main.setBackgroundColor('#87CEEB');
 
-        const W = this.scale.width;
-        const H = this.scale.height;
+        const W = this.scale.width;   // 480
+        const H = this.scale.height;  // 800
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        this.fontScale = Math.min(W / 800, H / 600);
+        this.fontScale = Math.min(W / 480, H / 800);
 
-        // World bounds
+        // World bounds - horizontal scrolling platformer
         this.physics.world.setBounds(0, 0, 1600, 600);
 
         // Platforms
@@ -43,21 +43,21 @@ class PlatformerScene extends Phaser.Scene {
         // Virtual joystick (mobile/touch)
         this.createVirtualJoystick();
 
-        // Home button - top-left with padding
-        this.createButton(W * 0.08, H * 0.08, '\ud83c\udfe0 Home', () => {
+        // Home button - top-left
+        this.createButton(W * 0.12, H * 0.05, '\ud83c\udfe0 Home', () => {
             this.scene.start('HomeScene');
         });
 
-        // Inventory display - below home button
-        this.fishText = this.add.text(W * 0.02, H * 0.02, '\ud83d\udc1f: 0', {
-            fontSize: `${Math.round(18 * this.fontScale)}px`,
+        // Inventory display
+        this.fishText = this.add.text(W * 0.02, H * 0.015, '\ud83d\udc1f: 0', {
+            fontSize: `${Math.round(16 * this.fontScale)}px`,
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
         }).setScrollFactor(0);
 
-        this.toyText = this.add.text(W * 0.02, H * 0.02 + 25 * this.fontScale, '\ud83e\uddf6: 0', {
-            fontSize: `${Math.round(18 * this.fontScale)}px`,
+        this.toyText = this.add.text(W * 0.02, H * 0.015 + 22 * this.fontScale, '\ud83e\uddf6: 0', {
+            fontSize: `${Math.round(16 * this.fontScale)}px`,
             color: '#ffffff',
             stroke: '#000000',
             strokeThickness: 3
@@ -65,8 +65,8 @@ class PlatformerScene extends Phaser.Scene {
 
         // Hint text (shows on mobile, fades after 4s)
         if (isMobile) {
-            this.hintText = this.add.text(W / 2, H * 0.12, '\ud83c\udfae Drag the round controller to move & jump!', {
-                fontSize: `${Math.round(16 * this.fontScale)}px`,
+            this.hintText = this.add.text(W / 2, H * 0.10, '\ud83c\udfae Drag round controller to move & jump!', {
+                fontSize: `${Math.round(14 * this.fontScale)}px`,
                 color: '#ffffff',
                 stroke: '#000000',
                 strokeThickness: 3
@@ -78,8 +78,8 @@ class PlatformerScene extends Phaser.Scene {
         }
 
         // Copyright watermark
-        this.add.text(W / 2, H - 20, '\u00a9 2025 Helen C. All Rights Reserved.', {
-            fontSize: `${Math.round(12 * this.fontScale)}px`,
+        this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
+            fontSize: `${Math.round(10 * this.fontScale)}px`,
             color: '#555577'
         }).setOrigin(0.5).setScrollFactor(0);
 
@@ -95,7 +95,6 @@ class PlatformerScene extends Phaser.Scene {
         const baseRadius = 70 * this.fontScale;
         const nubRadius = 26 * this.fontScale;
 
-        // Joystick state
         this.joyActive = false;
         this.joyBaseX = 0;
         this.joyBaseY = 0;
@@ -103,15 +102,14 @@ class PlatformerScene extends Phaser.Scene {
         this.joyY = 0;
         this.joyJumpTriggered = false;
 
-        // --- Visuals (hidden until active) ---
-        // Outer ring (base) with subtle cross lines
+        // Outer ring (base)
         this.joyBase = this.add.circle(0, 0, baseRadius, 0x444466, 0.22)
             .setStrokeStyle(Math.max(2, Math.round(3 * this.fontScale)), 0xffffff, 0.35)
             .setScrollFactor(0)
             .setVisible(false)
             .setDepth(100);
 
-        // Direction hint arrows on the base
+        // Direction hint arrows
         this.joyArrows = this.add.text(0, 0, '\u25c0  \u25b6\n\u25b2', {
             fontSize: `${Math.round(18 * this.fontScale)}px`,
             color: '#ffffff',
@@ -119,22 +117,21 @@ class PlatformerScene extends Phaser.Scene {
             fontStyle: 'bold'
         }).setOrigin(0.5).setScrollFactor(0).setVisible(false).setDepth(100).setAlpha(0.35);
 
-        // Inner nub (the draggable thumb stick)
+        // Inner nub (draggable thumb stick)
         this.joyNub = this.add.circle(0, 0, nubRadius, 0x7777dd, 0.55)
             .setStrokeStyle(Math.max(2, Math.round(2 * this.fontScale)), 0xffffff, 0.5)
             .setScrollFactor(0)
             .setVisible(false)
             .setDepth(101);
 
-        // Nub highlight for a subtle 3D effect
+        // Nub highlight
         this.joyNubGlow = this.add.circle(0, 0, nubRadius * 0.55, 0xaaaaff, 0.35)
             .setScrollFactor(0)
             .setVisible(false)
             .setDepth(101);
 
-        // --- Input handling ---
-        // Activate joystick when touching bottom half of screen (avoid UI top area)
-        const joyZoneTop = H * 0.35;
+        // Activate joystick when touching bottom half of screen
+        const joyZoneTop = H * 0.45;
         this.input.on('pointerdown', (pointer) => {
             if (pointer.y > joyZoneTop && !this.joyActive) {
                 this.joyActive = true;
@@ -143,19 +140,16 @@ class PlatformerScene extends Phaser.Scene {
                 this.joyX = 0;
                 this.joyY = 0;
 
-                // Position visuals
                 this.joyBase.setPosition(this.joyBaseX, this.joyBaseY);
                 this.joyArrows.setPosition(this.joyBaseX, this.joyBaseY);
                 this.joyNub.setPosition(this.joyBaseX, this.joyBaseY);
                 this.joyNubGlow.setPosition(this.joyBaseX - 3, this.joyBaseY - 3);
 
-                // Show visuals
                 this.joyBase.setVisible(true);
                 this.joyArrows.setVisible(true);
                 this.joyNub.setVisible(true);
                 this.joyNubGlow.setVisible(true);
 
-                // Pop-in animation
                 this.joyBase.setScale(0.4);
                 this.joyNub.setScale(0.4);
                 this.joyArrows.setScale(0.4);
@@ -169,14 +163,12 @@ class PlatformerScene extends Phaser.Scene {
             }
         });
 
-        // Update nub position during drag
         this.input.on('pointermove', (pointer) => {
             if (this.joyActive && pointer.isDown) {
                 const dx = pointer.x - this.joyBaseX;
                 const dy = pointer.y - this.joyBaseY;
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
-                // Clamp nub to maxDrag radius
                 let nubX, nubY;
                 if (dist > maxDrag) {
                     const angle = Math.atan2(dy, dx);
@@ -190,13 +182,11 @@ class PlatformerScene extends Phaser.Scene {
                 this.joyNub.setPosition(nubX, nubY);
                 this.joyNubGlow.setPosition(nubX - 3, nubY - 3);
 
-                // Normalize joystick values (-1 to 1)
                 this.joyX = Phaser.Math.Clamp(dx / maxDrag, -1, 1);
                 this.joyY = Phaser.Math.Clamp(dy / maxDrag, -1, 1);
             }
         });
 
-        // Release
         this.input.on('pointerup', () => {
             if (this.joyActive) {
                 this.joyActive = false;
@@ -204,7 +194,6 @@ class PlatformerScene extends Phaser.Scene {
                 this.joyY = 0;
                 this.joyJumpTriggered = false;
 
-                // Pop-out animation then hide
                 this.tweens.add({
                     targets: [this.joyBase, this.joyNub, this.joyArrows, this.joyNubGlow],
                     scaleX: 0.3,
@@ -264,39 +253,33 @@ class PlatformerScene extends Phaser.Scene {
         const W = this.scale.width;
         const H = this.scale.height;
 
-        // Update inventory display
         const inv = this.registry.get('inventory');
         this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
         this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
-        // Keep inventory positioned correctly on resize
-        this.fishText.setPosition(W * 0.02, H * 0.02);
-        this.toyText.setPosition(W * 0.02, H * 0.02 + 25 * this.fontScale);
 
-        // Movement - keyboard OR joystick
+        // Reposition UI on resize
+        this.fishText.setPosition(W * 0.02, H * 0.015);
+        this.toyText.setPosition(W * 0.02, H * 0.015 + 22 * this.fontScale);
+
         let left = this.cursors.left.isDown;
         let right = this.cursors.right.isDown;
         let jump = this.cursors.up.isDown;
 
-        // Add joystick input
         if (this.joyActive) {
-            // Horizontal: use analog joystick value with a deadzone
             if (Math.abs(this.joyX) > 0.15) {
                 if (this.joyX < 0) left = true;
                 else right = true;
             }
 
-            // Vertical: pull up to jump (threshold -0.4)
             if (this.joyY < -0.4 && !this.joyJumpTriggered) {
                 jump = true;
                 this.joyJumpTriggered = true;
             }
-            // Reset jump trigger when pulling back down
             if (this.joyY > -0.2) {
                 this.joyJumpTriggered = false;
             }
         }
 
-        // Apply movement with analog speed when using joystick
         let velocityX = 0;
         if (left) {
             velocityX = this.joyActive ? -200 * Math.abs(this.joyX) : -200;
@@ -307,10 +290,8 @@ class PlatformerScene extends Phaser.Scene {
         }
         this.player.setVelocityX(velocityX);
 
-        // Jump
         if (jump && this.player.body.touching.down) {
             this.player.setVelocityY(-400);
-            // Visual feedback on nub
             if (this.joyActive) {
                 this.tweens.add({
                     targets: this.joyNub,
@@ -322,7 +303,6 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // Energy drain from running
         if (Math.abs(this.player.body.velocity.x) > 10) {
             stats.energy = Math.max(0, stats.energy - 0.02);
             this.registry.set('stats', stats);

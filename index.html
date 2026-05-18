@@ -39,12 +39,12 @@
             justify-content: center;
             align-items: center;
         }
-        /* Desktop: keep nice aspect ratio with max width */
-        @media (min-width: 801px) {
+        /* Desktop: keep nice max width */
+        @media (min-width: 481px) {
             #game-container {
-                max-width: 900px;
+                max-width: 520px;
                 height: auto;
-                aspect-ratio: 4/3;
+                aspect-ratio: 480/800;
             }
         }
         canvas {
@@ -87,49 +87,9 @@
         #start-btn:active {
             transform: translate(-50%, -50%) scale(0.95);
         }
-        /* Rotate device overlay for portrait mobile */
-        #rotate-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #1a1a2e;
-            color: #fff;
-            z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            gap: 20px;
-        }
-        #rotate-overlay .phone-icon {
-            font-size: 4rem;
-            animation: rotatePhone 2s ease-in-out infinite;
-        }
-        @keyframes rotatePhone {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(90deg); }
-        }
-        @media (max-width: 800px) and (orientation: portrait) {
-            #rotate-overlay {
-                display: flex;
-            }
-            #game-container {
-                display: none !important;
-            }
-        }
     </style>
 </head>
 <body>
-    <div id="rotate-overlay">
-        <div class="phone-icon">📱</div>
-        <h2>Rotate your device!</h2>
-        <p>Catmagotchi works best in landscape mode 🐱</p>
-    </div>
-
     <div id="game-container">
         <div id="loading">Loading Catmagotchi...</div>
         <div id="error-msg"></div>
@@ -140,10 +100,10 @@
     <script src="phaser.min.js"></script>
 
     <!-- Game scenes -->
-    <script src="src/BootScene.js?v=11"></script>
-    <script src="src/HomeScene.js?v=11"></script>
-    <script src="src/PlatformerScene.js?v=11"></script>
-    <script src="src/game.js?v=11"></script>
+    <script src="src/BootScene.js?v=12"></script>
+    <script src="src/HomeScene.js?v=12"></script>
+    <script src="src/PlatformerScene.js?v=12"></script>
+    <script src="src/game.js?v=12"></script>
 
     <script>
         // Error handling with stack trace

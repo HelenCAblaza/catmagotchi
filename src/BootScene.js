@@ -14,11 +14,11 @@ class BootScene extends Phaser.Scene {
         this.createTexture('box', '#8b6914', 80, 60, 'rect');
         this.createTexture('bowl', '#6666ff', 24, 12, 'rect');
         this.createTexture('bed', '#ffcc88', 48, 32, 'rect');
-        this.createTexture('bg_home', '#3a3a5c', 800, 600, 'rect');
-        this.createTexture('bg_platformer', '#2a2a4a', 800, 600, 'rect');
+        this.createTexture('bg_home', '#3a3a5c', 480, 800, 'rect');
+        this.createTexture('bg_platformer', '#2a2a4a', 480, 800, 'rect');
         this.createTexture('ground', '#4a7a3a', 32, 32, 'rect');
-        this.createTexture('sky', '#87CEEB', 800, 600, 'rect');
-        
+        this.createTexture('sky', '#87CEEB', 480, 800, 'rect');
+
         // Hide loading screen safely
         const loading = document.getElementById('loading');
         if (loading) loading.style.display = 'none';
@@ -27,7 +27,7 @@ class BootScene extends Phaser.Scene {
     createTexture(key, color, w, h, shape) {
         const gfx = this.make.graphics({ x: 0, y: 0, add: false });
         gfx.fillStyle(parseInt(color.replace('#', '0x')), 1);
-        
+
         if (shape === 'cat') {
             // Body
             gfx.fillRect(w*0.25, h*0.3, w*0.5, h*0.5);
@@ -64,7 +64,7 @@ class BootScene extends Phaser.Scene {
         } else {
             gfx.fillRect(0, 0, w, h);
         }
-        
+
         gfx.generateTexture(key, w, h);
         gfx.destroy();
     }
@@ -81,7 +81,7 @@ class BootScene extends Phaser.Scene {
             fish: 0,
             toys: 0
         });
-        
+
         this.scene.start('HomeScene');
     }
 }

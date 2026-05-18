@@ -4,31 +4,58 @@ class HomeScene extends Phaser.Scene {
     }
 
     create() {
-        const W = this.scale.width;
-        const H = this.scale.height;
+        const W = this.scale.width;   // 480
+        const H = this.scale.height;  // 800
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const fontScale = Math.min(W / 800, H / 600);
+        const fontScale = Math.min(W / 480, H / 800);
 
         // Background - scaled to fill
         const bg = this.add.image(W / 2, H / 2, 'bg_home');
         bg.setDisplaySize(W, H);
 
-        // Title
-        this.add.text(W / 2, H * 0.05, '🐱 Catmagotchi 🐱', {
-            fontSize: `${Math.round(36 * fontScale)}px`,
+        // Title at top
+        this.add.text(W / 2, H * 0.04, '\ud83d\udc31 Catmagotchi \ud83d\udc31', {
+            fontSize: `${Math.round(32 * fontScale)}px`,
             color: '#ffffff',
             fontFamily: 'monospace'
         }).setOrigin(0.5);
 
         // Copyright watermark
-        this.add.text(W / 2, H - 20, '© 2025 Helen C. All Rights Reserved.', {
-            fontSize: `${Math.round(12 * fontScale)}px`,
+        this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
+            fontSize: `${Math.round(10 * fontScale)}px`,
             color: '#555577'
         }).setOrigin(0.5);
 
-        // Cat - positioned center
-        this.cat = this.add.sprite(W / 2, H * 0.45, 'cat_idle');
-        this.cat.setScale(3 * fontScale);
+        // Stats bars - top section, two columns
+        const statY = H * 0.10;
+        const statGap = H * 0.045;
+        const barW = W * 0.35;
+        const barH = Math.max(10, Math.round(14 * fontScale));
+
+        this.createStatBar(W * 0.05, statY, 'Hunger', 'hunger', 0xff5555, barW, barH, fontScale);
+        this.createStatBar(W * 0.55, statY, 'Happy', 'happiness', 0xffcc00, barW, barH, fontScale);
+        this.createStatBar(W * 0.05, statY + statGap, 'Energy', 'energy', 0x55ff55, barW, barH, fontScale);
+        this.createStatBar(W * 0.55, statY + statGap, 'Clean', 'hygiene', 0x55ccff, barW, barH, fontScale);
+
+        // Inventory display - right of stats
+        this.fishText = this.add.text(W * 0.92, statY, '\ud83d\udc1f: 0', {
+            fontSize: `${Math.round(16 * fontScale)}px`,
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setOrigin(1, 0.5);
+
+        this.toyText = this.add.text(W * 0.92, statY + statGap, '\ud83e\uddf6: 0', {
+            fontSize: `${Math.round(16 * fontScale)}px`,
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setOrigin(1, 0.5);
+
+        // Cat - centered vertically in the middle of the screen
+        const catY = H * 0.40;
+        this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
+        this.cat.setScale(3.5 * fontScale);
 
         // Make cat clickable to clean!
         this.cat.setInteractive({ useHandCursor: true });
@@ -38,72 +65,36 @@ class HomeScene extends Phaser.Scene {
         this.canClean = true;
 
         // Cat name
-        this.add.text(W / 2, H * 0.35, 'Mittens', {
+        this.add.text(W / 2, catY - 55 * fontScale, 'Mittens', {
             fontSize: `${Math.round(24 * fontScale)}px`,
             color: '#ffcc88'
         }).setOrigin(0.5);
 
         // Hint text under cat
-        this.add.text(W / 2, H * 0.55, '👆 Tap cat to clean!', {
+        this.add.text(W / 2, catY + 55 * fontScale, '\ud83d\udc46 Tap cat to clean!', {
             fontSize: `${Math.round(14 * fontScale)}px`,
             color: '#aaaaaa'
         }).setOrigin(0.5);
 
-        // Home items (bed, bowl, yarn) - positioned around cat
-        const itemY = H * 0.62;
-        this.add.image(W * 0.25, itemY, 'bed').setScale(2 * fontScale);
-        this.add.text(W * 0.25, itemY - 30 * fontScale, '🛏️ Sleep', {
-            fontSize: `${Math.round(14 * fontScale)}px`, color: '#fff'
-        }).setOrigin(0.5);
+        // Home items - decorative, around cat
+        const decoY = catY + 20 * fontScale;
+        this.add.image(W * 0.15, decoY, 'bed').setScale(1.8 * fontScale);
+        this.add.image(W * 0.85, decoY, 'bowl').setScale(1.8 * fontScale);
+        this.add.image(W * 0.5, decoY + 35 * fontScale, 'yarn').setScale(1.8 * fontScale);
 
-        this.add.image(W * 0.5, itemY + 30 * fontScale, 'bowl').setScale(2 * fontScale);
-        this.add.text(W * 0.5, itemY + 5 * fontScale, '🍽️ Food', {
-            fontSize: `${Math.round(14 * fontScale)}px`, color: '#fff'
-        }).setOrigin(0.5);
+        // Action buttons - bottom area, stacked or in a compact row
+        const btnY = H * 0.72;
+        const btnGap = H * 0.065;
+        const btnW = W * 0.38;
+        const btnH = Math.max(36, Math.round(42 * fontScale));
+        const btnFont = `${Math.round(15 * fontScale)}px`;
 
-        this.add.image(W * 0.75, itemY, 'yarn').setScale(2 * fontScale);
-        this.add.text(W * 0.75, itemY - 30 * fontScale, '🧶 Play', {
-            fontSize: `${Math.round(14 * fontScale)}px`, color: '#fff'
-        }).setOrigin(0.5);
-
-        // Stats bars - left side
-        const statX = isMobile ? W * 0.08 : W * 0.15;
-        const barW = isMobile ? 120 : 200;
-        this.createStatBar(statX, H * 0.12, 'Hunger', 'hunger', 0xff5555, barW, fontScale);
-        this.createStatBar(statX, H * 0.17, 'Happy', 'happiness', 0xffcc00, barW, fontScale);
-        this.createStatBar(statX, H * 0.22, 'Energy', 'energy', 0x55ff55, barW, fontScale);
-        this.createStatBar(statX, H * 0.27, 'Clean', 'hygiene', 0x55ccff, barW, fontScale);
-
-        // Inventory display - right side
-        const invX = isMobile ? W * 0.85 : W * 0.78;
-        this.fishText = this.add.text(invX, H * 0.12, '🐟: 0', {
-            fontSize: `${Math.round(18 * fontScale)}px`,
-            color: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 3
-        }).setOrigin(1, 0.5);
-
-        this.toyText = this.add.text(invX, H * 0.17, '🧶: 0', {
-            fontSize: `${Math.round(18 * fontScale)}px`,
-            color: '#ffffff',
-            stroke: '#000000',
-            strokeThickness: 3
-        }).setOrigin(1, 0.5);
-
-        // Action buttons - bottom row, evenly spaced
-        const btnY = H * 0.82;
-        const btnW = isMobile ? 90 : 140;
-        const btnH = isMobile ? 36 : 40;
-        const btnFont = `${Math.round(14 * fontScale)}px`;
-
-        this.createButton(W * 0.2, btnY, '🛏️ Sleep', () => this.sleep(), btnW, btnH, btnFont);
-        this.createButton(W * 0.5, btnY, '🍗 Feed', () => this.feed(), btnW, btnH, btnFont);
-        this.createButton(W * 0.8, btnY, '🧶 Play', () => this.play(), btnW, btnH, btnFont);
-
-        // Adventure button (go to platformer)
-        this.createButton(W / 2, H * 0.9, '🌍 Go Adventure!', () => {
+        this.createButton(W * 0.25, btnY, '\ud83d\udecf\ufe0f Sleep', () => this.sleep(), btnW, btnH, btnFont);
+        this.createButton(W * 0.75, btnY, '\ud83c\udf57 Feed', () => this.feed(), btnW, btnH, btnFont);
+        this.createButton(W * 0.25, btnY + btnGap, '\ud83e\uddf6 Play', () => this.play(), btnW, btnH, btnFont);
+        this.createButton(W * 0.75, btnY + btnGap, '\ud83c\udf0d Adventure', () => {
             this.scene.start('PlatformerScene');
-        }, isMobile ? 200 : 280, btnH, btnFont, 0x00cc88);
+        }, btnW, btnH, btnFont, 0x00cc88);
 
         // Stats update loop
         this.time.addEvent({
@@ -112,24 +103,23 @@ class HomeScene extends Phaser.Scene {
             callback: () => this.decayStats()
         });
 
-        // Cat idle animation
+        // Cat idle animation - gentle bob
         this.tweens.add({
             targets: this.cat,
-            y: H * 0.45 - 10 * fontScale,
+            y: catY - 8 * fontScale,
             duration: 1000,
             yoyo: true,
             repeat: -1
         });
     }
 
-    createStatBar(x, y, label, key, color, barWidth, fontScale) {
-        const barH = Math.round(16 * fontScale);
-        const labelW = Math.round(60 * fontScale);
-        const bg = this.add.rectangle(x + labelW, y, barWidth, barH, 0x333344).setOrigin(0, 0.5);
-        const bar = this.add.rectangle(x + labelW, y, barWidth * 0.8, barH * 0.8, color).setOrigin(0, 0.5);
+    createStatBar(x, y, label, key, color, barWidth, barHeight, fontScale) {
+        const labelW = Math.round(50 * fontScale);
+        const bg = this.add.rectangle(x + labelW, y, barWidth, barHeight, 0x333344).setOrigin(0, 0.5);
+        const bar = this.add.rectangle(x + labelW, y, barWidth * 0.8, barHeight * 0.75, color).setOrigin(0, 0.5);
 
         this.add.text(x, y, label, {
-            fontSize: `${Math.round(14 * fontScale)}px`,
+            fontSize: `${Math.round(12 * fontScale)}px`,
             color: '#ffffff'
         }).setOrigin(1, 0.5);
 
@@ -145,17 +135,14 @@ class HomeScene extends Phaser.Scene {
 
         // Update inventory display
         const inv = this.registry.get('inventory');
-        this.fishText.setText(`🐟: ${inv.fish}`);
-        this.toyText.setText(`🧶: ${inv.toys}`);
+        this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
+        this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
     }
 
     updateBar(key, value) {
         const bar = this[`bar_${key}`];
         if (bar) {
-            bar.width = Math.max(0, value * (bar.parentContainer ? 2 : 2)); // scale width to percentage
-            // Recalculate based on the bar's original max width
-            const maxW = bar.originalMaxWidth || 160;
-            bar.width = Math.max(0, (value / 100) * maxW);
+            bar.width = Math.max(0, (value / 100) * bar.parent?.width * 0.8 || 120);
             if (value < 30) bar.setFillStyle(0xff0000);
         }
     }
@@ -181,11 +168,11 @@ class HomeScene extends Phaser.Scene {
         if (inv.fish > 0) {
             stats.hunger = Math.min(100, stats.hunger + 20);
             stats.energy = Math.min(100, stats.energy + 5);
-            stats.hygiene = Math.max(0, stats.hygiene - 10); // Eating makes cat messy!
+            stats.hygiene = Math.max(0, stats.hygiene - 10);
             inv.fish--;
-            this.showFloatingText(this.cat.x, this.cat.y - 40, '😋 Yum!');
+            this.showFloatingText(this.cat.x, this.cat.y - 40, '\ud83d\ude0b Yum!');
         } else {
-            this.showFloatingText(this.cat.x, this.cat.y - 40, '😿 No fish!');
+            this.showFloatingText(this.cat.x, this.cat.y - 40, '\ud83d\ude3f No fish!');
         }
 
         this.registry.set('stats', stats);
@@ -199,9 +186,9 @@ class HomeScene extends Phaser.Scene {
         if (stats.energy > 10) {
             stats.happiness = Math.min(100, stats.happiness + 15);
             stats.energy = Math.max(0, stats.energy - 10);
-            stats.hygiene = Math.max(0, stats.hygiene - 15); // Playing gets cat dirty!
+            stats.hygiene = Math.max(0, stats.hygiene - 15);
             inv.toys++;
-            this.showFloatingText(this.cat.x, this.cat.y - 40, '😸 Fun!');
+            this.showFloatingText(this.cat.x, this.cat.y - 40, '\ud83d\ude38 Fun!');
 
             this.tweens.add({
                 targets: this.cat,
@@ -210,7 +197,7 @@ class HomeScene extends Phaser.Scene {
                 yoyo: true
             });
         } else {
-            this.showFloatingText(this.cat.x, this.cat.y - 40, '😴 Too tired...');
+            this.showFloatingText(this.cat.x, this.cat.y - 40, '\ud83d\ude34 Too tired...');
         }
 
         this.registry.set('stats', stats);
@@ -224,9 +211,8 @@ class HomeScene extends Phaser.Scene {
         this.registry.set('stats', stats);
 
         this.cat.setTexture('cat_sleep');
-        this.showFloatingText(this.cat.x, this.cat.y - 40, '💤 Zzz...');
+        this.showFloatingText(this.cat.x, this.cat.y - 40, '\ud83d\udca4 Zzz...');
 
-        // Use Phaser timer so it auto-cancels if scene stops
         this.time.delayedCall(2000, () => {
             if (this.cat && this.cat.active) {
                 this.cat.setTexture('cat_idle');
@@ -236,25 +222,22 @@ class HomeScene extends Phaser.Scene {
 
     cleanCat() {
         if (!this.canClean) {
-            this.showFloatingText(this.cat.x, this.cat.y - 50, '⏳ Wait...');
+            this.showFloatingText(this.cat.x, this.cat.y - 50, '\u23f3 Wait...');
             return;
         }
 
         const stats = this.registry.get('stats');
         if (stats.hygiene >= 100) {
-            this.showFloatingText(this.cat.x, this.cat.y - 50, '✨ Already clean!');
+            this.showFloatingText(this.cat.x, this.cat.y - 50, '\u2728 Already clean!');
             return;
         }
 
-        // Increase hygiene
         stats.hygiene = Math.min(100, stats.hygiene + 25);
         stats.happiness = Math.min(100, stats.happiness + 5);
         this.registry.set('stats', stats);
 
-        // Visual feedback
-        this.showFloatingText(this.cat.x, this.cat.y - 50, '👅 Clean!');
+        this.showFloatingText(this.cat.x, this.cat.y - 50, '\ud83d\udc45 Clean!');
 
-        // Licking animation - little scale wobble
         this.tweens.add({
             targets: this.cat,
             scaleX: this.cat.scaleX * 1.07,
@@ -264,9 +247,8 @@ class HomeScene extends Phaser.Scene {
             repeat: 2
         });
 
-        // Sparkle effect
-        const sparkle = this.add.text(this.cat.x + 30, this.cat.y - 30, '✨', {
-            fontSize: `${Math.round(24 * Math.min(this.scale.width / 800, this.scale.height / 600))}px`
+        const sparkle = this.add.text(this.cat.x + 30, this.cat.y - 30, '\u2728', {
+            fontSize: `${Math.round(24 * Math.min(this.scale.width / 480, this.scale.height / 800))}px`
         }).setOrigin(0.5);
         this.tweens.add({
             targets: sparkle,
@@ -276,7 +258,6 @@ class HomeScene extends Phaser.Scene {
             onComplete: () => sparkle.destroy()
         });
 
-        // Cooldown
         this.canClean = false;
         this.time.delayedCall(3000, () => {
             this.canClean = true;
@@ -293,7 +274,7 @@ class HomeScene extends Phaser.Scene {
     }
 
     showFloatingText(x, y, text) {
-        const fontScale = Math.min(this.scale.width / 800, this.scale.height / 600);
+        const fontScale = Math.min(this.scale.width / 480, this.scale.height / 800);
         const txt = this.add.text(x, y, text, {
             fontSize: `${Math.round(18 * fontScale)}px`,
             color: '#ffffff',

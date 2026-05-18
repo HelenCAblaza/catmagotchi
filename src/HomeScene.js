@@ -61,14 +61,14 @@ class HomeScene extends Phaser.Scene {
         const statY2 = 156;
         const barW = 110;
         const barH = 14;
-        const labelX = 52;
-        const barX = 56;
+        const labelX = 20;     // aligned with name
+        const barX = 70;       // after labels
 
         this.createCapsuleStatBar(labelX, statY1, 'Hunger', 'hunger', 0xff7799, barX, barW, barH);
         this.createCapsuleStatBar(labelX, statY2, 'Energy', 'energy', 0x88dd88, barX, barW, barH);
 
-        const rightLabelX = 242;
-        const rightBarX = 246;
+        const rightLabelX = 260;
+        const rightBarX = 300;
         this.createCapsuleStatBar(rightLabelX, statY1, 'Happy', 'happiness', 0xffcc66, rightBarX, barW, barH);
         this.createCapsuleStatBar(rightLabelX, statY2, 'Clean', 'hygiene', 0x77ccff, rightBarX, barW, barH);
 
@@ -213,7 +213,7 @@ class HomeScene extends Phaser.Scene {
             color: '#777777',
             fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
-        }).setOrigin(1, 0.5);
+        }).setOrigin(0, 0.5);
     }
 
     drawCapsule(gfx, x, y, w, h, r) {

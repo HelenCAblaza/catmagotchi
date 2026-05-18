@@ -1,10 +1,45 @@
 <!DOCTYPE html>
 <html>
-<head><style>body{background:#333;color:#fff;font-family:sans-serif;padding:20px;}img{width:256px;height:256px;image-rendering:pixelated;margin:20px;border:2px solid #666;}</style></head>
+<head>
+<meta charset="UTF-8">
+<title>Mittens Sprites Preview</title>
+<style>
+body { background: #222; color: #fff; font-family: sans-serif; padding: 20px; }
+canvas { image-rendering: pixelated; border: 2px solid #555; margin: 10px; }
+.sprite-container { display: inline-block; text-align: center; margin: 15px; }
+</style>
+</head>
 <body>
-<h2>Sprites Preview</h2>
-<div>cat-idle.png: <img src="cat-idle.png"></div>
-<div>cat-run.png: <img src="cat-run.png"></div>
-<div>cat-sleep.png: <img src="cat-sleep.png"></div>
+<h2>Mittens the Cat — Sprite Preview</h2>
+<div id="sprites"></div>
+
+<script>
+const SPRITES = [
+  { name: 'cat-idle.png', src: 'cat-idle.png', label: 'Idle (sitting, front-facing)' },
+  { name: 'cat-run.png', src: 'cat-run.png', label: 'Run (side profile, running)' },
+  { name: 'cat-sleep.png', src: 'cat-sleep.png', label: 'Sleep (curled up with Zzz)' }
+];
+
+const div = document.getElementById('sprites');
+
+SPRITES.forEach(s => {
+  const container = document.createElement('div');
+  container.className = 'sprite-container';
+
+  const label = document.createElement('div');
+  label.textContent = s.label;
+  container.appendChild(label);
+
+  const img = document.createElement('img');
+  img.src = s.src;
+  img.style.width = '256px';
+  img.style.height = '256px';
+  img.style.imageRendering = 'pixelated';
+  img.style.border = '2px solid #555';
+  container.appendChild(img);
+
+  div.appendChild(container);
+});
+</script>
 </body>
 </html>

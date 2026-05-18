@@ -42,7 +42,39 @@ class PlatformerScene extends Phaser.Scene {
         // Virtual joystick (mobile/touch)
         this.createVirtualJoystick();
 
-        // === UI (fixed positions, scrollFactor 0) ===
+        // Decorative clouds in the sky (parallax scrolling)
+        this.clouds = [];
+        for (let i = 0; i < 5; i++) {
+            const cloud = this.add.image(100 + i * 300, 60 + Math.random() * 80, 'cloud')
+                .setScale(0.7 + Math.random() * 0.5)
+                .setAlpha(0.5 + Math.random() * 0.3)
+                .setScrollFactor(0.3)
+                .setDepth(-5);
+            this.clouds.push({
+                sprite: cloud,
+                speed: 0.1 + Math.random() * 0.2
+            });
+        }
+
+        // Floating stars/sparkles
+        this.stars = this.add.group();
+        for (let i = 0; i < 8; i++) {
+            const star = this.add.image(Math.random() * 1600, Math.random() * 400, 'star')
+                .setScale(0.3 + Math.random() * 0.3)
+                .setAlpha(0.4 + Math.random() * 0.4);
+            this.stars.add(star);
+            this.tweens.add({
+                targets: star,
+                y: star.y - 10,
+                alpha: 0.1,
+                duration: 2000 + Math.random() * 2000,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
+        }
+
+        // === UI ===
         // Home button - top right
         this.createButton(W - 60, 30, '\ud83c\udfe0 Home', () => {
             this.scene.start('HomeScene');
@@ -240,16 +272,43 @@ class PlatformerScene extends Phaser.Scene {
         ];
 
         fishPositions.forEach(([x, y]) => {
-            this.fishes.create(x, y, 'fish');
+            const fish = this.fishes.create(x, y, 'fish');
+            // Gentle bob animation
+            this.tweens.add({
+                targets: fish,
+                y: y - 5,
+                duration: 800 + Math.random() * 400,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
         });
 
         toyPositions.forEach(([x, y]) => {
-            this.toys.create(x, y, 'yarn');
+            const yarn = this.toys.create(x, y, 'yarn');
+            // Gentle spin and bob
+            this.tweens.add({
+                targets: yarn,
+                y: y - 6,
+                angle: 10,
+                duration: 1000 + Math.random() * 500,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
         });
     }
 
     update() {
         const stats = this.registry.get('stats');
+
+        // Drift clouds
+        for (const cloud of this.clouds) {
+            cloud.sprite.x += cloud.speed;
+            if (cloud.sprite.x > 1700) {
+                cloud.sprite.x = -100;
+            }
+        }
 
         // Update inventory display
         const inv = this.registry.get('inventory');
@@ -306,14 +365,19 @@ class PlatformerScene extends Phaser.Scene {
     }
 
     collectFish(player, fish) {
+        const x = fish.x;
+        const y = fish.y;
         fish.destroy();
         const inv = this.registry.get('inventory');
         inv.fish++;
         this.registry.set('inventory', inv);
         this.showFloatingText(player.x, player.y - 30, '\ud83d\udc1f +1');
+        this.spawnCollectEffect(x, y, 'heart');
     }
 
     collectToy(player, toy) {
+        const x = toy.x;
+        const y = toy.y;
         toy.destroy();
         const inv = this.registry.get('inventory');
         inv.toys++;
@@ -322,6 +386,28 @@ class PlatformerScene extends Phaser.Scene {
         stats.happiness = Math.min(100, stats.happiness + 5);
         this.registry.set('stats', stats);
         this.showFloatingText(player.x, player.y - 30, '\ud83e\uddf6 +1');
+        this.spawnCollectEffect(x, y, 'star');
+    }
+
+    spawnCollectEffect(x, y, textureKey) {
+        for (let i = 0; i < 4; i++) {
+            const p = this.add.image(x, y, textureKey)
+                .setScale(0.3 + Math.random() * 0.3)
+                .setAlpha(0.9);
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 15 + Math.random() * 25;
+            this.tweens.add({
+                targets: p,
+                x: x + Math.cos(angle) * dist,
+                y: y + Math.sin(angle) * dist - 15,
+                alpha: 0,
+                scaleX: 0,
+                scaleY: 0,
+                duration: 500 + Math.random() * 300,
+                ease: 'Power2',
+                onComplete: () => p.destroy()
+            });
+        }
     }
 
     createButton(x, y, text, callback) {

@@ -3,84 +3,6 @@ class StartScene extends Phaser.Scene {
         super({ key: 'StartScene' });
     }
 
-    preload() {
-        // Generate textures needed for start screen
-        this.createCatTexture('cat_idle', '#ff8c42');
-        this.createHeartTexture('heart');
-        this.createCloudTexture('cloud');
-    }
-
-    createCatTexture(key, color) {
-        const w = 32, h = 32;
-        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
-        const baseColor = parseInt(color.replace('#', '0x'));
-
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillRoundedRect(w * 0.2, h * 0.35, w * 0.6, h * 0.45, 8);
-        gfx.fillCircle(w * 0.5, h * 0.28, w * 0.28);
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillTriangle(w * 0.25, h * 0.15, w * 0.38, h * 0.30, w * 0.22, h * 0.32);
-        gfx.fillTriangle(w * 0.75, h * 0.15, w * 0.62, h * 0.30, w * 0.78, h * 0.32);
-        gfx.fillStyle(0xffaacc, 1);
-        gfx.fillTriangle(w * 0.27, h * 0.18, w * 0.36, h * 0.28, w * 0.25, h * 0.30);
-        gfx.fillTriangle(w * 0.73, h * 0.18, w * 0.64, h * 0.28, w * 0.75, h * 0.30);
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillEllipse(w * 0.82, h * 0.55, w * 0.12, h * 0.35);
-        gfx.fillStyle(0xffffff, 1);
-        gfx.fillCircle(w * 0.40, h * 0.26, 5);
-        gfx.fillCircle(w * 0.60, h * 0.26, 5);
-        gfx.fillStyle(0x000000, 1);
-        gfx.fillCircle(w * 0.41, h * 0.27, 3);
-        gfx.fillCircle(w * 0.61, h * 0.27, 3);
-        gfx.fillStyle(0xffffff, 1);
-        gfx.fillCircle(w * 0.42, h * 0.25, 1.5);
-        gfx.fillCircle(w * 0.62, h * 0.25, 1.5);
-        gfx.fillStyle(0xff6699, 1);
-        const nx = w * 0.5, ny = h * 0.32, s = 1.8;
-        gfx.fillCircle(nx - s, ny, s);
-        gfx.fillCircle(nx + s, ny, s);
-        gfx.fillTriangle(nx - s * 2.2, ny + s * 0.3, nx + s * 2.2, ny + s * 0.3, nx, ny + s * 2.5);
-        gfx.fillStyle(0xffaacc, 0.5);
-        gfx.fillCircle(w * 0.30, h * 0.32, 3);
-        gfx.fillCircle(w * 0.70, h * 0.32, 3);
-        gfx.lineStyle(1, 0x000000, 0.5);
-        gfx.beginPath();
-        gfx.arc(w * 0.50, h * 0.35, 2, 0, Math.PI);
-        gfx.strokePath();
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillCircle(w * 0.30, h * 0.78, 3);
-        gfx.fillCircle(w * 0.45, h * 0.78, 3);
-        gfx.fillCircle(w * 0.55, h * 0.78, 3);
-        gfx.fillCircle(w * 0.70, h * 0.78, 3);
-        gfx.generateTexture(key, w, h);
-        gfx.destroy();
-    }
-
-    createHeartTexture(key) {
-        const s = 16;
-        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
-        gfx.fillStyle(0xff6699, 1);
-        gfx.fillCircle(s * 0.25, s * 0.3, s * 0.25);
-        gfx.fillCircle(s * 0.75, s * 0.3, s * 0.25);
-        gfx.fillTriangle(s * 0.05, s * 0.35, s * 0.95, s * 0.35, s * 0.5, s * 0.95);
-        gfx.fillStyle(0xffffff, 0.6);
-        gfx.fillCircle(s * 0.2, s * 0.2, s * 0.08);
-        gfx.generateTexture(key, s, s);
-        gfx.destroy();
-    }
-
-    createCloudTexture(key) {
-        const w = 64, h = 32;
-        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
-        gfx.fillStyle(0xffffff, 0.8);
-        gfx.fillCircle(w * 0.25, h * 0.55, h * 0.45);
-        gfx.fillCircle(w * 0.50, h * 0.45, h * 0.55);
-        gfx.fillCircle(w * 0.75, h * 0.55, h * 0.45);
-        gfx.fillRect(w * 0.25, h * 0.35, w * 0.5, h * 0.4);
-        gfx.generateTexture(key, w, h);
-        gfx.destroy();
-    }
-
     create() {
         const W = this.scale.width;
         const H = this.scale.height;
@@ -119,7 +41,7 @@ class StartScene extends Phaser.Scene {
             strokeThickness: 3
         }).setOrigin(0.5).setShadow(0, 4, '#ff88cc88', 0, true, true);
 
-        // Cat sprite (large, centered)
+        // Cat sprite (large, centered) - uses real pixel-art PNG!
         const cat = this.add.sprite(W / 2, H * 0.42, 'cat_idle')
             .setScale(5)
             .setOrigin(0.5);
@@ -196,7 +118,7 @@ class StartScene extends Phaser.Scene {
                 onComplete: () => {
                     this.cameras.main.fadeOut(400, 245, 230, 255);
                     this.cameras.main.once('camerafadeoutcomplete', () => {
-                        this.scene.start('BootScene');
+                        this.scene.start('HomeScene');
                     });
                 }
             });

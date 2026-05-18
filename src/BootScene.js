@@ -4,10 +4,12 @@ class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        // Generate cute pixel-art style textures programmatically
-        this.createCatTexture('cat_idle', '#ff8c42');
-        this.createCatTexture('cat_run', '#ff8c42');
-        this.createSleepyCatTexture('cat_sleep', '#6b6b8a');
+        // Load real pixel-art sprites!
+        this.load.image('cat_idle', 'assets/cat-idle.png');
+        this.load.image('cat_run', 'assets/cat-run.png');
+        this.load.image('cat_sleep', 'assets/cat-sleep.png');
+
+        // Generate other textures programmatically
         this.createTexture('platform', '#8b7355', 32, 32, 'rect');
         this.createCuteFishTexture('fish');
         this.createCuteYarnTexture('yarn');
@@ -24,135 +26,6 @@ class BootScene extends Phaser.Scene {
         // Hide loading screen safely
         const loading = document.getElementById('loading');
         if (loading) loading.style.display = 'none';
-    }
-
-    createCatTexture(key, color) {
-        const w = 32, h = 32;
-        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
-        const baseColor = parseInt(color.replace('#', '0x'));
-
-        // Round chubby body
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillRoundedRect(w * 0.2, h * 0.35, w * 0.6, h * 0.45, 8);
-
-        // Big round head
-        gfx.fillCircle(w * 0.5, h * 0.28, w * 0.28);
-
-        // Round ears (cuter triangles)
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillTriangle(w * 0.25, h * 0.15, w * 0.38, h * 0.30, w * 0.22, h * 0.32);
-        gfx.fillTriangle(w * 0.75, h * 0.15, w * 0.62, h * 0.30, w * 0.78, h * 0.32);
-
-        // Inner ear pink
-        gfx.fillStyle(0xffaacc, 1);
-        gfx.fillTriangle(w * 0.27, h * 0.18, w * 0.36, h * 0.28, w * 0.25, h * 0.30);
-        gfx.fillTriangle(w * 0.73, h * 0.18, w * 0.64, h * 0.28, w * 0.75, h * 0.30);
-
-        // Curved tail (drawn as a thick curved line)
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillEllipse(w * 0.82, h * 0.55, w * 0.12, h * 0.35);
-
-        // Big sparkly eyes
-        gfx.fillStyle(0xffffff, 1);
-        gfx.fillCircle(w * 0.40, h * 0.26, 5);
-        gfx.fillCircle(w * 0.60, h * 0.26, 5);
-
-        // Eye pupils (black)
-        gfx.fillStyle(0x000000, 1);
-        gfx.fillCircle(w * 0.41, h * 0.27, 3);
-        gfx.fillCircle(w * 0.61, h * 0.27, 3);
-
-        // Eye shine dots (white)
-        gfx.fillStyle(0xffffff, 1);
-        gfx.fillCircle(w * 0.42, h * 0.25, 1.5);
-        gfx.fillCircle(w * 0.62, h * 0.25, 1.5);
-
-        // Heart nose (pink)
-        gfx.fillStyle(0xff6699, 1);
-        const nx = w * 0.5, ny = h * 0.32;
-        const s = 1.8;
-        gfx.fillCircle(nx - s, ny, s);
-        gfx.fillCircle(nx + s, ny, s);
-        gfx.fillTriangle(nx - s * 2.2, ny + s * 0.3, nx + s * 2.2, ny + s * 0.3, nx, ny + s * 2.5);
-
-        // Pink blush
-        gfx.fillStyle(0xffaacc, 0.5);
-        gfx.fillCircle(w * 0.30, h * 0.32, 3);
-        gfx.fillCircle(w * 0.70, h * 0.32, 3);
-
-        // Tiny mouth (small curve)
-        gfx.lineStyle(1, 0x000000, 0.5);
-        gfx.beginPath();
-        gfx.arc(w * 0.50, h * 0.35, 2, 0, Math.PI);
-        gfx.strokePath();
-
-        // Little paws
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillCircle(w * 0.30, h * 0.78, 3);
-        gfx.fillCircle(w * 0.45, h * 0.78, 3);
-        gfx.fillCircle(w * 0.55, h * 0.78, 3);
-        gfx.fillCircle(w * 0.70, h * 0.78, 3);
-
-        gfx.generateTexture(key, w, h);
-        gfx.destroy();
-    }
-
-    createSleepyCatTexture(key, color) {
-        const w = 32, h = 32;
-        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
-        const baseColor = parseInt(color.replace('#', '0x'));
-
-        // Curled up body (oval)
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillEllipse(w * 0.5, h * 0.55, w * 0.6, h * 0.35);
-
-        // Head
-        gfx.fillCircle(w * 0.35, h * 0.45, w * 0.22);
-
-        // Ears
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillTriangle(w * 0.20, h * 0.32, w * 0.32, h * 0.42, w * 0.18, h * 0.45);
-        gfx.fillTriangle(w * 0.45, h * 0.32, w * 0.38, h * 0.42, w * 0.48, h * 0.45);
-
-        // Inner ear pink
-        gfx.fillStyle(0xffaacc, 1);
-        gfx.fillTriangle(w * 0.22, h * 0.35, w * 0.30, h * 0.42, w * 0.20, h * 0.44);
-        gfx.fillTriangle(w * 0.43, h * 0.35, w * 0.38, h * 0.42, w * 0.46, h * 0.44);
-
-        // Closed eyes (little horizontal lines)
-        gfx.lineStyle(1.5, 0x000000, 0.7);
-        gfx.beginPath();
-        gfx.moveTo(w * 0.28, h * 0.44);
-        gfx.lineTo(w * 0.34, h * 0.44);
-        gfx.strokePath();
-        gfx.beginPath();
-        gfx.moveTo(w * 0.38, h * 0.44);
-        gfx.lineTo(w * 0.44, h * 0.44);
-        gfx.strokePath();
-
-        // Pink nose
-        gfx.fillStyle(0xff6699, 1);
-        gfx.fillCircle(w * 0.36, h * 0.48, 2);
-
-        // Blush
-        gfx.fillStyle(0xffaacc, 0.4);
-        gfx.fillCircle(w * 0.26, h * 0.48, 2.5);
-
-        // Zzz (drawn as cute little shapes since gfx has no fillText)
-        gfx.fillStyle(0xffffff, 0.9);
-        // Big Z
-        this.drawZ(gfx, w * 0.55, h * 0.30, 4);
-        // Medium z
-        this.drawZ(gfx, w * 0.65, h * 0.25, 3);
-        // Small z
-        this.drawZ(gfx, w * 0.72, h * 0.20, 2);
-
-        // Tail wrapped around
-        gfx.fillStyle(baseColor, 1);
-        gfx.fillEllipse(w * 0.65, h * 0.60, w * 0.18, h * 0.12);
-
-        gfx.generateTexture(key, w, h);
-        gfx.destroy();
     }
 
     createCuteFishTexture(key) {
@@ -412,17 +285,6 @@ class BootScene extends Phaser.Scene {
         gfx.destroy();
     }
 
-    drawZ(gfx, x, y, size) {
-        // Draw a cute Z shape using lines
-        gfx.lineStyle(size * 0.3, 0xffffff, 0.9);
-        gfx.beginPath();
-        gfx.moveTo(x - size, y - size);
-        gfx.lineTo(x + size, y - size);
-        gfx.lineTo(x - size, y + size);
-        gfx.lineTo(x + size, y + size);
-        gfx.strokePath();
-    }
-
     create() {
         // Initialize cat stats
         this.registry.set('stats', {
@@ -436,6 +298,6 @@ class BootScene extends Phaser.Scene {
             toys: 0
         });
 
-        this.scene.start('HomeScene');
+        this.scene.start('StartScene');
     }
 }

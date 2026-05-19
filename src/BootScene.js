@@ -286,76 +286,105 @@ class BootScene extends Phaser.Scene {
     }
 
     createCatIdleTexture(key) {
-        const w = 64, h = 64;
+        const w = 128, h = 128;
         const g = this.make.graphics({ x: 0, y: 0, add: false });
+        const cx = 64, cy = 48; // head center (shifted up to fit body)
+        const hr = 34; // head radius
 
-        const cx = 32, cy = 26; // head center
-        const hr = 18; // head radius
-
-        // --- BODY ---
-        // Tiny body overlapping head bottom by 2-3px
+        // --- TAIL (curled up on the right side) ---
+        g.lineStyle(10, 0xffffff, 1);
+        g.beginPath();
+        g.moveTo(cx + 28, cy + 36);
+        g.lineTo(cx + 46, cy + 20);
+        g.lineTo(cx + 52, cy - 4);
+        g.lineTo(cx + 44, cy - 18);
+        g.lineTo(cx + 32, cy - 14);
+        g.strokePath();
+        // Tail tip
         g.fillStyle(0xffffff, 1);
-        g.fillEllipse(cx, cy + hr + 6, 16, 14);
-        // Little paws
-        g.fillCircle(cx - 8, cy + hr + 14, 4);
-        g.fillCircle(cx + 8, cy + hr + 14, 4);
+        g.fillCircle(cx + 32, cy - 14, 6);
 
-        // --- HEAD (perfect circle) ---
+        // --- BODY (chubby oval) ---
+        g.fillStyle(0xffffff, 1);
+        g.fillEllipse(cx, cy + 42, 52, 38);
+
+        // --- LEGS (4 short rounded legs) ---
+        // Front left
+        g.fillStyle(0xffffff, 1);
+        g.fillRoundedRect(cx - 28, cy + 66, 16, 18, 8);
+        // Front right
+        g.fillRoundedRect(cx - 6, cy + 66, 16, 18, 8);
+        // Back left
+        g.fillRoundedRect(cx + 8, cy + 66, 16, 18, 8);
+        // Back right
+        g.fillRoundedRect(cx + 22, cy + 62, 16, 20, 8);
+
+        // --- HEAD (large round) ---
         g.fillStyle(0xffffff, 1);
         g.fillCircle(cx, cy, hr);
 
-        // --- EARS (attach to SIDES of head) ---
+        // --- EARS (pointed triangles on sides) ---
         // Left ear outer
         g.fillStyle(0xffffff, 1);
-        g.fillTriangle(cx - 16, cy - 2, cx - 22, cy - 14, cx - 10, cy - 12);
+        g.fillTriangle(cx - 30, cy - 16, cx - 40, cy - 42, cx - 16, cy - 36);
         // Left ear inner (pink)
         g.fillStyle(0xffbbcc, 1);
-        g.fillTriangle(cx - 16, cy - 4, cx - 20, cy - 12, cx - 12, cy - 10);
+        g.fillTriangle(cx - 30, cy - 20, cx - 36, cy - 38, cx - 20, cy - 34);
 
         // Right ear outer
         g.fillStyle(0xffffff, 1);
-        g.fillTriangle(cx + 16, cy - 2, cx + 22, cy - 14, cx + 10, cy - 12);
+        g.fillTriangle(cx + 30, cy - 16, cx + 40, cy - 42, cx + 16, cy - 36);
         // Right ear inner (pink)
         g.fillStyle(0xffbbcc, 1);
-        g.fillTriangle(cx + 16, cy - 4, cx + 20, cy - 12, cx + 12, cy - 10);
+        g.fillTriangle(cx + 30, cy - 20, cx + 36, cy - 38, cx + 20, cy - 34);
 
-        // --- EYES (white sclera + brown pupil + sparkle, NO dark outlines) ---
-        // Left eye sclera
-        g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx - 7, cy - 2, 4);
-        // Left pupil
+        // --- EYES (large brown with big white sparkles) ---
+        // Left eye (brown)
         g.fillStyle(0x8b5a2b, 1);
-        g.fillCircle(cx - 7, cy - 2, 2);
-        // Left sparkle
+        g.fillCircle(cx - 16, cy - 4, 10);
+        // Left sparkle (big white highlight)
         g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx - 6, cy - 3, 1);
+        g.fillCircle(cx - 12, cy - 8, 5);
+        g.fillCircle(cx - 18, cy - 2, 2);
 
-        // Right eye sclera
-        g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx + 7, cy - 2, 4);
-        // Right pupil
+        // Right eye (brown)
         g.fillStyle(0x8b5a2b, 1);
-        g.fillCircle(cx + 7, cy - 2, 2);
+        g.fillCircle(cx + 16, cy - 4, 10);
         // Right sparkle
         g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx + 8, cy - 3, 1);
+        g.fillCircle(cx + 20, cy - 8, 5);
+        g.fillCircle(cx + 14, cy - 2, 2);
 
-        // --- BLUSH (pink circles on cheeks) ---
-        g.fillStyle(0xffaabb, 0.9);
-        g.fillCircle(cx - 14, cy + 4, 3.5);
-        g.fillCircle(cx + 14, cy + 4, 3.5);
+        // --- NOSE (small pink triangle/dot) ---
+        g.fillStyle(0xffaabb, 1);
+        g.fillCircle(cx, cy + 8, 4);
 
-        // --- WHISKERS (thin lines from cheeks, 3 per side) ---
-        g.lineStyle(1, 0xdddddd, 0.9);
+        // --- MOUTH (happy smile with tongue) ---
+        g.lineStyle(2, 0xcc8899, 1);
+        g.beginPath();
+        g.moveTo(cx - 6, cy + 16);
+        g.quadraticCurveTo(cx, cy + 22, cx + 6, cy + 16);
+        g.strokePath();
+        // Tongue
+        g.fillStyle(0xff7799, 1);
+        g.fillEllipse(cx, cy + 20, 8, 6);
+
+        // --- BLUSH (pink ovals on cheeks) ---
+        g.fillStyle(0xffaabb, 0.85);
+        g.fillEllipse(cx - 30, cy + 8, 10, 7);
+        g.fillEllipse(cx + 30, cy + 8, 10, 7);
+
+        // --- WHISKERS (brown lines from cheeks) ---
+        g.lineStyle(2, 0x8b7355, 0.9);
         // Left whiskers
         g.beginPath();
-        g.moveTo(cx - 16, cy + 2);  g.lineTo(cx - 22, cy + 0);
-        g.moveTo(cx - 16, cy + 4);  g.lineTo(cx - 22, cy + 4);
-        g.moveTo(cx - 16, cy + 6);  g.lineTo(cx - 22, cy + 8);
+        g.moveTo(cx - 34, cy + 2);  g.lineTo(cx - 48, cy - 2);
+        g.moveTo(cx - 34, cy + 6);  g.lineTo(cx - 50, cy + 6);
+        g.moveTo(cx - 34, cy + 10); g.lineTo(cx - 48, cy + 14);
         // Right whiskers
-        g.moveTo(cx + 16, cy + 2);  g.lineTo(cx + 22, cy + 0);
-        g.moveTo(cx + 16, cy + 4);  g.lineTo(cx + 22, cy + 4);
-        g.moveTo(cx + 16, cy + 6);  g.lineTo(cx + 22, cy + 8);
+        g.moveTo(cx + 34, cy + 2);  g.lineTo(cx + 48, cy - 2);
+        g.moveTo(cx + 34, cy + 6);  g.lineTo(cx + 50, cy + 6);
+        g.moveTo(cx + 34, cy + 10); g.lineTo(cx + 48, cy + 14);
         g.strokePath();
 
         g.generateTexture(key, w, h);
@@ -363,91 +392,34 @@ class BootScene extends Phaser.Scene {
     }
 
     createCatRunTexture(key) {
-        const w = 64, h = 64;
+        const w = 128, h = 128;
         const g = this.make.graphics({ x: 0, y: 0, add: false });
+        const cx = 64, cy = 48;
+        const hr = 34;
 
-        const cx = 32, cy = 26;
-        const hr = 18;
-
-        // --- BODY (slightly stretched, running pose) ---
+        // --- BODY (stretched for running) ---
         g.fillStyle(0xffffff, 1);
-        g.fillEllipse(cx + 2, cy + hr + 6, 18, 13);
-        // Paws (one lifted slightly)
-        g.fillCircle(cx - 6, cy + hr + 13, 4);
-        g.fillCircle(cx + 10, cy + hr + 13, 4);
+        g.fillEllipse(cx + 4, cy + 42, 58, 34);
 
-        // --- HEAD (perfect circle) ---
+        // --- LEGS (running pose) ---
         g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx, cy, hr);
+        // Front left (lifted)
+        g.fillRoundedRect(cx - 24, cy + 58, 14, 18, 7);
+        // Front right
+        g.fillRoundedRect(cx - 4, cy + 66, 14, 18, 7);
+        // Back left
+        g.fillRoundedRect(cx + 12, cy + 66, 14, 18, 7);
+        // Back right (lifted)
+        g.fillRoundedRect(cx + 28, cy + 60, 14, 18, 7);
 
-        // --- EARS (attach to SIDES) ---
-        g.fillStyle(0xffffff, 1);
-        g.fillTriangle(cx - 16, cy - 2, cx - 22, cy - 14, cx - 10, cy - 12);
-        g.fillStyle(0xffbbcc, 1);
-        g.fillTriangle(cx - 16, cy - 4, cx - 20, cy - 12, cx - 12, cy - 10);
-
-        g.fillStyle(0xffffff, 1);
-        g.fillTriangle(cx + 16, cy - 2, cx + 22, cy - 14, cx + 10, cy - 12);
-        g.fillStyle(0xffbbcc, 1);
-        g.fillTriangle(cx + 16, cy - 4, cx + 20, cy - 12, cx + 12, cy - 10);
-
-        // --- EYES (white sclera + brown pupil + sparkle) ---
-        g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx - 7, cy - 2, 4);
-        g.fillStyle(0x8b5a2b, 1);
-        g.fillCircle(cx - 7, cy - 2, 2);
-        g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx - 6, cy - 3, 1);
-
-        g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx + 7, cy - 2, 4);
-        g.fillStyle(0x8b5a2b, 1);
-        g.fillCircle(cx + 7, cy - 2, 2);
-        g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx + 8, cy - 3, 1);
-
-        // --- BLUSH (on cheeks) ---
-        g.fillStyle(0xffaabb, 0.9);
-        g.fillCircle(cx - 14, cy + 4, 3.5);
-        g.fillCircle(cx + 14, cy + 4, 3.5);
-
-        // --- WHISKERS (from cheeks) ---
-        g.lineStyle(1, 0xdddddd, 0.9);
+        // --- TAIL (streaming back) ---
+        g.lineStyle(8, 0xffffff, 1);
         g.beginPath();
-        g.moveTo(cx - 16, cy + 2);  g.lineTo(cx - 22, cy + 0);
-        g.moveTo(cx - 16, cy + 4);  g.lineTo(cx - 22, cy + 4);
-        g.moveTo(cx - 16, cy + 6);  g.lineTo(cx - 22, cy + 8);
-        g.moveTo(cx + 16, cy + 2);  g.lineTo(cx + 22, cy + 0);
-        g.moveTo(cx + 16, cy + 4);  g.lineTo(cx + 22, cy + 4);
-        g.moveTo(cx + 16, cy + 6);  g.lineTo(cx + 22, cy + 8);
+        g.moveTo(cx + 30, cy + 36);
+        g.lineTo(cx + 50, cy + 28);
+        g.lineTo(cx + 56, cy + 16);
         g.strokePath();
-
-        // --- TAIL (lifted in run) ---
-        g.lineStyle(3, 0xffffff, 1);
-        g.beginPath();
-        g.moveTo(cx + 8, cy + hr + 4);
-        g.lineTo(cx + 14, cy + hr - 2);
-        g.lineTo(cx + 18, cy + hr - 10);
-        g.strokePath();
-        g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx + 18, cy + hr - 10, 3);
-
-        g.generateTexture(key, w, h);
-        g.destroy();
-    }
-
-    createCatSleepTexture(key) {
-        const w = 64, h = 64;
-        const g = this.make.graphics({ x: 0, y: 0, add: false });
-
-        const cx = 32, cy = 26;
-        const hr = 18;
-
-        // --- BODY (curled a bit) ---
-        g.fillStyle(0xffffff, 1);
-        g.fillEllipse(cx, cy + hr + 8, 20, 14);
-        g.fillCircle(cx - 10, cy + hr + 14, 5);
-        g.fillCircle(cx + 10, cy + hr + 14, 5);
+        g.fillCircle(cx + 56, cy + 16, 5);
 
         // --- HEAD ---
         g.fillStyle(0xffffff, 1);
@@ -455,44 +427,139 @@ class BootScene extends Phaser.Scene {
 
         // --- EARS ---
         g.fillStyle(0xffffff, 1);
-        g.fillTriangle(cx - 16, cy - 2, cx - 22, cy - 14, cx - 10, cy - 12);
+        g.fillTriangle(cx - 30, cy - 16, cx - 40, cy - 42, cx - 16, cy - 36);
         g.fillStyle(0xffbbcc, 1);
-        g.fillTriangle(cx - 16, cy - 4, cx - 20, cy - 12, cx - 12, cy - 10);
+        g.fillTriangle(cx - 30, cy - 20, cx - 36, cy - 38, cx - 20, cy - 34);
 
         g.fillStyle(0xffffff, 1);
-        g.fillTriangle(cx + 16, cy - 2, cx + 22, cy - 14, cx + 10, cy - 12);
+        g.fillTriangle(cx + 30, cy - 16, cx + 40, cy - 42, cx + 16, cy - 36);
         g.fillStyle(0xffbbcc, 1);
-        g.fillTriangle(cx + 16, cy - 4, cx + 20, cy - 12, cx + 12, cy - 10);
+        g.fillTriangle(cx + 30, cy - 20, cx + 36, cy - 38, cx + 20, cy - 34);
 
-        // --- CLOSED EYES (curved lines, sleeping) ---
-        g.lineStyle(1.5, 0x8b5a2b, 1);
+        // --- EYES (determined/run look) ---
+        g.fillStyle(0x8b5a2b, 1);
+        g.fillCircle(cx - 16, cy - 4, 10);
+        g.fillStyle(0xffffff, 1);
+        g.fillCircle(cx - 12, cy - 8, 5);
+        g.fillCircle(cx - 18, cy - 2, 2);
+
+        g.fillStyle(0x8b5a2b, 1);
+        g.fillCircle(cx + 16, cy - 4, 10);
+        g.fillStyle(0xffffff, 1);
+        g.fillCircle(cx + 20, cy - 8, 5);
+        g.fillCircle(cx + 14, cy - 2, 2);
+
+        // --- NOSE ---
+        g.fillStyle(0xffaabb, 1);
+        g.fillCircle(cx, cy + 8, 4);
+
+        // --- MOUTH (focused) ---
+        g.lineStyle(2, 0xcc8899, 1);
         g.beginPath();
-        // Left closed eye (upside-down arc)
-        g.arc(cx - 7, cy - 2, 3, Math.PI, 0, false);
-        // Right closed eye
-        g.arc(cx + 7, cy - 2, 3, Math.PI, 0, false);
+        g.moveTo(cx - 5, cy + 16);
+        g.lineTo(cx, cy + 20);
+        g.lineTo(cx + 5, cy + 16);
         g.strokePath();
 
-        // --- BLUSH (on cheeks) ---
-        g.fillStyle(0xffaabb, 0.9);
-        g.fillCircle(cx - 14, cy + 4, 3.5);
-        g.fillCircle(cx + 14, cy + 4, 3.5);
+        // --- BLUSH ---
+        g.fillStyle(0xffaabb, 0.85);
+        g.fillEllipse(cx - 30, cy + 8, 10, 7);
+        g.fillEllipse(cx + 30, cy + 8, 10, 7);
 
-        // --- WHISKERS (from cheeks) ---
-        g.lineStyle(1, 0xdddddd, 0.9);
+        // --- WHISKERS ---
+        g.lineStyle(2, 0x8b7355, 0.9);
         g.beginPath();
-        g.moveTo(cx - 16, cy + 2);  g.lineTo(cx - 22, cy + 0);
-        g.moveTo(cx - 16, cy + 4);  g.lineTo(cx - 22, cy + 4);
-        g.moveTo(cx - 16, cy + 6);  g.lineTo(cx - 22, cy + 8);
-        g.moveTo(cx + 16, cy + 2);  g.lineTo(cx + 22, cy + 0);
-        g.moveTo(cx + 16, cy + 4);  g.lineTo(cx + 22, cy + 4);
-        g.moveTo(cx + 16, cy + 6);  g.lineTo(cx + 22, cy + 8);
+        g.moveTo(cx - 34, cy + 2);  g.lineTo(cx - 48, cy - 2);
+        g.moveTo(cx - 34, cy + 6);  g.lineTo(cx - 50, cy + 6);
+        g.moveTo(cx - 34, cy + 10); g.lineTo(cx - 48, cy + 14);
+        g.moveTo(cx + 34, cy + 2);  g.lineTo(cx + 48, cy - 2);
+        g.moveTo(cx + 34, cy + 6);  g.lineTo(cx + 50, cy + 6);
+        g.moveTo(cx + 34, cy + 10); g.lineTo(cx + 48, cy + 14);
         g.strokePath();
 
-        // --- Zzz bubble ---
+        g.generateTexture(key, w, h);
+        g.destroy();
+    }
+
+    createCatSleepTexture(key) {
+        const w = 128, h = 128;
+        const g = this.make.graphics({ x: 0, y: 0, add: false });
+        const cx = 64, cy = 48;
+        const hr = 34;
+
+        // --- BODY (curled) ---
+        g.fillStyle(0xffffff, 1);
+        g.fillEllipse(cx, cy + 44, 56, 36);
+
+        // --- LEGS (tucked) ---
+        g.fillStyle(0xffffff, 1);
+        g.fillRoundedRect(cx - 26, cy + 64, 14, 16, 7);
+        g.fillRoundedRect(cx - 6, cy + 66, 14, 16, 7);
+        g.fillRoundedRect(cx + 10, cy + 66, 14, 16, 7);
+        g.fillRoundedRect(cx + 24, cy + 64, 14, 16, 7);
+
+        // --- TAIL (curled around body) ---
+        g.lineStyle(8, 0xffffff, 1);
+        g.beginPath();
+        g.moveTo(cx + 28, cy + 36);
+        g.lineTo(cx + 42, cy + 50);
+        g.lineTo(cx + 36, cy + 60);
+        g.strokePath();
+        g.fillCircle(cx + 36, cy + 60, 5);
+
+        // --- HEAD ---
+        g.fillStyle(0xffffff, 1);
+        g.fillCircle(cx, cy, hr);
+
+        // --- EARS ---
+        g.fillStyle(0xffffff, 1);
+        g.fillTriangle(cx - 30, cy - 16, cx - 40, cy - 42, cx - 16, cy - 36);
+        g.fillStyle(0xffbbcc, 1);
+        g.fillTriangle(cx - 30, cy - 20, cx - 36, cy - 38, cx - 20, cy - 34);
+
+        g.fillStyle(0xffffff, 1);
+        g.fillTriangle(cx + 30, cy - 16, cx + 40, cy - 42, cx + 16, cy - 36);
+        g.fillStyle(0xffbbcc, 1);
+        g.fillTriangle(cx + 30, cy - 20, cx + 36, cy - 38, cx + 20, cy - 34);
+
+        // --- CLOSED EYES (sleeping arcs) ---
+        g.lineStyle(3, 0x8b5a2b, 1);
+        g.beginPath();
+        g.arc(cx - 16, cy - 4, 8, Math.PI, 0, false);
+        g.arc(cx + 16, cy - 4, 8, Math.PI, 0, false);
+        g.strokePath();
+
+        // --- NOSE ---
+        g.fillStyle(0xffaabb, 1);
+        g.fillCircle(cx, cy + 8, 4);
+
+        // --- MOUTH (small smile) ---
+        g.lineStyle(2, 0xcc8899, 1);
+        g.beginPath();
+        g.moveTo(cx - 5, cy + 16);
+        g.quadraticCurveTo(cx, cy + 20, cx + 5, cy + 16);
+        g.strokePath();
+
+        // --- BLUSH ---
+        g.fillStyle(0xffaabb, 0.85);
+        g.fillEllipse(cx - 30, cy + 8, 10, 7);
+        g.fillEllipse(cx + 30, cy + 8, 10, 7);
+
+        // --- WHISKERS ---
+        g.lineStyle(2, 0x8b7355, 0.9);
+        g.beginPath();
+        g.moveTo(cx - 34, cy + 2);  g.lineTo(cx - 48, cy - 2);
+        g.moveTo(cx - 34, cy + 6);  g.lineTo(cx - 50, cy + 6);
+        g.moveTo(cx - 34, cy + 10); g.lineTo(cx - 48, cy + 14);
+        g.moveTo(cx + 34, cy + 2);  g.lineTo(cx + 48, cy - 2);
+        g.moveTo(cx + 34, cy + 6);  g.lineTo(cx + 50, cy + 6);
+        g.moveTo(cx + 34, cy + 10); g.lineTo(cx + 48, cy + 14);
+        g.strokePath();
+
+        // --- Zzz ---
         g.fillStyle(0xaaaaff, 1);
-        g.fillCircle(cx + 18, cy - 14, 3);
-        g.fillCircle(cx + 22, cy - 20, 2);
+        g.fillCircle(cx + 36, cy - 20, 5);
+        g.fillCircle(cx + 42, cy - 30, 3);
 
         g.generateTexture(key, w, h);
         g.destroy();

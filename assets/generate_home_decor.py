@@ -168,15 +168,6 @@ def make_bed():
     for bx, by, br in light_rim:
         bubble(bx, by, br, PINK_LIGHT)
 
-    # ===== Highlight fuzz dots on top =====
-    highlight = [
-        (34, 24, 4), (46, 20, 5), (60, 18, 5), (74, 18, 5), (88, 20, 5), (100, 24, 4),
-        (40, 22, 3), (54, 16, 4), (68, 16, 4), (82, 22, 3),
-        (52, 26, 2), (66, 26, 2), (78, 26, 2)
-    ]
-    for bx, by, br in highlight:
-        bubble(bx, by, br, (255, 230, 238, 255))
-
     # ===== Soft inner cushion (recessed) =====
     fill_ellipse(img, 64, 44, 32, 14, (255, 235, 240, 255))
     fill_ellipse(img, 64, 42, 28, 12, (255, 245, 248, 255))
@@ -191,16 +182,6 @@ def make_bed():
     line(img, 52, 40, 58, 36, (255, 215, 228, 255), 1)
     line(img, 64, 46, 70, 42, (255, 215, 228, 255), 1)
     line(img, 76, 40, 70, 36, (255, 215, 228, 255), 1)
-
-    # ===== Cute tiny cat ears on the rim =====
-    # left ear
-    fill_circle(img, 30, 28, 7, PINK)
-    fill_circle(img, 28, 26, 5, PINK_LIGHT)
-    fill_circle(img, 27, 25, 3, (255, 220, 230, 255))
-    # right ear
-    fill_circle(img, 98, 28, 7, PINK)
-    fill_circle(img, 100, 26, 5, PINK_LIGHT)
-    fill_circle(img, 101, 25, 3, (255, 220, 230, 255))
 
     # ===== Tiny heart on front =====
     heart = [(64, 56), (61, 52), (58, 52), (58, 56), (64, 62), (70, 56), (70, 52), (67, 52)]

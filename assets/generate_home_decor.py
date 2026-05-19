@@ -198,29 +198,51 @@ def make_bed():
 
 
 def make_yarn():
-    img = new_canvas(64, 64)
+    """Cute fluffy 3D yarn ball with loose tail."""
+    img = new_canvas(80, 64)
+
     # shadow
-    fill_ellipse(img, 28, 43, 15, 6, (200, 150, 160, 55))
-    # ball
-    fill_circle(img, 27, 28, 17, PINK)
-    fill_circle(img, 27, 27, 15, PINK_LIGHT)
-    # knitted swirl lines
+    fill_ellipse(img, 34, 48, 18, 6, (200, 160, 170, 55))
+
+    # back depth layer (darker pink)
+    fill_circle(img, 30, 28, 22, (225, 130, 165, 255))
+
+    # main body (pink)
+    fill_circle(img, 32, 26, 20, PINK)
+
+    # front light layer (lighter pink)
+    fill_circle(img, 34, 24, 18, PINK_LIGHT)
+
+    # top highlight sheen for 3D
+    fill_ellipse(img, 28, 18, 10, 5, (255, 230, 238, 180))
+    fill_ellipse(img, 36, 15, 8, 4, (255, 225, 235, 150))
+
+    # knitted swirl lines (depth layers)
     for pts, col in [
-        ([(14, 21), (20, 18), (28, 17), (37, 19), (40, 24)], PINK_DARK),
-        ([(12, 28), (19, 25), (28, 24), (36, 25), (41, 30)], PINK_DARK),
-        ([(15, 35), (21, 31), (28, 30), (35, 31), (39, 35)], PINK_DARK),
-        ([(18, 15), (22, 13), (27, 12), (32, 13), (36, 16)], (255, 220, 227, 255)),
+        ([(18, 16), (24, 13), (34, 12), (44, 14), (48, 19)], PINK_DARK),
+        ([(16, 22), (24, 19), (34, 18), (44, 20), (50, 25)], PINK_DARK),
+        ([(18, 30), (26, 26), (34, 25), (42, 26), (48, 30)], PINK_DARK),
+        ([(22, 36), (28, 33), (34, 32), (40, 33), (44, 36)], PINK_DARK),
+        ([(20, 14), (26, 11), (34, 10), (42, 12), (46, 16)], (255, 235, 240, 255)),
     ]:
         for a, b in zip(pts, pts[1:]):
             line(img, a[0], a[1], b[0], b[1], col, 1)
-    # highlight
-    fill_circle(img, 18, 18, 3, (255, 235, 240, 255))
-    fill_circle(img, 14, 17, 1, (255, 255, 255, 180))
-    # tail string
-    line(img, 40, 36, 45, 39, PINK_DARK, 1)
-    line(img, 45, 39, 48, 43, PINK_DARK, 1)
-    line(img, 48, 43, 55, 44, PINK_DARK, 1)
-    line(img, 55, 44, 58, 48, PINK_DARK, 1)
+
+    # highlight sparkle
+    fill_circle(img, 22, 16, 3, (255, 245, 250, 255))
+    fill_circle(img, 18, 14, 1, (255, 255, 255, 180))
+
+    # loose tail string (curvy)
+    line(img, 52, 38, 56, 42, PINK_DARK, 2)
+    line(img, 56, 42, 60, 46, PINK_DARK, 2)
+    line(img, 60, 46, 66, 48, PINK_DARK, 2)
+    line(img, 66, 48, 72, 54, PINK_DARK, 1)
+    line(img, 72, 54, 76, 58, PINK_DARK, 1)
+
+    # tail tip fluff
+    fill_circle(img, 76, 58, 3, PINK_LIGHT)
+    fill_circle(img, 74, 56, 2, (255, 245, 250, 255))
+
     return img
 
 
@@ -286,12 +308,6 @@ def make_food_tray():
     fill_rect(img, 72, 25, 12, 1, (255, 255, 255, 120))
     # bowl front shadow
     fill_ellipse(img, 78, 36, 12, 4, (240, 230, 225, 100))
-
-    # === Tiny paw print on the stand front ===
-    fill_circle(img, 62, 44, 4, (200, 150, 100, 255))
-    fill_circle(img, 57, 40, 2, (190, 140, 90, 255))
-    fill_circle(img, 62, 38, 2, (190, 140, 90, 255))
-    fill_circle(img, 67, 40, 2, (190, 140, 90, 255))
 
     return img
 

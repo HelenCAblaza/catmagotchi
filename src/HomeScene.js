@@ -91,9 +91,9 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(1, 0.5);
 
         // === CAT AREA ===
-        const catY = H * 0.535;
+        const catY = H * 0.53;
         this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
-        this.cat.setScale(2.8);
+        this.cat.setScale(3.0);
 
         // Cooldown for cleaning (via Bath button)
         this.canClean = true;

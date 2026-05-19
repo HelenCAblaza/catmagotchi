@@ -324,7 +324,7 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(0.5).setScrollFactor(0);
 
         // Adventure text below icon
-        const lbl = this.add.text(x, y + 10, 'Adventure', {
+        const lbl = this.add.text(x, y + 14, 'Adventure', {
             fontSize: '10px',
             color: '#8888aa',
             fontFamily: '"Poppins", sans-serif',

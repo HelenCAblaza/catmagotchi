@@ -104,15 +104,18 @@ class HomeScene extends Phaser.Scene {
         this.add.image(W * 0.85, decoY, 'bowl').setScale(1.8);
         this.add.image(W / 2, decoY + 40, 'yarn').setScale(1.8);
 
-        // === BUTTONS (bottom area) - circle buttons like Tamagotchi ===
-        const btnY1 = H * 0.74;
-        const btnY2 = btnY1 + 70;
+        // === BUTTONS (bottom area) - circle buttons in a single row ===
+        const btnY = H * 0.78;
         const circleR = 32;
+        const btnX1 = W * 0.14;
+        const btnX2 = W * 0.38;
+        const btnX3 = W * 0.62;
+        const btnX4 = W * 0.86;
 
-        this.createCircleButton(W * 0.25, btnY1, '🛏️', 'Sleep', () => this.sleep(), circleR, 0x9999dd);
-        this.createCircleButton(W * 0.75, btnY1, '🍗', 'Feed', () => this.feed(), circleR, 0xdd9999);
-        this.createCircleButton(W * 0.25, btnY2, '🧶', 'Play', () => this.play(), circleR, 0xdd99dd);
-        this.createCircleButton(W * 0.75, btnY2, '🛁', 'Bath', () => this.cleanCat(), circleR, 0x77bbdd);
+        this.createCircleButton(btnX1, btnY, '🛏️', 'Sleep', () => this.sleep(), circleR, 0x9999dd);
+        this.createCircleButton(btnX2, btnY, '🍗', 'Feed', () => this.feed(), circleR, 0xdd9999);
+        this.createCircleButton(btnX3, btnY, '🧶', 'Play', () => this.play(), circleR, 0xdd99dd);
+        this.createCircleButton(btnX4, btnY, '🛁', 'Bath', () => this.cleanCat(), circleR, 0x77bbdd);
 
         // === ADVENTURE BUTTON - round pastel world button at bottom right ===
         this.createAdventureButton(W - 55, H - 55);

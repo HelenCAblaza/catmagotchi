@@ -88,10 +88,10 @@ def draw_run_cat(img):
     fill_ellipse(img, 36, 47, 2.0, 2.1, S)
     fill_ellipse(img, 37, 49, 1.3, 1.1, P)
 
-    # Head: slightly smaller so the face details breathe more
-    fill_circle(img, 21, 25, 14, W)
+    # Head: slightly smaller and a touch more oval so the face reads clearly
+    fill_ellipse(img, 21, 25, 13.5, 13.1, W)
     # Head shadow on the back side
-    fill_ellipse(img, 28, 26, 7, 8, S)
+    fill_ellipse(img, 28, 26, 7, 7.5, S)
 
     # Ears attached slightly further back
     for x, y in [
@@ -144,6 +144,8 @@ def draw_run_cat(img):
                 set_pixel(img, x, y, LIGHT_PINK)
 
     # Nose / mouth / whiskers
+    set_pixel(img, 6, 25, B)
+    set_pixel(img, 6, 26, B)
     set_pixel(img, 8, 25, B)
     set_pixel(img, 7, 26, B)
     set_pixel(img, 8, 26, B)

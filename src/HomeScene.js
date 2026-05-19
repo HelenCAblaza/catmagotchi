@@ -234,8 +234,9 @@ class HomeScene extends Phaser.Scene {
     createCircleButton(x, y, icon, label, callback, radius, color) {
         const border = 2;
         const btn = this.add.graphics();
-        // Crisp white border using filled circle behind
-        btn.fillStyle(0xffffff, 1);
+        const borderColor = this.darkenColor(color, 0x222222);
+        // Crisp border using filled circle behind
+        btn.fillStyle(borderColor, 1);
         btn.fillCircle(x, y, radius + border);
         btn.fillStyle(color, 1);
         btn.fillCircle(x, y, radius);
@@ -265,14 +266,14 @@ class HomeScene extends Phaser.Scene {
         btn.on('pointerover', () => {
             btn.clear();
             const lighter = this.lightenColor(color, 0x222222);
-            btn.fillStyle(0xffffff, 1);
+            btn.fillStyle(borderColor, 1);
             btn.fillCircle(x, y, radius + border);
             btn.fillStyle(lighter, 1);
             btn.fillCircle(x, y, radius);
         });
         btn.on('pointerout', () => {
             btn.clear();
-            btn.fillStyle(0xffffff, 1);
+            btn.fillStyle(borderColor, 1);
             btn.fillCircle(x, y, radius + border);
             btn.fillStyle(color, 1);
             btn.fillCircle(x, y, radius);
@@ -284,6 +285,13 @@ class HomeScene extends Phaser.Scene {
         const r = Math.min(255, ((color >> 16) & 0xFF) + ((amount >> 16) & 0xFF));
         const g = Math.min(255, ((color >> 8) & 0xFF) + ((amount >> 8) & 0xFF));
         const b = Math.min(255, (color & 0xFF) + (amount & 0xFF));
+        return (r << 16) | (g << 8) | b;
+    }
+
+    darkenColor(color, amount) {
+        const r = Math.max(0, ((color >> 16) & 0xFF) - ((amount >> 16) & 0xFF));
+        const g = Math.max(0, ((color >> 8) & 0xFF) - ((amount >> 8) & 0xFF));
+        const b = Math.max(0, (color & 0xFF) - (amount & 0xFF));
         return (r << 16) | (g << 8) | b;
     }
 

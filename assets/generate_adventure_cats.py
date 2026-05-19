@@ -170,9 +170,9 @@ def draw_adventure_idle(img):
 
     # --- WHISKERS on cheek (fanning from cheek, not projecting forward) ---
     # Start from cheek area (near blush, below eye) and fan outward/down
-    draw_line(img, 12, 26, 8, 29, K)
-    draw_line(img, 14, 27, 10, 31, K)
-    draw_line(img, 16, 27, 13, 32, K)
+    draw_line(img, 8, 29, 12, 26, K)
+    draw_line(img, 10, 31, 14, 27, K)
+    draw_line(img, 13, 32, 16, 27, K)
 
 
 def draw_adventure_run(img):
@@ -289,9 +289,9 @@ def draw_adventure_run(img):
     set_pixel(img, 9, 23, M)
 
     # --- WHISKERS on cheek (fanning from cheek area, not forward) ---
-    draw_line(img, 10, 24, 6, 27, K)
-    draw_line(img, 12, 25, 8, 29, K)
-    draw_line(img, 14, 25, 11, 30, K)
+    draw_line(img, 6, 27, 10, 24, K)
+    draw_line(img, 8, 29, 12, 25, K)
+    draw_line(img, 11, 30, 14, 25, K)
 
 
 if __name__ == '__main__':

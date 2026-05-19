@@ -5,9 +5,10 @@ class BootScene extends Phaser.Scene {
 
     preload() {
         // Load real pixel-art sprites!
-        this.load.image('cat_idle', 'assets/cat-idle.png?v=306');
-        this.load.image('cat_run', 'assets/cat-run.png?v=320');
-        this.load.image('cat_sleep', 'assets/cat-sleep.png?v=306');
+        this.load.image('cat_idle', 'assets/cat-idle.png?v=307');
+        this.load.image('cat_adventure_idle', 'assets/cat-adventure-idle.png?v=307');
+        this.load.image('cat_run', 'assets/cat-run.png?v=321');
+        this.load.image('cat_sleep', 'assets/cat-sleep.png?v=307');
 
         // Generate other textures programmatically
         this.createTexture('platform', '#8b7355', 32, 32, 'rect');

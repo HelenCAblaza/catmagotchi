@@ -105,7 +105,7 @@ class HomeScene extends Phaser.Scene {
         this.add.image(W / 2, decoY + 40, 'yarn').setScale(1.8);
 
         // === BUTTONS (bottom area) - rounded pill shape ===
-        const btnY1 = H * 0.70;
+        const btnY1 = H * 0.74;
         const btnY2 = btnY1 + 52;
         const btnY3 = btnY2 + 52;
         const btnW = 160;

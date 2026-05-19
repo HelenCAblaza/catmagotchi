@@ -36,7 +36,7 @@ class HomeScene extends Phaser.Scene {
         this.add.text(W / 2, 52, '\u2728 Catmagotchi \u2728', {
             fontSize: '42px',
             color: '#ffffff',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             fontStyle: 'bold',
             stroke: '#ff88cc',
             strokeThickness: 3
@@ -46,14 +46,14 @@ class HomeScene extends Phaser.Scene {
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
             fontSize: '10px',
             color: '#887799',
-            fontFamily: '"Poppins", sans-serif'
+            fontFamily: 'Poppins'
         }).setOrigin(0.5);
 
         // Cat name above stats - smaller, left aligned, no stars, darker grey
         this.add.text(40, 125, 'Mittens', {
             fontSize: '18px',
             color: '#555555',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             fontStyle: 'bold'
         }).setOrigin(0, 0.5);
 
@@ -77,7 +77,7 @@ class HomeScene extends Phaser.Scene {
         this.fishText = this.add.text(440, statY1, '\ud83d\udc1f: 0', {
             fontSize: '15px',
             color: '#cccccc',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(1, 0.5);
@@ -85,7 +85,7 @@ class HomeScene extends Phaser.Scene {
         this.toyText = this.add.text(440, statY2, '\ud83e\uddf6: 0', {
             fontSize: '15px',
             color: '#cccccc',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(1, 0.5);
@@ -203,7 +203,7 @@ class HomeScene extends Phaser.Scene {
         this.add.text(labelX, labelY, label, {
             fontSize: '12px',
             color: '#777777',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             fontStyle: 'bold'
         }).setOrigin(0, 0.5);
     }
@@ -249,7 +249,7 @@ class HomeScene extends Phaser.Scene {
         // Emoji icon centered in circle
         const iconText = this.add.text(x, y - 2, icon, {
             fontSize: '24px',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 2
         }).setOrigin(0.5);
@@ -258,7 +258,7 @@ class HomeScene extends Phaser.Scene {
         this.add.text(x, y + radius + 10, label, {
             fontSize: '11px',
             color: '#8888aa',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             fontStyle: 'bold'
         }).setOrigin(0.5);
 
@@ -318,7 +318,7 @@ class HomeScene extends Phaser.Scene {
         // World icon
         const icon = this.add.text(x, y - 6, '\ud83c\udf0d', {
             fontSize: '24px',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(0);
@@ -327,7 +327,7 @@ class HomeScene extends Phaser.Scene {
         const lbl = this.add.text(x, y + 14, 'Adventure', {
             fontSize: '10px',
             color: '#8888aa',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             fontStyle: 'bold'
         }).setOrigin(0.5).setScrollFactor(0);
 
@@ -443,7 +443,7 @@ class HomeScene extends Phaser.Scene {
 
         const sparkle = this.add.text(this.cat.x + 30, this.cat.y - 30, '\u2728', {
             fontSize: '22px',
-            fontFamily: '"Poppins", sans-serif'
+            fontFamily: 'Poppins'
         }).setOrigin(0.5);
         this.tweens.add({
             targets: sparkle,
@@ -493,7 +493,7 @@ class HomeScene extends Phaser.Scene {
         const txt = this.add.text(x, y, text, {
             fontSize: '16px',
             color: '#ffffff',
-            fontFamily: '"Poppins", sans-serif',
+            fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(0.5);

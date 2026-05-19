@@ -122,51 +122,69 @@ GREEN_DARK = (96, 146, 74, 255)
 
 
 def make_bed():
-    img = new_canvas(104, 72)
-    # soft shadow
-    fill_ellipse(img, 53, 51, 43, 12, (230, 176, 182, 55))
+    img = new_canvas(120, 80)
+    # soft ground shadow
+    fill_ellipse(img, 60, 60, 48, 10, (200, 160, 160, 60))
 
-    # outer bed wall / body
-    fill_ellipse(img, 52, 42, 40, 20, (210, 121, 145, 255))
-    fill_ellipse(img, 52, 41, 38, 18, PINK)
-    fill_ellipse(img, 52, 40, 36, 16, PINK_LIGHT)
+    # fluffy outer rim — built from overlapping circles for cloud-like puffiness
+    def fluffy_bubble(cx, cy, r, color):
+        fill_circle(img, cx, cy, r, color)
 
-    # 3D front lip / underside
-    fill_ellipse(img, 52, 48, 34, 9, PINK_DARK)
-    fill_ellipse(img, 52, 45, 35, 10, (236, 156, 168, 255))
-    fill_rect(img, 18, 45, 68, 5, (214, 127, 145, 255))
-    fill_rect(img, 18, 43, 68, 3, (255, 219, 226, 160))
+    # back rim puffs (darker, for depth)
+    for bx, by, br in [
+        (24, 42, 16), (36, 34, 18), (50, 30, 19), (66, 30, 19),
+        (80, 34, 18), (92, 42, 16), (84, 50, 15), (72, 54, 16),
+        (58, 56, 17), (44, 54, 16), (32, 50, 15)
+    ]:
+        fluffy_bubble(bx, by, br, PINK_DARK)
 
-    # side shading for depth
-    fill_ellipse(img, 27, 42, 7, 12, (187, 106, 129, 255))
-    fill_ellipse(img, 77, 42, 7, 12, (183, 103, 124, 255))
+    # mid rim puffs
+    for bx, by, br in [
+        (26, 40, 15), (38, 32, 17), (52, 28, 18), (68, 28, 18),
+        (82, 32, 17), (94, 40, 15), (86, 48, 14), (74, 52, 15),
+        (60, 54, 16), (46, 52, 15), (34, 48, 14)
+    ]:
+        fluffy_bubble(bx, by, br, PINK)
 
-    # fluffy cushion
-    fill_ellipse(img, 53, 39, 28, 12, CREAM)
-    fill_ellipse(img, 53, 38, 25, 10, (255, 245, 234, 255))
-    fill_rect(img, 31, 34, 43, 2, (255, 255, 255, 110))
+    # front/top rim puffs (lighter, catching light)
+    for bx, by, br in [
+        (28, 38, 13), (40, 30, 15), (54, 26, 16), (70, 26, 16),
+        (84, 30, 15), (96, 38, 13), (30, 46, 12), (42, 50, 13),
+        (56, 52, 14), (70, 52, 13), (82, 46, 12)
+    ]:
+        fluffy_bubble(bx, by, br, PINK_LIGHT)
 
-    # pillow nub / top volume
-    fill_ellipse(img, 36, 36, 10, 6, (255, 241, 231, 255))
-    fill_ellipse(img, 69, 36, 9, 5, (255, 241, 231, 255))
-    fill_circle(img, 42, 35, 2, (255, 223, 232, 255))
-    fill_circle(img, 63, 35, 2, (255, 223, 232, 255))
+    # highlight dots on top of rim puffs
+    for bx, by, br in [
+        (36, 28, 4), (52, 24, 5), (68, 24, 5), (84, 28, 4),
+        (44, 26, 3), (76, 26, 3)
+    ]:
+        fluffy_bubble(bx, by, br, (255, 225, 232, 255))
 
-    # stitch / tuft lines
-    line(img, 36, 39, 42, 36, (255, 232, 220, 255), 1)
-    line(img, 42, 43, 48, 38, (255, 232, 220, 255), 1)
-    line(img, 58, 43, 64, 38, (255, 232, 220, 255), 1)
-    line(img, 68, 39, 74, 43, (255, 232, 220, 255), 1)
+    # inner cushion base (recessed look)
+    fill_ellipse(img, 62, 42, 34, 16, (250, 215, 200, 255))
+    fill_ellipse(img, 62, 40, 30, 14, (255, 245, 235, 255))
+    fill_ellipse(img, 62, 38, 26, 12, WHITE)
 
-    # front paw print
-    fill_circle(img, 51, 54, 4, PINK_LIGHT)
-    fill_circle(img, 42, 49, 2, PINK_LIGHT)
-    fill_circle(img, 46, 46, 2, PINK_LIGHT)
-    fill_circle(img, 56, 46, 2, PINK_LIGHT)
-    fill_circle(img, 60, 49, 2, PINK_LIGHT)
+    # cushion tuft / pillow dimples
+    fill_circle(img, 48, 38, 3, (255, 232, 220, 255))
+    fill_circle(img, 76, 38, 3, (255, 232, 220, 255))
+    fill_circle(img, 62, 44, 2, (255, 220, 210, 255))
 
-    # little underside shadow to make the bed feel lifted
-    fill_ellipse(img, 52, 50, 35, 7, (216, 145, 155, 120))
+    # tiny stitch lines
+    line(img, 48, 38, 54, 34, (255, 220, 205, 255), 1)
+    line(img, 62, 44, 68, 40, (255, 220, 205, 255), 1)
+    line(img, 76, 38, 70, 34, (255, 220, 205, 255), 1)
+
+    # small heart on front rim
+    heart_pts = [(60, 50), (57, 46), (54, 46), (54, 50), (60, 56), (66, 50), (66, 46), (63, 46)]
+    for hx, hy in heart_pts:
+        fill_circle(img, hx, hy, 2, (255, 200, 210, 255))
+    fill_circle(img, 60, 52, 3, (255, 190, 200, 255))
+
+    # underside depth shadow
+    fill_ellipse(img, 60, 58, 40, 8, (200, 120, 140, 90))
+
     return img
 
 

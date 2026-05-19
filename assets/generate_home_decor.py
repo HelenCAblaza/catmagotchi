@@ -225,54 +225,74 @@ def make_yarn():
 
 
 def make_food_tray():
-    img = new_canvas(112, 64)
-    # tray shadow
-    fill_ellipse(img, 57, 50, 46, 7, (160, 112, 72, 70))
+    """Cute 3D elevated pet food station with two bowls."""
+    img = new_canvas(120, 72)
 
-    # wooden tray: layered to look more 3D
-    fill_rounded_rect(img, 8, 28, 96, 24, 8, BROWN_DARK)          # outer edge
-    fill_rounded_rect(img, 10, 26, 92, 24, 8, BROWN)              # side wall / body
-    fill_rounded_rect(img, 12, 28, 88, 18, 7, BEIGE)              # inner top
-    fill_rect(img, 12, 38, 88, 6, (209, 157, 105, 255))          # front lip underside
-    fill_rect(img, 12, 28, 88, 3, (240, 214, 183, 255))          # top highlight
-    fill_rect(img, 12, 31, 88, 1, (255, 248, 236, 190))
-    # subtle side shading and front edge
-    fill_rect(img, 12, 28, 3, 18, (187, 129, 79, 255))
-    fill_rect(img, 97, 28, 3, 18, (181, 122, 73, 255))
-    fill_rect(img, 12, 42, 88, 3, (120, 80, 48, 120))
+    # soft ground shadow
+    fill_ellipse(img, 60, 64, 48, 6, (180, 170, 175, 60))
 
-    # left food bowl (slightly raised to fit tray better)
-    fill_ellipse(img, 42, 23, 15, 11, WHITE)
-    fill_ellipse(img, 42, 24, 13, 9, PINK_LIGHT)
-    fill_ellipse(img, 42, 24, 11, 7, (255, 241, 236, 255))
-    fill_ellipse(img, 42, 22, 9, 5, (139, 86, 43, 255))
-    fill_ellipse(img, 42, 20, 7, 3, (174, 118, 72, 255))
-    fill_ellipse(img, 42, 19, 5, 2, (198, 146, 96, 255))
-    for p in [(35, 18), (39, 15), (45, 17), (49, 20), (37, 22), (43, 21), (47, 19)]:
-        fill_circle(img, p[0], p[1], 1, (120, 76, 38, 255))
-    # bowl rim highlight and tiny paw mark
-    fill_rect(img, 35, 15, 14, 1, (255, 251, 246, 210))
-    fill_circle(img, 42, 28, 3, PINK_DARK)
+    # === Stand legs (back, darker) ===
+    fill_rounded_rect(img, 22, 48, 6, 14, 2, (140, 100, 65, 255))
+    fill_rounded_rect(img, 92, 48, 6, 14, 2, (140, 100, 65, 255))
 
-    # right water bowl
-    fill_ellipse(img, 79, 23, 15, 11, WHITE)
-    fill_ellipse(img, 79, 24, 13, 9, (248, 241, 232, 255))
-    fill_ellipse(img, 79, 24, 11, 7, BLUE_LIGHT)
-    fill_ellipse(img, 79, 22, 8, 5, BLUE)
-    fill_ellipse(img, 79, 20, 6, 3, (190, 234, 255, 255))
-    fill_ellipse(img, 79, 19, 4, 2, (225, 249, 255, 255))
-    fill_rect(img, 72, 15, 14, 1, (255, 255, 255, 180))
-    fill_circle(img, 79, 28, 3, BEIGE)
-    fill_circle(img, 72, 21, 1, BEIGE)
-    fill_circle(img, 76, 18, 1, BEIGE)
-    fill_circle(img, 83, 18, 1, BEIGE)
-    fill_circle(img, 87, 21, 1, BEIGE)
+    # === Stand body / table top (layered for 3D) ===
+    # bottom dark edge
+    fill_rounded_rect(img, 14, 46, 92, 10, 4, (130, 90, 55, 255))
+    # main body
+    fill_rounded_rect(img, 14, 38, 92, 14, 4, BROWN)
+    # top surface
+    fill_rounded_rect(img, 16, 36, 88, 10, 3, (225, 195, 155, 255))
+    # top highlight strip
+    fill_rect(img, 18, 37, 84, 2, (240, 220, 190, 180))
+    fill_rect(img, 18, 39, 84, 1, (255, 250, 240, 120))
+    # side shading
+    fill_rect(img, 14, 40, 3, 10, (160, 115, 70, 255))
+    fill_rect(img, 103, 40, 3, 10, (155, 110, 65, 255))
 
-    # tray paws / cute mark
-    fill_circle(img, 57, 43, 5, (208, 156, 106, 255))
-    fill_circle(img, 51, 40, 2, (193, 139, 92, 255))
-    fill_circle(img, 55, 37, 2, (193, 139, 92, 255))
-    fill_circle(img, 59, 40, 2, (193, 139, 92, 255))
+    # === Left food bowl ===
+    # bowl shadow on table
+    fill_ellipse(img, 44, 40, 16, 5, (180, 150, 120, 80))
+    # bowl outer
+    fill_ellipse(img, 44, 32, 16, 12, WHITE)
+    fill_ellipse(img, 44, 33, 14, 10, (255, 245, 240, 255))
+    # food inside (stacked circles for kibble look)
+    fill_ellipse(img, 44, 30, 10, 6, (198, 146, 96, 255))
+    fill_ellipse(img, 44, 29, 8, 5, (210, 160, 110, 255))
+    fill_ellipse(img, 44, 28, 6, 3, (225, 180, 130, 255))
+    # individual kibble dots
+    for kx, ky in [(40, 28), (44, 27), (48, 28), (42, 30), (46, 30)]:
+        fill_circle(img, kx, ky, 1, (180, 130, 80, 255))
+    # bowl rim highlight
+    fill_rect(img, 36, 24, 16, 1, (255, 255, 255, 200))
+    fill_rect(img, 38, 25, 12, 1, (255, 255, 255, 120))
+    # bowl front shadow
+    fill_ellipse(img, 44, 36, 12, 4, (240, 230, 225, 100))
+
+    # === Right water bowl ===
+    # bowl shadow on table
+    fill_ellipse(img, 82, 40, 16, 5, (180, 150, 120, 80))
+    # bowl outer
+    fill_ellipse(img, 82, 32, 16, 12, WHITE)
+    fill_ellipse(img, 82, 33, 14, 10, (248, 248, 255, 255))
+    # water inside
+    fill_ellipse(img, 82, 30, 11, 7, BLUE_LIGHT)
+    fill_ellipse(img, 82, 29, 9, 5, BLUE)
+    fill_ellipse(img, 82, 28, 6, 3, (210, 240, 255, 255))
+    # water sparkle
+    fill_circle(img, 78, 28, 2, (255, 255, 255, 200))
+    fill_circle(img, 76, 27, 1, (255, 255, 255, 160))
+    # bowl rim highlight
+    fill_rect(img, 74, 24, 16, 1, (255, 255, 255, 200))
+    fill_rect(img, 76, 25, 12, 1, (255, 255, 255, 120))
+    # bowl front shadow
+    fill_ellipse(img, 82, 36, 12, 4, (240, 230, 225, 100))
+
+    # === Tiny paw print on the stand front ===
+    fill_circle(img, 62, 44, 4, (200, 150, 100, 255))
+    fill_circle(img, 57, 40, 2, (190, 140, 90, 255))
+    fill_circle(img, 62, 38, 2, (190, 140, 90, 255))
+    fill_circle(img, 67, 40, 2, (190, 140, 90, 255))
+
     return img
 
 

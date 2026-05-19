@@ -15,11 +15,11 @@ class HomeScene extends Phaser.Scene {
         const room = this.add.graphics();
         room.setDepth(-1);
         room.fillStyle(0xf3e0cc, 1);
-        room.fillRect(0, 0, W, H * 0.67);
+        room.fillRect(0, 0, W, H * 0.60);
         room.fillStyle(0xe4bf96, 1);
-        room.fillRect(0, H * 0.67, W, H * 0.33);
+        room.fillRect(0, H * 0.60, W, H * 0.40);
         room.fillStyle(0xcd9d74, 1);
-        room.fillRect(0, H * 0.665, W, 6);
+        room.fillRect(0, H * 0.595, W, 6);
 
         // Window
         room.fillStyle(0xbfe8ff, 1);
@@ -121,9 +121,9 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(1, 0.5);
 
         // === CAT AREA ===
-        const catY = H * 0.58;
+        const catY = H * 0.61;
         this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
-        this.cat.setScale(2.95);
+        this.cat.setScale(2.9);
 
         // Cooldown for cleaning (via Bath button)
         this.canClean = true;

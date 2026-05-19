@@ -88,10 +88,10 @@ def draw_run_cat(img):
     fill_ellipse(img, 36, 47, 2.0, 2.1, S)
     fill_ellipse(img, 37, 49, 1.3, 1.1, P)
 
-    # Head: keep size the same
-    fill_circle(img, 21, 25, 15, W)
+    # Head: slightly smaller so the face details breathe more
+    fill_circle(img, 21, 25, 14, W)
     # Head shadow on the back side
-    fill_ellipse(img, 28, 26, 7, 9, S)
+    fill_ellipse(img, 28, 26, 7, 8, S)
 
     # Ears attached slightly further back
     for x, y in [
@@ -127,7 +127,7 @@ def draw_run_cat(img):
     ]:
         set_pixel(img, x, y, P)
 
-    # Eye / face
+    # Eye / face - keep details visible by not overfilling the muzzle area
     fill_circle(img, 15, 21, 2.75, E)
     fill_circle(img, 14, 19, 1.4, W)
     fill_circle(img, 16, 22, 0.8, W)

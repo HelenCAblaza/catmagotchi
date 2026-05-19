@@ -298,30 +298,35 @@ class HomeScene extends Phaser.Scene {
     createAdventureButton(x, y) {
         const radius = 45;
         const size = radius * 2;
+        const color = 0xaaddcc;
+        const borderColor = this.darkenColor(color, 0x222222);
+        const border = 2;
 
         const btn = this.add.graphics();
-        btn.fillStyle(0xaaddcc, 1);
+        btn.fillStyle(borderColor, 1);
+        btn.fillCircle(0, 0, radius + border);
+        btn.fillStyle(color, 1);
         btn.fillCircle(0, 0, radius);
-        btn.lineStyle(3, 0xffffff, 0.5);
-        btn.strokeCircle(0, 0, radius);
         btn.setPosition(x, y);
         // Rectangle hit area that fully contains the circle
         btn.setInteractive(
-            new Phaser.Geom.Rectangle(-radius, -radius, size, size),
+            new Phaser.Geom.Rectangle(-radius - border, -radius - border, size + border * 2, size + border * 2),
             Phaser.Geom.Rectangle.Contains
         );
         btn.setScrollFactor(0);
 
         // World icon
         const icon = this.add.text(x, y - 6, '\ud83c\udf0d', {
-            fontSize: '22px',
-            fontFamily: '"Poppins", sans-serif'
+            fontSize: '24px',
+            fontFamily: '"Poppins", sans-serif',
+            stroke: '#000000',
+            strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(0);
 
         // Adventure text below icon
         const lbl = this.add.text(x, y + 10, 'Adventure', {
             fontSize: '10px',
-            color: '#ffffff',
+            color: '#8888aa',
             fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5).setScrollFactor(0);
@@ -329,17 +334,18 @@ class HomeScene extends Phaser.Scene {
         // Hover effect - brighten (redraw)
         btn.on('pointerover', () => {
             btn.clear();
-            btn.fillStyle(0xbbeecc, 1);
+            const lighter = this.lightenColor(color, 0x222222);
+            btn.fillStyle(borderColor, 1);
+            btn.fillCircle(0, 0, radius + border);
+            btn.fillStyle(lighter, 1);
             btn.fillCircle(0, 0, radius);
-            btn.lineStyle(3, 0xffffff, 0.5);
-            btn.strokeCircle(0, 0, radius);
         });
         btn.on('pointerout', () => {
             btn.clear();
-            btn.fillStyle(0xaaddcc, 1);
+            btn.fillStyle(borderColor, 1);
+            btn.fillCircle(0, 0, radius + border);
+            btn.fillStyle(color, 1);
             btn.fillCircle(0, 0, radius);
-            btn.lineStyle(3, 0xffffff, 0.5);
-            btn.strokeCircle(0, 0, radius);
         });
         btn.on('pointerdown', () => {
             this.scene.start('PlatformerScene');

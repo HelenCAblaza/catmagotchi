@@ -17,8 +17,8 @@ class PlatformerScene extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.createLevel();
 
-        // Cat player - uses side-facing idle when still, side run when moving
-        this.player = this.physics.add.sprite(100, 500, 'cat_adventure_idle');
+        // Cat player - uses front-facing idle when still, side run when moving
+        this.player = this.physics.add.sprite(100, 500, 'cat_idle');
         this.player.setScale(1);
         // Physics body matches the visible cat within the 64x64 sprite
         this.player.body.setSize(32, 40);
@@ -362,7 +362,7 @@ class PlatformerScene extends Phaser.Scene {
             this.player.setTexture('cat_run');
             this.playerRunTexture = true;
         } else if (!isMoving && this.playerRunTexture) {
-            this.player.setTexture('cat_adventure_idle');
+            this.player.setTexture('cat_idle');
             this.playerRunTexture = false;
         }
 

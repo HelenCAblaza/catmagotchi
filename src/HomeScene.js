@@ -232,13 +232,15 @@ class HomeScene extends Phaser.Scene {
     }
 
     createCircleButton(x, y, icon, label, callback, radius, color) {
+        const border = 2;
         const btn = this.add.graphics();
+        // Crisp white border using filled circle behind
+        btn.fillStyle(0xffffff, 1);
+        btn.fillCircle(x, y, radius + border);
         btn.fillStyle(color, 1);
         btn.fillCircle(x, y, radius);
-        btn.lineStyle(3, 0xffffff, 0.4);
-        btn.strokeCircle(x, y, radius);
         btn.setInteractive(
-            new Phaser.Geom.Circle(x, y, radius),
+            new Phaser.Geom.Circle(x, y, radius + border),
             Phaser.Geom.Circle.Contains
         );
         btn.setScrollFactor(0);
@@ -263,17 +265,17 @@ class HomeScene extends Phaser.Scene {
         btn.on('pointerover', () => {
             btn.clear();
             const lighter = this.lightenColor(color, 0x222222);
+            btn.fillStyle(0xffffff, 1);
+            btn.fillCircle(x, y, radius + border);
             btn.fillStyle(lighter, 1);
             btn.fillCircle(x, y, radius);
-            btn.lineStyle(3, 0xffffff, 0.6);
-            btn.strokeCircle(x, y, radius);
         });
         btn.on('pointerout', () => {
             btn.clear();
+            btn.fillStyle(0xffffff, 1);
+            btn.fillCircle(x, y, radius + border);
             btn.fillStyle(color, 1);
             btn.fillCircle(x, y, radius);
-            btn.lineStyle(3, 0xffffff, 0.4);
-            btn.strokeCircle(x, y, radius);
         });
         btn.on('pointerdown', callback);
     }

@@ -244,10 +244,11 @@ class HomeScene extends Phaser.Scene {
         btn.setScrollFactor(0);
 
         // Emoji icon centered in circle
-        this.add.text(x, y - 4, icon, {
-            fontSize: '32px',
-            color: '#ffffff',
-            fontFamily: '"Poppins", sans-serif'
+        const iconText = this.add.text(x, y - 2, icon, {
+            fontSize: '24px',
+            fontFamily: '"Poppins", sans-serif',
+            stroke: '#000000',
+            strokeThickness: 2
         }).setOrigin(0.5);
 
         // Label below circle

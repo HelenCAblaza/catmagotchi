@@ -10,6 +10,9 @@ class PlatformerScene extends Phaser.Scene {
         const H = this.scale.height;  // 800
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+        // Reset adventure inventory to 0 each time
+        this.registry.set('inventory', { fish: 0, toys: 0 });
+
         // World bounds - horizontal scrolling platformer
         this.physics.world.setBounds(0, 0, 1600, 600);
 

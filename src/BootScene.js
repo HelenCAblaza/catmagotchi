@@ -15,6 +15,7 @@ class BootScene extends Phaser.Scene {
         // Generate other textures programmatically
         this.createTexture('platform', '#8b7355', 32, 32, 'rect');
         this.createCuteFishTexture('fish');
+        this.createCuteYarnTexture('yarn');
         this.createTexture('box', '#c4956a', 80, 60, 'rect');
         this.createHomeBgTexture('bg_home');
         this.createPlatformerBgTexture('bg_platformer');

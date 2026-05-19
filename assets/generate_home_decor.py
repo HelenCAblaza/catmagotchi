@@ -128,6 +128,9 @@ def make_bed():
     def bubble(cx, cy, r, col):
         fill_circle(img, cx, cy, r, col)
 
+    # soft ground shadow
+    fill_ellipse(img, 60, 62, 42, 8, (180, 170, 175, 50))
+
     # ===== Back depth layer (darkest) =====
     back_rim = [
         (20, 44, 14), (30, 36, 16), (42, 30, 18), (56, 27, 19),
@@ -167,6 +170,14 @@ def make_bed():
     ]
     for bx, by, br in light_rim:
         bubble(bx, by, br, PINK_LIGHT)
+
+    # pixel-style white highlight dots on rim top
+    for hx, hy in [(32, 22), (40, 18), (50, 16), (62, 15), (74, 16), (86, 19), (96, 24),
+                   (28, 28), (38, 24), (54, 20), (68, 20), (82, 24), (92, 30),
+                   (36, 32), (48, 28), (62, 26), (76, 28), (88, 32)]:
+        set_pixel(img, hx, hy, (255, 255, 255, 200))
+        set_pixel(img, hx + 1, hy, (255, 255, 255, 160))
+        set_pixel(img, hx, hy + 1, (255, 255, 255, 120))
 
     # ===== Soft inner cushion (recessed) =====
     fill_ellipse(img, 64, 44, 32, 14, (255, 235, 240, 255))

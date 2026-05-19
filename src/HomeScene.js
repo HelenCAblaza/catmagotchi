@@ -91,7 +91,7 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(1, 0.5);
 
         // === CAT AREA ===
-        const catY = H * 0.40;
+        const catY = H * 0.44;
         this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
         this.cat.setScale(2);
 

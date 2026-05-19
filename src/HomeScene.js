@@ -33,7 +33,7 @@ class HomeScene extends Phaser.Scene {
         });
 
         // Title - matching StartScene style
-        this.add.text(W / 2, 52, '\u2728 Catmagotchi \u2728', {
+        this.add.text(W / 2, 52, 'Catmagotchi', {
             fontSize: '42px',
             color: '#ffffff',
             fontFamily: 'Poppins',

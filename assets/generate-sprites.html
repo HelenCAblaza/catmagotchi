@@ -266,26 +266,26 @@ function drawRunCat(ctx) {
     }
   }
 
-  // --- LEGS (running pose, natural shapes) ---
-  // Back leg (stretched back) — thinner, curved
+  // --- LEGS (running pose, fatter curved shapes) ---
+  // Back leg (stretched back) — thick, curved
   const backLeg = [
-    [42,38],[43,39],[44,40],[45,41],
-    [45,42],[46,43],[47,44],[48,45],[49,46],
-    [49,47],[50,48],[48,48],[49,49],[50,49]
+    [42,38],[43,38],[43,39],[44,39],[44,40],[45,40],[45,41],
+    [45,42],[46,42],[46,43],[47,43],[47,44],[48,44],[48,45],[49,45],[49,46],
+    [49,47],[50,47],[50,48],[48,48],[49,49],[50,49],[51,49],[51,50],[50,50]
   ];
   backLeg.forEach(([x,y]) => setPixel(ctx, x, y, W));
-  setPixel(ctx, 50, 50, P); setPixel(ctx, 49, 50, P); // paw
-  // Front leg (stretched forward) — thinner, curved
+  setPixel(ctx, 50, 51, P); setPixel(ctx, 51, 51, P); setPixel(ctx, 49, 51, P); // paw
+  // Front leg (stretched forward) — thick, curved, fixed shape
   const frontLeg = [
-    [22,38],[21,39],[20,40],[19,41],
-    [18,42],[17,43],[16,44],[15,45],[14,46],
-    [13,47],[12,48],[14,48],[13,49],[12,49]
+    [22,38],[23,38],[22,39],[21,39],[21,40],[20,40],[20,41],[19,41],
+    [19,42],[18,42],[18,43],[17,43],[17,44],[16,44],[16,45],[15,45],
+    [15,46],[14,46],[14,47],[13,47],[13,48],[12,48],[12,49],[14,49],[13,50],[12,50]
   ];
   frontLeg.forEach(([x,y]) => setPixel(ctx, x, y, W));
-  setPixel(ctx, 12, 50, P); setPixel(ctx, 13, 50, P); // paw
+  setPixel(ctx, 12, 51, P); setPixel(ctx, 13, 51, P); setPixel(ctx, 11, 51, P); // paw
   // Tucked legs (barely visible nubs behind body)
-  setPixel(ctx, 38, 41, S); setPixel(ctx, 39, 41, S);
-  setPixel(ctx, 25, 41, S); setPixel(ctx, 26, 41, S);
+  setPixel(ctx, 38, 41, S); setPixel(ctx, 39, 41, S); setPixel(ctx, 40, 41, S);
+  setPixel(ctx, 25, 41, S); setPixel(ctx, 26, 41, S); setPixel(ctx, 27, 41, S);
 
   // --- HEAD (round, facing left, shorter chin) ---
   for (let y = 10; y <= 33; y++) {
@@ -353,11 +353,14 @@ function drawRunCat(ctx) {
   // --- BLUSH (back/side of head, slightly toward front) ---
   fillCircle(ctx, 22, 22, 3, P);
 
-  // --- NOSE (tiny tip highlight) ---
+  // --- NOSE (more prominent tip) ---
   setPixel(ctx, 6, 20, B);
   setPixel(ctx, 5, 21, B);
+  setPixel(ctx, 4, 19, W); // tip highlight
   setPixel(ctx, 4, 20, W); // tip highlight
+  setPixel(ctx, 5, 19, B); // tip pixel
   setPixel(ctx, 5, 20, B); // tip pixel
+  setPixel(ctx, 3, 20, B); // extra tip
 
   // --- MOUTH ---
   setPixel(ctx, 7, 23, M);

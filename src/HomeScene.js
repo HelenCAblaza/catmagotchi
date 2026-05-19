@@ -112,7 +112,7 @@ class HomeScene extends Phaser.Scene {
         const btnX3 = W * 0.62;
         const btnX4 = W * 0.86;
 
-        this.createCircleButton(btnX1, btnY, '🛏️', 'Sleep', () => this.sleep(), circleR, 0x9999dd);
+        this.createCircleButton(btnX1, btnY, '🛏️', 'Sleep', () => this.sleep(), circleR, 0xaabbee);
         this.createCircleButton(btnX2, btnY, '🍗', 'Feed', () => this.feed(), circleR, 0xdd9999);
         this.createCircleButton(btnX3, btnY, '🧶', 'Play', () => this.play(), circleR, 0xdd99dd);
         this.createCircleButton(btnX4, btnY, '🛁', 'Bath', () => this.cleanCat(), circleR, 0x77bbdd);

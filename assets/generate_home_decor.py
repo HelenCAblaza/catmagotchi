@@ -122,63 +122,91 @@ GREEN_DARK = (96, 146, 74, 255)
 
 
 def make_bed():
+    """Cute fluffy donut bed — extra puffy rim, soft cushion, kawaii details."""
     img = new_canvas(120, 80)
 
-    # fluffy outer rim — built from overlapping circles for cloud-like puffiness
-    def fluffy_bubble(cx, cy, r, color):
-        fill_circle(img, cx, cy, r, color)
+    def bubble(cx, cy, r, col):
+        fill_circle(img, cx, cy, r, col)
 
-    # back rim puffs (darker, for depth)
-    for bx, by, br in [
-        (24, 42, 16), (36, 34, 18), (50, 30, 19), (66, 30, 19),
-        (80, 34, 18), (92, 42, 16), (84, 50, 15), (72, 54, 16),
-        (58, 56, 17), (44, 54, 16), (32, 50, 15)
-    ]:
-        fluffy_bubble(bx, by, br, PINK_DARK)
+    # ===== Back depth layer (darkest) =====
+    back_rim = [
+        (20, 44, 14), (30, 36, 16), (42, 30, 18), (56, 27, 19),
+        (70, 27, 19), (84, 30, 18), (96, 36, 16), (104, 44, 14),
+        (98, 52, 13), (88, 58, 14), (76, 62, 15), (62, 64, 16),
+        (48, 62, 15), (36, 58, 14), (26, 52, 13)
+    ]
+    for bx, by, br in back_rim:
+        bubble(bx, by, br, (198, 110, 135, 255))
 
-    # mid rim puffs
-    for bx, by, br in [
-        (26, 40, 15), (38, 32, 17), (52, 28, 18), (68, 28, 18),
-        (82, 32, 17), (94, 40, 15), (86, 48, 14), (74, 52, 15),
-        (60, 54, 16), (46, 52, 15), (34, 48, 14)
-    ]:
-        fluffy_bubble(bx, by, br, PINK)
+    # ===== Mid depth layer =====
+    mid_rim = [
+        (22, 42, 13), (32, 34, 15), (44, 28, 17), (58, 25, 18),
+        (72, 25, 18), (86, 28, 17), (98, 34, 15), (106, 42, 13),
+        (100, 50, 12), (90, 56, 13), (78, 60, 14), (64, 62, 15),
+        (50, 60, 14), (38, 56, 13), (28, 50, 12)
+    ]
+    for bx, by, br in mid_rim:
+        bubble(bx, by, br, (220, 140, 160, 255))
 
-    # front/top rim puffs (lighter, catching light)
-    for bx, by, br in [
-        (28, 38, 13), (40, 30, 15), (54, 26, 16), (70, 26, 16),
-        (84, 30, 15), (96, 38, 13), (30, 46, 12), (42, 50, 13),
-        (56, 52, 14), (70, 52, 13), (82, 46, 12)
-    ]:
-        fluffy_bubble(bx, by, br, PINK_LIGHT)
+    # ===== Main body layer (PINK) =====
+    main_rim = [
+        (24, 40, 12), (34, 32, 14), (46, 26, 16), (60, 23, 17),
+        (74, 23, 17), (88, 26, 16), (100, 32, 14), (108, 40, 12),
+        (102, 48, 11), (92, 54, 12), (80, 58, 13), (66, 60, 14),
+        (52, 58, 13), (40, 54, 12), (30, 48, 11)
+    ]
+    for bx, by, br in main_rim:
+        bubble(bx, by, br, PINK)
 
-    # highlight dots on top of rim puffs
-    for bx, by, br in [
-        (36, 28, 4), (52, 24, 5), (68, 24, 5), (84, 28, 4),
-        (44, 26, 3), (76, 26, 3)
-    ]:
-        fluffy_bubble(bx, by, br, (255, 225, 232, 255))
+    # ===== Light front layer =====
+    light_rim = [
+        (26, 38, 10), (36, 30, 12), (48, 24, 14), (62, 21, 15),
+        (76, 21, 15), (90, 24, 14), (102, 30, 12), (110, 38, 10),
+        (104, 46, 9), (94, 52, 10), (82, 56, 11), (68, 58, 12),
+        (54, 56, 11), (42, 52, 10), (32, 46, 9)
+    ]
+    for bx, by, br in light_rim:
+        bubble(bx, by, br, PINK_LIGHT)
 
-    # inner cushion base — clean light pink, no brown tint
-    fill_ellipse(img, 62, 42, 34, 16, (255, 245, 240, 255))
-    fill_ellipse(img, 62, 40, 30, 14, (255, 250, 248, 255))
-    fill_ellipse(img, 62, 38, 26, 12, WHITE)
+    # ===== Highlight fuzz dots on top =====
+    highlight = [
+        (34, 24, 4), (46, 20, 5), (60, 18, 5), (74, 18, 5), (88, 20, 5), (100, 24, 4),
+        (40, 22, 3), (54, 16, 4), (68, 16, 4), (82, 22, 3),
+        (52, 26, 2), (66, 26, 2), (78, 26, 2)
+    ]
+    for bx, by, br in highlight:
+        bubble(bx, by, br, (255, 230, 238, 255))
 
-    # cushion tuft dimples — soft pink, not brown
-    fill_circle(img, 48, 38, 3, (255, 235, 245, 255))
-    fill_circle(img, 76, 38, 3, (255, 235, 245, 255))
-    fill_circle(img, 62, 44, 2, (255, 230, 240, 255))
+    # ===== Soft inner cushion (recessed) =====
+    fill_ellipse(img, 64, 44, 32, 14, (255, 235, 240, 255))
+    fill_ellipse(img, 64, 42, 28, 12, (255, 245, 248, 255))
+    fill_ellipse(img, 64, 40, 24, 10, WHITE)
 
-    # tiny stitch lines — light pink
-    line(img, 48, 38, 54, 34, (255, 225, 235, 255), 1)
-    line(img, 62, 44, 68, 40, (255, 225, 235, 255), 1)
-    line(img, 76, 38, 70, 34, (255, 225, 235, 255), 1)
+    # cushion tuft dimples
+    fill_circle(img, 52, 40, 3, (255, 228, 235, 255))
+    fill_circle(img, 76, 40, 3, (255, 228, 235, 255))
+    fill_circle(img, 64, 46, 2, (255, 220, 230, 255))
 
-    # small heart on front rim
-    heart_pts = [(60, 50), (57, 46), (54, 46), (54, 50), (60, 56), (66, 50), (66, 46), (63, 46)]
-    for hx, hy in heart_pts:
-        fill_circle(img, hx, hy, 2, (255, 200, 210, 255))
-    fill_circle(img, 60, 52, 3, (255, 190, 200, 255))
+    # tiny quilt stitch lines
+    line(img, 52, 40, 58, 36, (255, 215, 228, 255), 1)
+    line(img, 64, 46, 70, 42, (255, 215, 228, 255), 1)
+    line(img, 76, 40, 70, 36, (255, 215, 228, 255), 1)
+
+    # ===== Cute tiny cat ears on the rim =====
+    # left ear
+    fill_circle(img, 30, 28, 7, PINK)
+    fill_circle(img, 28, 26, 5, PINK_LIGHT)
+    fill_circle(img, 27, 25, 3, (255, 220, 230, 255))
+    # right ear
+    fill_circle(img, 98, 28, 7, PINK)
+    fill_circle(img, 100, 26, 5, PINK_LIGHT)
+    fill_circle(img, 101, 25, 3, (255, 220, 230, 255))
+
+    # ===== Tiny heart on front =====
+    heart = [(64, 56), (61, 52), (58, 52), (58, 56), (64, 62), (70, 56), (70, 52), (67, 52)]
+    for hx, hy in heart:
+        fill_circle(img, hx, hy, 2, (255, 185, 200, 255))
+    fill_circle(img, 64, 58, 3, (255, 175, 195, 255))
 
     return img
 

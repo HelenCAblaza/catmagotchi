@@ -14,11 +14,11 @@ class HomeScene extends Phaser.Scene {
         // Cozy room overlay: warm walls, wood floor, window, picture, and rug
         const room = this.add.graphics();
         room.setDepth(-1);
-        room.fillStyle(0xe7c6a5, 1);
+        room.fillStyle(0xebd7bf, 1);
         room.fillRect(0, 0, W, H * 0.56);
-        room.fillStyle(0xd6ac7d, 1);
+        room.fillStyle(0xdcb689, 1);
         room.fillRect(0, H * 0.56, W, H * 0.44);
-        room.fillStyle(0xc08e61, 1);
+        room.fillStyle(0xc7935f, 1);
         room.fillRect(0, H * 0.555, W, 6);
 
         // Window
@@ -48,9 +48,6 @@ class HomeScene extends Phaser.Scene {
         room.fillEllipse(W / 2, H * 0.68 + 90, 260, 74);
         room.fillStyle(0xffc7d6, 0.45);
         room.fillEllipse(W / 2, H * 0.68 + 90, 170, 48);
-
-        this.roomGlow = this.add.ellipse(W * 0.73, H * 0.43, 170, 170, 0xffe7bf, 0.12)
-            .setDepth(-0.5);
 
         this.clouds = []; // kept for update() compatibility, but no clouds in the room
 
@@ -121,9 +118,9 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(1, 0.5);
 
         // === CAT AREA ===
-        const catY = H * 0.64;
+        const catY = H * 0.57;
         this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
-        this.cat.setScale(2.88);
+        this.cat.setScale(2.86);
 
         // Cooldown for cleaning (via Bath button)
         this.canClean = true;

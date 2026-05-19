@@ -161,20 +161,20 @@ def make_bed():
     ]:
         fluffy_bubble(bx, by, br, (255, 225, 232, 255))
 
-    # inner cushion base (recessed look)
-    fill_ellipse(img, 62, 42, 34, 16, (250, 215, 200, 255))
-    fill_ellipse(img, 62, 40, 30, 14, (255, 245, 235, 255))
+    # inner cushion base — clean light pink, no brown tint
+    fill_ellipse(img, 62, 42, 34, 16, (255, 245, 240, 255))
+    fill_ellipse(img, 62, 40, 30, 14, (255, 250, 248, 255))
     fill_ellipse(img, 62, 38, 26, 12, WHITE)
 
-    # cushion tuft / pillow dimples
-    fill_circle(img, 48, 38, 3, (255, 232, 220, 255))
-    fill_circle(img, 76, 38, 3, (255, 232, 220, 255))
-    fill_circle(img, 62, 44, 2, (255, 220, 210, 255))
+    # cushion tuft dimples — soft pink, not brown
+    fill_circle(img, 48, 38, 3, (255, 235, 245, 255))
+    fill_circle(img, 76, 38, 3, (255, 235, 245, 255))
+    fill_circle(img, 62, 44, 2, (255, 230, 240, 255))
 
-    # tiny stitch lines
-    line(img, 48, 38, 54, 34, (255, 220, 205, 255), 1)
-    line(img, 62, 44, 68, 40, (255, 220, 205, 255), 1)
-    line(img, 76, 38, 70, 34, (255, 220, 205, 255), 1)
+    # tiny stitch lines — light pink
+    line(img, 48, 38, 54, 34, (255, 225, 235, 255), 1)
+    line(img, 62, 44, 68, 40, (255, 225, 235, 255), 1)
+    line(img, 76, 38, 70, 34, (255, 225, 235, 255), 1)
 
     # small heart on front rim
     heart_pts = [(60, 50), (57, 46), (54, 46), (54, 50), (60, 56), (66, 50), (66, 46), (63, 46)]

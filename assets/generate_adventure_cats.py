@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-"""Generate side-facing 64x64 cat sprites for Adventure mode.
+"""Generate side-facing 64x64 RUN cat sprite for Adventure mode.
 
-Design notes:
-- All sprites face LEFT in the PNG (default orientation).
-- setFlipX(true) mirrors to face RIGHT.
-- Whiskers and ears point TOWARD THE TAIL (rightward) so that after a horizontal
-  flip they still point toward the tail, i.e. opposite to the facing direction.
-- Idle = straight standing body, neutral swept-back ears, short trailing whiskers.
-- Run  = stretched horizontal body, ears swept back, whiskers swept back, legs in stride.
+- Head: smaller, rounder circle
+- Body: shorter horizontal oval
+- Ears: small triangles pointing UP (symmetric, looks fine when flipped)
+- Compact, cute proportions matching the home scene cat
 """
 from PIL import Image
 
@@ -61,259 +58,140 @@ def draw_line(img, x1, y1, x2, y2, color):
             err += dx
             y += sy
 
-# ========================================================================
-# ADVENTURE IDLE — straight standing body, facing left
-# ========================================================================
-def draw_adventure_idle(img):
-    """Side-facing idle cat, straight standing pose, facing left."""
-    # --- TAIL (gently curved down-behind) ---
+def draw_run_cat(img):
+    """Side-facing RUN cat — compact, round, cute.
+    Head faces LEFT (nose on left side of head).
+    Ears point UP (symmetric triangles, safe for setFlipX).
+    Body is short and horizontal.
+    """
+    # --- TAIL (curved up behind, short) ---
     tail = [
-        (46, 38), (48, 40), (50, 42), (52, 44), (53, 46),
-        (53, 48), (52, 50), (50, 51), (48, 50)
+        (48, 36), (50, 34), (52, 32), (54, 30), (55, 28),
+        (55, 26), (54, 24), (52, 23), (50, 24)
     ]
     for x, y in tail:
         set_pixel(img, x, y, W)
-    set_pixel(img, 54, 44, S)
-    set_pixel(img, 54, 46, S)
+    set_pixel(img, 56, 30, S)
+    set_pixel(img, 56, 28, S)
 
-    # --- BODY (upright rounded oval, taller than wide) ---
-    for y in range(28, 50):
-        for x in range(22, 46):
-            dx = x - 34
-            dy = y - 38
-            if dx * dx / 120 + dy * dy / 110 <= 1.2:
+    # --- BODY (short horizontal chubby oval) ---
+    # Center around (32, 40), smaller than before
+    for y in range(32, 48):
+        for x in range(18, 46):
+            dx = x - 32
+            dy = y - 40
+            # Ellipse: wider than tall
+            if dx * dx / 180 + dy * dy / 55 <= 1.1:
                 set_pixel(img, x, y, W)
-    # Body shadow (right side)
-    for y in range(34, 50):
-        for x in range(38, 46):
-            dx = x - 34
-            dy = y - 38
-            if dx * dx / 120 + dy * dy / 110 <= 1.2 and dx > 2:
+    # Body shadow (right side, toward tail)
+    for y in range(38, 48):
+        for x in range(36, 46):
+            dx = x - 32
+            dy = y - 40
+            if dx * dx / 180 + dy * dy / 55 <= 1.1 and dx > 2:
                 set_pixel(img, x, y, S)
 
-    # --- LEGS (standing straight, 4 on ground) ---
-    # Front legs
-    fill_rect(img, 26, 48, 4, 6, W)
-    fill_rect(img, 27, 54, 3, 2, P)
-    fill_rect(img, 22, 48, 4, 6, S)
-    fill_rect(img, 23, 54, 2, 2, P)
-    # Back legs
-    fill_rect(img, 42, 48, 4, 6, W)
-    fill_rect(img, 43, 54, 3, 2, P)
-    fill_rect(img, 36, 48, 4, 6, S)
-    fill_rect(img, 37, 54, 2, 2, P)
+    # --- LEGS (running stride, shorter) ---
+    # Back leg (stretched back)
+    fill_rect(img, 42, 44, 3, 5, W)
+    fill_rect(img, 44, 48, 3, 3, W)
+    fill_rect(img, 45, 50, 2, 2, P)   # paw
+    # Other back leg (tucked)
+    fill_rect(img, 36, 44, 3, 4, S)
+    fill_rect(img, 37, 47, 2, 2, P)
+    # Front leg (stretched forward)
+    fill_rect(img, 22, 44, 3, 5, W)
+    fill_rect(img, 18, 48, 4, 3, W)
+    fill_rect(img, 19, 50, 2, 2, P)   # paw
+    # Other front leg (tucked)
+    fill_rect(img, 26, 44, 3, 4, S)
+    fill_rect(img, 27, 47, 2, 2, P)
 
-    # --- HEAD (round, facing left) ---
-    for y in range(8, 36):
-        for x in range(8, 32):
+    # --- HEAD (small round circle, facing left) ---
+    # Smaller radius than before — compact and cute
+    for y in range(14, 34):
+        for x in range(10, 30):
             dx = x - 20
-            dy = y - 22
-            if dx * dx + dy * dy <= 190:
+            dy = y - 24
+            if dx * dx + dy * dy <= 95:
                 set_pixel(img, x, y, W)
     # Head shadow (right side)
-    for y in range(24, 34):
-        for x in range(24, 32):
+    for y in range(26, 34):
+        for x in range(22, 30):
             dx = x - 20
-            dy = y - 22
-            if dx * dx + dy * dy <= 190 and dx > 4:
+            dy = y - 24
+            if dx * dx + dy * dy <= 95 and dx > 3:
                 set_pixel(img, x, y, S)
 
-    # --- EARS (swept back toward tail — rightward) ---
-    # Main ear (leaning back)
+    # --- EARS (small triangles pointing UP — symmetric, flip-safe) ---
+    # Main ear (left/top of head)
     ear = [
-        (12, 4), (13, 3), (14, 2), (15, 1), (16, 0),
-        (11, 5), (12, 5), (13, 5), (14, 5), (15, 5), (16, 5), (17, 5),
-        (10, 6), (11, 6), (12, 6), (13, 6), (14, 6), (15, 6), (16, 6), (17, 6), (18, 6),
-        (11, 7), (12, 7), (13, 7), (14, 7), (15, 7), (16, 7), (17, 7),
-        (12, 8), (13, 8), (14, 8), (15, 8), (16, 8)
+        (12, 8), (13, 7), (14, 6), (15, 5), (16, 5), (17, 6),
+        (11, 9), (12, 9), (13, 9), (14, 9), (15, 9), (16, 9), (17, 9), (18, 9),
+        (11, 10), (12, 10), (13, 10), (14, 10), (15, 10), (16, 10), (17, 10), (18, 10),
+        (12, 11), (13, 11), (14, 11), (15, 11), (16, 11), (17, 11),
+        (13, 12), (14, 12), (15, 12), (16, 12)
     ]
     for x, y in ear:
         set_pixel(img, x, y, W)
     ear_inner = [
-        (13, 4), (14, 3), (15, 2),
-        (12, 5), (13, 5), (14, 5), (15, 5), (16, 5),
-        (12, 6), (13, 6), (14, 6), (15, 6), (16, 6),
-        (13, 7), (14, 7), (15, 7)
+        (14, 7), (15, 6), (16, 6),
+        (13, 8), (14, 8), (15, 8), (16, 8),
+        (13, 9), (14, 9), (15, 9), (16, 9),
+        (14, 10), (15, 10), (16, 10),
+        (14, 11), (15, 11)
     ]
     for x, y in ear_inner:
         set_pixel(img, x, y, P)
 
-    # Second ear (smaller, more swept back)
+    # Second ear (slightly behind, also pointing UP)
     ear2 = [
-        (20, 6), (21, 5), (22, 4), (23, 3),
-        (19, 7), (20, 7), (21, 7), (22, 7), (23, 7), (24, 7),
-        (19, 8), (20, 8), (21, 8), (22, 8), (23, 8), (24, 8),
-        (20, 9), (21, 9), (22, 9), (23, 9)
+        (20, 9), (21, 8), (22, 7), (23, 7), (24, 8),
+        (19, 10), (20, 10), (21, 10), (22, 10), (23, 10), (24, 10), (25, 10),
+        (20, 11), (21, 11), (22, 11), (23, 11), (24, 11), (25, 11),
+        (21, 12), (22, 12), (23, 12), (24, 12)
     ]
     for x, y in ear2:
         set_pixel(img, x, y, W)
     ear2_inner = [
-        (21, 6), (22, 5), (23, 4),
-        (20, 7), (21, 7), (22, 7), (23, 7),
-        (21, 8), (22, 8), (23, 8)
+        (22, 8), (23, 8),
+        (21, 9), (22, 9), (23, 9), (24, 9),
+        (21, 10), (22, 10), (23, 10), (24, 10),
+        (22, 11), (23, 11)
     ]
     for x, y in ear2_inner:
         set_pixel(img, x, y, P)
 
-    # --- EYE (big sparkly brown) ---
-    fill_circle(img, 14, 18, 5, E)
-    fill_circle(img, 12, 15, 2.5, W)   # big white shine
-    fill_circle(img, 16, 19, 1, W)     # small shine
-    set_pixel(img, 11, 14, W)
+    # --- EYE (big sparkly brown, facing left) ---
+    fill_circle(img, 14, 20, 4, E)
+    fill_circle(img, 12, 17, 2, W)     # big white shine
+    fill_circle(img, 16, 21, 1, W)     # small shine
+    set_pixel(img, 11, 16, W)
 
     # --- BLUSH on cheek ---
-    fill_circle(img, 16, 24, 3, P)
-    fill_circle(img, 15, 24, 2, PI)
+    fill_circle(img, 16, 26, 3, P)
+    fill_circle(img, 15, 26, 2, PI)
 
-    # --- NOSE ---
-    set_pixel(img, 8, 22, B)
-    set_pixel(img, 7, 23, B)
-    set_pixel(img, 8, 23, B)
-
-    # --- MOUTH ---
-    set_pixel(img, 9, 24, M)
-    set_pixel(img, 10, 25, B)
-    set_pixel(img, 11, 24, M)
-
-    # --- WHISKERS (swept back toward tail — point RIGHT/increasing x)
-    # Start near muzzle/cheek, trail toward body/tail
-    draw_line(img, 10, 26, 16, 27, K)
-    draw_line(img, 10, 28, 17, 30, K)
-    draw_line(img, 11, 30, 18, 32, K)
-
-
-# ========================================================================
-# ADVENTURE RUN — stretched body, facing left
-# ========================================================================
-def draw_adventure_run(img):
-    """Side-facing run cat, stretched horizontal body, facing left."""
-    # --- TAIL (curved up behind) ---
-    tail = [
-        (52, 30), (54, 28), (56, 26), (57, 24), (58, 22),
-        (58, 20), (57, 18), (55, 17), (53, 18), (51, 20)
-    ]
-    for x, y in tail:
-        set_pixel(img, x, y, W)
-    set_pixel(img, 59, 24, S)
-    set_pixel(img, 59, 22, S)
-    set_pixel(img, 56, 16, S)
-
-    # --- BODY (horizontal stretched oval) ---
-    for y in range(24, 42):
-        for x in range(18, 54):
-            dx = x - 36
-            dy = y - 34
-            if dx * dx / 260 + dy * dy / 85 <= 1.2:
-                set_pixel(img, x, y, W)
-    # Body shadow
-    for y in range(34, 42):
-        for x in range(44, 54):
-            dx = x - 36
-            dy = y - 34
-            if dx * dx / 260 + dy * dy / 85 <= 1.2 and dx > 5:
-                set_pixel(img, x, y, S)
-
-    # --- LEGS (running stride) ---
-    # Back leg (stretched back)
-    fill_rect(img, 46, 40, 3, 7, W)
-    fill_rect(img, 48, 46, 3, 4, W)
-    fill_rect(img, 49, 49, 2, 2, P)
-    # Other back leg (tucked)
-    fill_rect(img, 40, 42, 3, 5, S)
-    fill_rect(img, 41, 46, 2, 2, P)
-    # Front leg (stretched forward)
-    fill_rect(img, 20, 40, 3, 7, W)
-    fill_rect(img, 16, 46, 4, 4, W)
-    fill_rect(img, 17, 49, 2, 2, P)
-    # Other front leg (tucked)
-    fill_rect(img, 26, 42, 3, 5, S)
-    fill_rect(img, 27, 46, 2, 2, P)
-
-    # --- HEAD (round, facing left) ---
-    for y in range(6, 36):
-        for x in range(6, 30):
-            dx = x - 18
-            dy = y - 20
-            if dx * dx + dy * dy <= 200:
-                set_pixel(img, x, y, W)
-    # Head shadow
-    for y in range(22, 34):
-        for x in range(22, 30):
-            dx = x - 18
-            dy = y - 20
-            if dx * dx + dy * dy <= 200 and dx > 4:
-                set_pixel(img, x, y, S)
-
-    # --- EARS (swept back toward tail) ---
-    ear = [
-        (12, 2), (13, 1), (14, 0), (15, 0), (16, 0),
-        (11, 3), (12, 3), (13, 3), (14, 3), (15, 3), (16, 3), (17, 3),
-        (10, 4), (11, 4), (12, 4), (13, 4), (14, 4), (15, 4), (16, 4), (17, 4), (18, 4),
-        (11, 5), (12, 5), (13, 5), (14, 5), (15, 5), (16, 5), (17, 5),
-        (12, 6), (13, 6), (14, 6), (15, 6), (16, 6)
-    ]
-    for x, y in ear:
-        set_pixel(img, x, y, W)
-    ear_inner = [
-        (13, 2), (14, 1), (15, 1),
-        (12, 3), (13, 3), (14, 3), (15, 3), (16, 3),
-        (12, 4), (13, 4), (14, 4), (15, 4), (16, 4),
-        (13, 5), (14, 5), (15, 5)
-    ]
-    for x, y in ear_inner:
-        set_pixel(img, x, y, P)
-
-    # Second ear (swept back)
-    ear2 = [
-        (20, 4), (21, 3), (22, 2), (23, 2),
-        (19, 5), (20, 5), (21, 5), (22, 5), (23, 5), (24, 5),
-        (19, 6), (20, 6), (21, 6), (22, 6), (23, 6), (24, 6),
-        (20, 7), (21, 7), (22, 7), (23, 7)
-    ]
-    for x, y in ear2:
-        set_pixel(img, x, y, W)
-    ear2_inner = [
-        (21, 4), (22, 3), (23, 3),
-        (20, 5), (21, 5), (22, 5), (23, 5),
-        (21, 6), (22, 6), (23, 6)
-    ]
-    for x, y in ear2_inner:
-        set_pixel(img, x, y, P)
-
-    # --- EYE (big sparkly) ---
-    fill_circle(img, 12, 16, 5, E)
-    fill_circle(img, 10, 13, 2.5, W)
-    fill_circle(img, 14, 18, 1, W)
-    set_pixel(img, 9, 12, W)
-
-    # --- BLUSH ---
-    fill_circle(img, 14, 22, 3, P)
-    fill_circle(img, 13, 22, 2, PI)
-
-    # --- NOSE ---
-    set_pixel(img, 6, 20, B)
-    set_pixel(img, 5, 21, B)
-    set_pixel(img, 6, 21, B)
-
-    # --- MOUTH ---
-    set_pixel(img, 7, 23, M)
+    # --- NOSE (small pink) ---
     set_pixel(img, 8, 24, B)
-    set_pixel(img, 9, 23, M)
+    set_pixel(img, 7, 25, B)
+    set_pixel(img, 8, 25, B)
 
-    # --- WHISKERS (swept back toward tail — point RIGHT) ---
-    draw_line(img, 10, 24, 18, 26, K)
-    draw_line(img, 10, 26, 19, 29, K)
-    draw_line(img, 11, 28, 20, 31, K)
+    # --- MOUTH (tiny happy) ---
+    set_pixel(img, 9, 26, M)
+    set_pixel(img, 10, 27, B)
+    set_pixel(img, 11, 26, M)
+
+    # --- WHISKERS (tiny cheek marks, flip-safe) ---
+    # Small dots instead of long lines — subtle and cute
+    set_pixel(img, 18, 27, K)
+    set_pixel(img, 19, 28, K)
+    set_pixel(img, 17, 29, K)
 
 
 if __name__ == '__main__':
-    img_idle = new_canvas()
-    draw_adventure_idle(img_idle)
-    img_idle.save('/home/helen/catmagotchi/assets/cat-adventure-idle.png')
-    print('Saved cat-adventure-idle.png')
-
     img_run = new_canvas()
-    draw_adventure_run(img_run)
+    draw_run_cat(img_run)
     img_run.save('/home/helen/catmagotchi/assets/cat-run.png')
     print('Saved cat-run.png')
 

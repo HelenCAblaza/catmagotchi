@@ -15,11 +15,11 @@ class HomeScene extends Phaser.Scene {
         const room = this.add.graphics();
         room.setDepth(-1);
         room.fillStyle(0xebd7bf, 1);
-        room.fillRect(0, 0, W, H * 0.56);
+        room.fillRect(0, 0, W, H * 0.54);
         room.fillStyle(0xe0d8ce, 1);
-        room.fillRect(0, H * 0.56, W, H * 0.44);
+        room.fillRect(0, H * 0.54, W, H * 0.46);
         room.fillStyle(0xc4b8a8, 1);
-        room.fillRect(0, H * 0.555, W, 3);
+        room.fillRect(0, H * 0.535, W, 3);
 
         // Window
         room.fillStyle(0xbfe8ff, 1);
@@ -54,7 +54,7 @@ class HomeScene extends Phaser.Scene {
         });
 
         // Title - matching StartScene style
-        this.add.text(W / 2, 52, 'Catmagotchi', {
+        this.add.text(W / 2, 60, 'Catmagotchi', {
             fontSize: '42px',
             color: '#ffffff',
             fontFamily: 'Poppins',
@@ -79,8 +79,8 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(0, 0.5);
 
         // === STATS AREA ===
-        const statY1 = 155;
-        const statY2 = 191;
+        const statY1 = 165;
+        const statY2 = 201;
         const barW = 110;
         const barH = 14;
         const labelX = 40;     // aligned with buttons left edge
@@ -112,7 +112,7 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(1, 0.5);
 
         // === CAT AREA ===
-        const catY = H * 0.57;
+        const catY = H * 0.55;
         this.cat = this.add.sprite(W / 2, catY, 'cat_idle');
         this.cat.setScale(2.86);
 
@@ -120,9 +120,9 @@ class HomeScene extends Phaser.Scene {
         this.canClean = true;
 
         // Decorative items around cat - separate movable sprites from PNG files
-        this.catBed = this.add.image(W * 0.20, H * 0.66, 'cat_bed').setScale(1.35).setDepth(1);
-        this.yarnToy = this.add.image(W * 0.80, H * 0.63, 'yarn_toy').setScale(1.15).setDepth(1);
-        this.foodTray = this.add.image(W * 0.50, H * 0.69, 'food_tray').setScale(1.05).setDepth(1);
+        this.catBed = this.add.image(W * 0.20, H * 0.64, 'cat_bed').setScale(1.35).setDepth(1);
+        this.yarnToy = this.add.image(W * 0.80, H * 0.61, 'yarn_toy').setScale(1.15).setDepth(1);
+        this.foodTray = this.add.image(W * 0.50, H * 0.67, 'food_tray').setScale(1.05).setDepth(1);
 
         // === BUTTONS (bottom area) - circle buttons in a single row ===
         const btnY = H * 0.78;
@@ -194,7 +194,7 @@ class HomeScene extends Phaser.Scene {
         const H = this.scale.height;
         // spawn hearts close to the cat (center of screen, cat Y area)
         const catX = W * 0.5;
-        const catY = H * 0.53;
+        const catY = H * 0.51;
         const x = catX + (Math.random() - 0.5) * 120;
         const y = catY + (Math.random() - 0.5) * 80;
         const heart = this.add.image(x, y, 'heart')

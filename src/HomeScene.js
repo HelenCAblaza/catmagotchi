@@ -43,12 +43,6 @@ class HomeScene extends Phaser.Scene {
         room.fillCircle(108, 114, 6);
         room.fillCircle(116, 125, 5);
 
-        // Rug under the cat
-        room.fillStyle(0xffe0d6, 0.95);
-        room.fillEllipse(W / 2, H * 0.68 + 90, 260, 74);
-        room.fillStyle(0xffc7d6, 0.45);
-        room.fillEllipse(W / 2, H * 0.68 + 90, 170, 48);
-
         this.clouds = []; // kept for update() compatibility, but no clouds in the room
 
         // Floating hearts particles around the cat area

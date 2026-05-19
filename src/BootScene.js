@@ -363,7 +363,10 @@ class BootScene extends Phaser.Scene {
         g.lineStyle(2, 0xcc8899, 1);
         g.beginPath();
         g.moveTo(cx - 6, cy + 16);
-        g.quadraticCurveTo(cx, cy + 22, cx + 6, cy + 16);
+        g.lineTo(cx - 3, cy + 20);
+        g.lineTo(cx, cy + 22);
+        g.lineTo(cx + 3, cy + 20);
+        g.lineTo(cx + 6, cy + 16);
         g.strokePath();
         // Tongue
         g.fillStyle(0xff7799, 1);
@@ -537,7 +540,10 @@ class BootScene extends Phaser.Scene {
         g.lineStyle(2, 0xcc8899, 1);
         g.beginPath();
         g.moveTo(cx - 5, cy + 16);
-        g.quadraticCurveTo(cx, cy + 20, cx + 5, cy + 16);
+        g.lineTo(cx - 2, cy + 19);
+        g.lineTo(cx, cy + 20);
+        g.lineTo(cx + 2, cy + 19);
+        g.lineTo(cx + 5, cy + 16);
         g.strokePath();
 
         // --- BLUSH ---

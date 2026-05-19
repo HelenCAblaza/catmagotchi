@@ -124,28 +124,48 @@ GREEN_DARK = (96, 146, 74, 255)
 def make_bed():
     img = new_canvas(104, 72)
     # soft shadow
-    fill_ellipse(img, 53, 49, 42, 12, (230, 176, 182, 55))
-    # base
-    fill_ellipse(img, 52, 42, 39, 20, PINK)
-    fill_ellipse(img, 52, 43, 37, 18, PINK_LIGHT)
-    # rim shading
-    fill_ellipse(img, 52, 46, 35, 16, PINK_DARK)
-    fill_ellipse(img, 52, 41, 33, 14, PINK_LIGHT)
+    fill_ellipse(img, 53, 51, 43, 12, (230, 176, 182, 55))
+
+    # outer bed wall / body
+    fill_ellipse(img, 52, 42, 40, 20, (210, 121, 145, 255))
+    fill_ellipse(img, 52, 41, 38, 18, PINK)
+    fill_ellipse(img, 52, 40, 36, 16, PINK_LIGHT)
+
+    # 3D front lip / underside
+    fill_ellipse(img, 52, 48, 34, 9, PINK_DARK)
+    fill_ellipse(img, 52, 45, 35, 10, (236, 156, 168, 255))
+    fill_rect(img, 18, 45, 68, 5, (214, 127, 145, 255))
+    fill_rect(img, 18, 43, 68, 3, (255, 219, 226, 160))
+
+    # side shading for depth
+    fill_ellipse(img, 27, 42, 7, 12, (187, 106, 129, 255))
+    fill_ellipse(img, 77, 42, 7, 12, (183, 103, 124, 255))
+
     # fluffy cushion
-    fill_ellipse(img, 53, 40, 28, 12, CREAM)
-    fill_ellipse(img, 53, 39, 25, 10, (255, 245, 234, 255))
+    fill_ellipse(img, 53, 39, 28, 12, CREAM)
+    fill_ellipse(img, 53, 38, 25, 10, (255, 245, 234, 255))
+    fill_rect(img, 31, 34, 43, 2, (255, 255, 255, 110))
+
+    # pillow nub / top volume
+    fill_ellipse(img, 36, 36, 10, 6, (255, 241, 231, 255))
+    fill_ellipse(img, 69, 36, 9, 5, (255, 241, 231, 255))
+    fill_circle(img, 42, 35, 2, (255, 223, 232, 255))
+    fill_circle(img, 63, 35, 2, (255, 223, 232, 255))
+
     # stitch / tuft lines
-    line(img, 35, 39, 42, 35, (255, 232, 220, 255), 1)
-    line(img, 41, 43, 47, 37, (255, 232, 220, 255), 1)
-    line(img, 58, 44, 64, 37, (255, 232, 220, 255), 1)
-    line(img, 68, 39, 75, 43, (255, 232, 220, 255), 1)
+    line(img, 36, 39, 42, 36, (255, 232, 220, 255), 1)
+    line(img, 42, 43, 48, 38, (255, 232, 220, 255), 1)
+    line(img, 58, 43, 64, 38, (255, 232, 220, 255), 1)
+    line(img, 68, 39, 74, 43, (255, 232, 220, 255), 1)
+
     # front paw print
     fill_circle(img, 51, 54, 4, PINK_LIGHT)
     fill_circle(img, 42, 49, 2, PINK_LIGHT)
     fill_circle(img, 46, 46, 2, PINK_LIGHT)
     fill_circle(img, 56, 46, 2, PINK_LIGHT)
     fill_circle(img, 60, 49, 2, PINK_LIGHT)
-    # little base underside
+
+    # little underside shadow to make the bed feel lifted
     fill_ellipse(img, 52, 50, 35, 7, (216, 145, 155, 120))
     return img
 

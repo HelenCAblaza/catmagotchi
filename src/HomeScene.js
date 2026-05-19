@@ -129,9 +129,9 @@ class HomeScene extends Phaser.Scene {
         this.canClean = true;
 
         // Decorative items around cat - separate movable sprites from PNG files
-        this.catBed = this.add.image(W * 0.80, H * 0.60, 'cat_bed').setScale(1.35).setDepth(1);
-        this.yarnToy = this.add.image(W * 0.26, H * 0.76, 'yarn_toy').setScale(1.15).setDepth(1);
-        this.foodTray = this.add.image(W * 0.79, H * 0.83, 'food_tray').setScale(1.18).setDepth(1);
+        this.catBed = this.add.image(W * 0.80, H * 0.45, 'cat_bed').setScale(1.35).setDepth(1);
+        this.yarnToy = this.add.image(W * 0.20, H * 0.66, 'yarn_toy').setScale(1.15).setDepth(1);
+        this.foodTray = this.add.image(W * 0.80, H * 0.63, 'food_tray').setScale(1.10).setDepth(1);
 
         // === BUTTONS (bottom area) - circle buttons in a single row ===
         const btnY = H * 0.78;

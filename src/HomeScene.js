@@ -316,16 +316,16 @@ class HomeScene extends Phaser.Scene {
         btn.setScrollFactor(0);
 
         // World icon
-        const icon = this.add.text(x, y - 6, '\ud83c\udf0d', {
+        const icon = this.add.text(x, y - 6, '🌍', {
             fontSize: '24px',
             fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(0);
 
-        // Adventure text below icon
-        const lbl = this.add.text(x, y + 14, 'Adventure', {
-            fontSize: '10px',
+        // Adventure label - fresh text with Poppins
+        this.add.text(x, y + 14, 'Adventure', {
+            fontSize: '11px',
             color: '#8888aa',
             fontFamily: 'Poppins',
             fontStyle: 'bold'

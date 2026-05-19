@@ -245,42 +245,52 @@ function drawRunCat(ctx) {
   ];
   tailPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
 
-  // --- BODY (horizontal oval) ---
-  for (let y = 26; y <= 42; y++) {
+  // --- BODY (horizontal oval, lowered to meet legs) ---
+  for (let y = 28; y <= 48; y++) {
     for (let x = 18; x <= 50; x++) {
       const dx = x - 34;
-      const dy = y - 34;
-      if (dx*dx/220 + dy*dy/80 <= 1.2) {
+      const dy = y - 38;
+      if (dx*dx/220 + dy*dy/110 <= 1.2) {
         setPixel(ctx, x, y, W);
       }
     }
   }
   // Body shadow
-  for (let y = 34; y <= 42; y++) {
+  for (let y = 38; y <= 48; y++) {
     for (let x = 40; x <= 50; x++) {
       const dx = x - 34;
-      const dy = y - 34;
-      if (dx*dx/220 + dy*dy/80 <= 1.2 && dx > 5) {
+      const dy = y - 38;
+      if (dx*dx/220 + dy*dy/110 <= 1.2 && dx > 5) {
         setPixel(ctx, x, y, S);
       }
     }
   }
 
-  // --- LEGS (running pose, short & round) ---
-  // Back leg (short stubby curve)
+  // --- LEGS (running pose, fat & round, reaching ground) ---
+  // Back leg (thick stub reaching ground)
   const backLeg = [
-    [42,38],[43,38],[43,39],[44,39],[44,40],[45,40],
-    [45,41],[46,41],[46,42],[47,42],[47,43],[48,43],[48,44]
+    [41,38],[42,38],[43,38],[43,39],[44,39],[44,40],[45,40],
+    [45,41],[46,41],[46,42],[47,42],[47,43],[48,43],[48,44],
+    [47,45],[48,45],[49,45],[47,46],[48,46],[49,46],[49,47],
+    [47,48],[48,48],[49,48],[50,48],[48,49],[49,49],[50,49],
+    [48,50],[49,50],[50,50],[49,51],[50,51],[49,52],[50,52]
   ];
   backLeg.forEach(([x,y]) => setPixel(ctx, x, y, W));
-  setPixel(ctx, 47, 45, P); setPixel(ctx, 48, 45, P); setPixel(ctx, 49, 45, P); // paw
-  // Front leg (short stubby curve)
+  // Back paw
+  setPixel(ctx, 48, 53, P); setPixel(ctx, 49, 53, P); setPixel(ctx, 50, 53, P);
+  setPixel(ctx, 49, 54, P); setPixel(ctx, 50, 54, P);
+  // Front leg (thick stub reaching ground)
   const frontLeg = [
-    [22,38],[21,38],[21,39],[20,39],[20,40],[19,40],
-    [19,41],[18,41],[18,42],[17,42],[17,43],[16,43],[16,44]
+    [23,38],[22,38],[21,38],[21,39],[20,39],[20,40],[19,40],
+    [19,41],[18,41],[18,42],[17,42],[17,43],[16,43],[16,44],
+    [15,45],[16,45],[17,45],[15,46],[16,46],[17,46],[15,47],
+    [15,48],[16,48],[17,48],[14,48],[15,49],[16,49],[17,49],
+    [15,50],[16,50],[17,50],[15,51],[16,51],[15,52],[16,52]
   ];
   frontLeg.forEach(([x,y]) => setPixel(ctx, x, y, W));
-  setPixel(ctx, 15, 45, P); setPixel(ctx, 16, 45, P); setPixel(ctx, 17, 45, P); // paw
+  // Front paw
+  setPixel(ctx, 14, 53, P); setPixel(ctx, 15, 53, P); setPixel(ctx, 16, 53, P);
+  setPixel(ctx, 15, 54, P); setPixel(ctx, 16, 54, P);
   // Tucked legs (barely visible nubs behind body)
   setPixel(ctx, 38, 41, S); setPixel(ctx, 39, 41, S); setPixel(ctx, 40, 41, S);
   setPixel(ctx, 25, 41, S); setPixel(ctx, 26, 41, S); setPixel(ctx, 27, 41, S);

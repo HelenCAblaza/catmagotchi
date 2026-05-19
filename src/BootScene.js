@@ -10,7 +10,7 @@ class BootScene extends Phaser.Scene {
         this.load.image('cat_sleep', 'assets/cat-sleep.png?v=306');
         this.load.image('cat_bed', 'assets/cat-bed.png?v=12');
         this.load.image('yarn_toy', 'assets/yarn-toy.png?v=2');
-        this.load.image('food_tray', 'assets/food-tray.png?v=6');
+        this.load.image('food_tray', 'assets/food-tray.png?v=7');
 
         // Generate other textures programmatically
         this.createTexture('platform', '#8b7355', 32, 32, 'rect');

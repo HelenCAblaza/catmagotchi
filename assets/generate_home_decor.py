@@ -272,6 +272,8 @@ def make_food_tray():
     fill_rect(img, 103, 40, 3, 10, (155, 110, 65, 255))
 
     # === Left food bowl ===
+    # bowl front shadow (drawn first so it sits under the bowl)
+    fill_ellipse(img, 42, 36, 12, 4, (240, 230, 225, 100))
     # bowl outer
     fill_ellipse(img, 42, 32, 16, 12, WHITE)
     fill_ellipse(img, 42, 33, 14, 10, (255, 245, 240, 255))
@@ -285,10 +287,10 @@ def make_food_tray():
     # bowl rim highlight
     fill_rect(img, 34, 24, 16, 1, (255, 255, 255, 200))
     fill_rect(img, 36, 25, 12, 1, (255, 255, 255, 120))
-    # bowl front shadow
-    fill_ellipse(img, 42, 36, 12, 4, (240, 230, 225, 100))
 
     # === Right water bowl ===
+    # bowl front shadow (drawn first so it sits under the bowl)
+    fill_ellipse(img, 78, 36, 12, 4, (240, 230, 225, 100))
     # bowl outer
     fill_ellipse(img, 78, 32, 16, 12, WHITE)
     fill_ellipse(img, 78, 33, 14, 10, (248, 248, 255, 255))
@@ -302,8 +304,6 @@ def make_food_tray():
     # bowl rim highlight
     fill_rect(img, 70, 24, 16, 1, (255, 255, 255, 200))
     fill_rect(img, 72, 25, 12, 1, (255, 255, 255, 120))
-    # bowl front shadow
-    fill_ellipse(img, 78, 36, 12, 4, (240, 230, 225, 100))
 
     return img
 

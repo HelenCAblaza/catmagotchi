@@ -68,7 +68,7 @@ class HomeScene extends Phaser.Scene {
         this.createCapsuleStatBar(labelX, statY1, 'Hunger', 'hunger', 0xff7799, barX, barW, barH);
         this.createCapsuleStatBar(labelX, statY2, 'Energy', 'energy', 0x88dd88, barX, barW, barH);
 
-        const rightLabelX = 210;
+        const rightLabelX = 225;
         const rightBarX = 265;
         this.createCapsuleStatBar(rightLabelX, statY1, 'Happy', 'happiness', 0xffcc66, rightBarX, barW, barH);
         this.createCapsuleStatBar(rightLabelX, statY2, 'Clean', 'hygiene', 0x77ccff, rightBarX, barW, barH);

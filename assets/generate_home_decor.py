@@ -123,8 +123,6 @@ GREEN_DARK = (96, 146, 74, 255)
 
 def make_bed():
     img = new_canvas(120, 80)
-    # soft ground shadow
-    fill_ellipse(img, 60, 60, 48, 10, (200, 160, 160, 60))
 
     # fluffy outer rim — built from overlapping circles for cloud-like puffiness
     def fluffy_bubble(cx, cy, r, color):
@@ -181,9 +179,6 @@ def make_bed():
     for hx, hy in heart_pts:
         fill_circle(img, hx, hy, 2, (255, 200, 210, 255))
     fill_circle(img, 60, 52, 3, (255, 190, 200, 255))
-
-    # underside depth shadow
-    fill_ellipse(img, 60, 58, 40, 8, (200, 120, 140, 90))
 
     return img
 

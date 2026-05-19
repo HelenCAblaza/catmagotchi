@@ -70,7 +70,7 @@ class HomeScene extends Phaser.Scene {
 
         const rightLabelX = 223;
         const rightBarX = 265;
-        this.createCapsuleStatBar(rightLabelX, statY1, 'Happy', 'happiness', 0xffcc66, rightBarX, barW, barH);
+        this.createCapsuleStatBar(rightLabelX - 2, statY1, 'Happy', 'happiness', 0xffcc66, rightBarX, barW, barH);
         this.createCapsuleStatBar(rightLabelX, statY2, 'Clean', 'hygiene', 0x77ccff, rightBarX, barW, barH);
 
         // Inventory - aligned right with buttons right edge

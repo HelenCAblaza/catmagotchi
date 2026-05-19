@@ -50,7 +50,7 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Cat name above stats - smaller, left aligned, no stars, darker grey
-        this.add.text(40, 102, 'Mittens', {
+        this.add.text(40, 125, 'Mittens', {
             fontSize: '18px',
             color: '#555555',
             fontFamily: '"Poppins", sans-serif',
@@ -58,8 +58,8 @@ class HomeScene extends Phaser.Scene {
         }).setOrigin(0, 0.5);
 
         // === STATS AREA ===
-        const statY1 = 130;
-        const statY2 = 166;
+        const statY1 = 155;
+        const statY2 = 191;
         const barW = 110;
         const barH = 14;
         const labelX = 40;     // aligned with buttons left edge

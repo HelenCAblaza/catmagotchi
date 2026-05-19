@@ -11,18 +11,48 @@ class HomeScene extends Phaser.Scene {
         const bg = this.add.image(W / 2, H / 2, 'bg_home');
         bg.setDisplaySize(W, H);
 
-        // Floating clouds (decorative, slowly drifting)
-        this.clouds = [];
-        for (let i = 0; i < 3; i++) {
-            const cloud = this.add.image(80 + i * 150, 60 + i * 30, 'cloud')
-                .setScale(0.6 + Math.random() * 0.4)
-                .setAlpha(0.5 + Math.random() * 0.3)
-                .setDepth(-1);
-            this.clouds.push({
-                sprite: cloud,
-                speed: 0.2 + Math.random() * 0.3
-            });
-        }
+        // Cozy room overlay: warm walls, wood floor, window, picture, and rug
+        const room = this.add.graphics();
+        room.setDepth(-1);
+        room.fillStyle(0xfff6eb, 1);
+        room.fillRect(0, 0, W, H * 0.67);
+        room.fillStyle(0xf0d2b3, 1);
+        room.fillRect(0, H * 0.67, W, H * 0.33);
+        room.fillStyle(0xe4bb93, 1);
+        room.fillRect(0, H * 0.665, W, 6);
+
+        // Window
+        room.fillStyle(0xbfe8ff, 1);
+        room.fillRoundedRect(W * 0.66, 92, 126, 150, 12);
+        room.fillStyle(0xeaf9ff, 0.85);
+        room.fillRoundedRect(W * 0.66 + 8, 100, 110, 134, 10);
+        room.fillStyle(0xffffff, 0.5);
+        room.fillRect(W * 0.66 + 61, 100, 4, 134);
+        room.fillRect(W * 0.66 + 8, 165, 110, 4);
+        room.fillStyle(0xffd7c2, 1);
+        room.fillRoundedRect(W * 0.64, 86, 20, 162, 8);
+        room.fillRoundedRect(W * 0.80, 86, 20, 162, 8);
+
+        // Picture frame on the wall
+        room.fillStyle(0xd9b38c, 1);
+        room.fillRoundedRect(54, 86, 92, 70, 10);
+        room.fillStyle(0xffffff, 1);
+        room.fillRoundedRect(60, 92, 80, 58, 8);
+        room.fillStyle(0xffb8cc, 1);
+        room.fillCircle(92, 120, 11);
+        room.fillCircle(108, 114, 6);
+        room.fillCircle(116, 125, 5);
+
+        // Rug under the cat
+        room.fillStyle(0xffe0d6, 0.95);
+        room.fillEllipse(W / 2, H * 0.68 + 90, 260, 74);
+        room.fillStyle(0xffc7d6, 0.45);
+        room.fillEllipse(W / 2, H * 0.68 + 90, 170, 48);
+
+        this.roomGlow = this.add.ellipse(W * 0.73, H * 0.43, 170, 170, 0xffe7bf, 0.20)
+            .setDepth(-0.5);
+
+        this.clouds = []; // kept for update() compatibility, but no clouds in the room
 
         // Floating hearts particles around the cat area
         this.hearts = this.add.group();

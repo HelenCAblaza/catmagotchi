@@ -152,31 +152,55 @@ class BootScene extends Phaser.Scene {
         const w = 480, h = 800;
         const gfx = this.make.graphics({ x: 0, y: 0, add: false });
 
-        // Soft pastel purple-pink gradient feel
-        gfx.fillStyle(0xf5e6ff, 1);
+        // Warm cozy room backdrop
+        gfx.fillStyle(0xfff7ec, 1);
         gfx.fillRect(0, 0, w, h);
 
-        // Soft clouds
-        gfx.fillStyle(0xffffff, 0.4);
+        // Wall and floor split
+        gfx.fillStyle(0xfff3e6, 1);
+        gfx.fillRect(0, 0, w, h * 0.67);
+        gfx.fillStyle(0xf0d2b3, 1);
+        gfx.fillRect(0, h * 0.67, w, h * 0.33);
+        gfx.fillStyle(0xe4bb93, 1);
+        gfx.fillRect(0, h * 0.665, w, 6);
+
+        // Soft wall stripes
+        gfx.fillStyle(0xffffff, 0.12);
         for (let i = 0; i < 6; i++) {
-            const cx = (i * 90 + 30) % w;
-            const cy = (i * 60 + 50) % (h * 0.4);
-            gfx.fillCircle(cx, cy, 25);
-            gfx.fillCircle(cx + 20, cy + 5, 20);
-            gfx.fillCircle(cx - 15, cy + 8, 18);
+            gfx.fillRect(i * 92, 0, 20, h * 0.67);
         }
 
-        // Tiny stars/sparkles scattered
-        gfx.fillStyle(0xffccff, 0.6);
-        for (let i = 0; i < 20; i++) {
-            const sx = Math.random() * w;
-            const sy = Math.random() * h;
-            gfx.fillCircle(sx, sy, 2 + Math.random() * 2);
-        }
+        // Window glow
+        gfx.fillStyle(0xb9e8ff, 0.5);
+        gfx.fillRoundedRect(w * 0.65, 88, 138, 160, 14);
+        gfx.fillStyle(0xeefaff, 0.6);
+        gfx.fillRoundedRect(w * 0.65 + 10, 98, 118, 140, 12);
+        gfx.fillStyle(0xffffff, 0.45);
+        gfx.fillRect(w * 0.65 + 59, 98, 4, 140);
+        gfx.fillRect(w * 0.65 + 10, 166, 118, 4);
+        gfx.fillStyle(0xffd6c2, 0.95);
+        gfx.fillRoundedRect(w * 0.63, 82, 20, 172, 8);
+        gfx.fillRoundedRect(w * 0.82, 82, 20, 172, 8);
 
-        // Soft floor area
-        gfx.fillStyle(0xffeecc, 0.3);
-        gfx.fillRect(0, h * 0.55, w, h * 0.45);
+        // Picture frame
+        gfx.fillStyle(0xd8b18a, 1);
+        gfx.fillRoundedRect(48, 86, 98, 74, 10);
+        gfx.fillStyle(0xffffff, 1);
+        gfx.fillRoundedRect(54, 92, 86, 62, 8);
+        gfx.fillStyle(0xffb8cc, 1);
+        gfx.fillCircle(90, 120, 11);
+        gfx.fillCircle(110, 115, 6);
+        gfx.fillCircle(118, 126, 5);
+
+        // Little rug
+        gfx.fillStyle(0xffe0d6, 0.92);
+        gfx.fillEllipse(w * 0.5, h * 0.79, 250, 74);
+        gfx.fillStyle(0xffc7d6, 0.45);
+        gfx.fillEllipse(w * 0.5, h * 0.79, 170, 48);
+
+        // Cozy lamp glow in one corner
+        gfx.fillStyle(0xffe7bf, 0.18);
+        gfx.fillEllipse(w * 0.74, h * 0.43, 160, 160);
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();

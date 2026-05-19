@@ -93,11 +93,11 @@ def draw_run_cat(img):
     # Head shadow on the back side
     fill_ellipse(img, 28, 26, 7, 7.5, S)
 
-    # Ears: rounder, slightly farther back, and a little lower
-    fill_ellipse(img, 19, 9, 3.1, 2.7, W)
-    fill_ellipse(img, 19, 10, 2.1, 1.8, P)
-    fill_ellipse(img, 27, 10, 3.4, 2.9, W)
-    fill_ellipse(img, 27, 11, 2.2, 1.9, P)
+    # Ears: rounder, a little bigger, farther back, and a bit lower
+    fill_ellipse(img, 18, 11, 3.6, 3.1, W)
+    fill_ellipse(img, 18, 12, 2.4, 2.0, P)
+    fill_ellipse(img, 26, 12, 3.8, 3.3, W)
+    fill_ellipse(img, 26, 13, 2.5, 2.1, P)
 
     # Eye / face - keep details visible by not overfilling the muzzle area
     fill_circle(img, 15, 21, 2.75, E)

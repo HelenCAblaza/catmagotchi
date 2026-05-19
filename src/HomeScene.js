@@ -102,7 +102,7 @@ class HomeScene extends Phaser.Scene {
         const decoY = catY + 20;
         this.add.image(W * 0.15, decoY, 'bed').setScale(1.8);
         this.add.image(W * 0.85, decoY, 'bowl').setScale(1.8);
-        this.add.image(W / 2, decoY + 40, 'yarn').setScale(1.8);
+        this.add.image(W / 2, catY + 90, 'yarn').setScale(1.8);
 
         // === BUTTONS (bottom area) - circle buttons in a single row ===
         const btnY = H * 0.78;

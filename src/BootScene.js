@@ -159,9 +159,9 @@ class BootScene extends Phaser.Scene {
         // Wall and floor split
         gfx.fillStyle(0xebd7bf, 1);
         gfx.fillRect(0, 0, w, h * 0.56);
-        gfx.fillStyle(0xdcb689, 1);
+        gfx.fillStyle(0xe0d8ce, 1);
         gfx.fillRect(0, h * 0.56, w, h * 0.44);
-        gfx.fillStyle(0xc7935f, 1);
+        gfx.fillStyle(0xc4b8a8, 1);
         gfx.fillRect(0, h * 0.555, w, 6);
 
         // Window glow

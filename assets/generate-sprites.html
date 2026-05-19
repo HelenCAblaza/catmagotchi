@@ -301,23 +301,42 @@ function drawRunCat(ctx) {
     }
   }
 
-  // --- EAR (rounded, top, shifted toward back) ---
-  const earPixels = [
-    [14,3],[15,3],[16,3],[17,3],
-    [13,4],[14,4],[15,4],[16,4],[17,4],[18,4],
-    [12,5],[13,5],[14,5],[15,5],[16,5],[17,5],[18,5],[19,5],
-    [12,6],[13,6],[14,6],[15,6],[16,6],[17,6],[18,6],[19,6],
-    [13,7],[14,7],[15,7],[16,7],[17,7],[18,7],
-    [14,8],[15,8],[16,8],[17,8]
+  // --- EARS (bigger, attached to top of head) ---
+  // Left ear (on head, facing left/front)
+  const leftEarPixels = [
+    [10,3],[11,3],[12,3],[13,3],
+    [9,4],[10,4],[11,4],[12,4],[13,4],[14,4],
+    [8,5],[9,5],[10,5],[11,5],[12,5],[13,5],[14,5],[15,5],
+    [8,6],[9,6],[10,6],[11,6],[12,6],[13,6],[14,6],[15,6],
+    [9,7],[10,7],[11,7],[12,7],[13,7],[14,7],
+    [10,8],[11,8],[12,8],[13,8]
   ];
-  earPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
-  // Ear inner
-  const earInner = [
-    [14,4],[15,4],[16,4],[17,4],
-    [14,5],[15,5],[16,5],[17,5],
-    [14,6],[15,6],[16,6],[17,6]
+  leftEarPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  // Left ear inner
+  const leftEarInner = [
+    [10,4],[11,4],[12,4],[13,4],
+    [10,5],[11,5],[12,5],[13,5],
+    [10,6],[11,6],[12,6],[13,6]
   ];
-  earInner.forEach(([x,y]) => setPixel(ctx, x, y, P));
+  leftEarInner.forEach(([x,y]) => setPixel(ctx, x, y, P));
+
+  // Right ear (on head, toward back)
+  const rightEarPixels = [
+    [18,3],[19,3],[20,3],[21,3],
+    [17,4],[18,4],[19,4],[20,4],[21,4],[22,4],
+    [16,5],[17,5],[18,5],[19,5],[20,5],[21,5],[22,5],[23,5],
+    [16,6],[17,6],[18,6],[19,6],[20,6],[21,6],[22,6],[23,6],
+    [17,7],[18,7],[19,7],[20,7],[21,7],[22,7],
+    [18,8],[19,8],[20,8],[21,8]
+  ];
+  rightEarPixels.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  // Right ear inner
+  const rightEarInner = [
+    [18,4],[19,4],[20,4],[21,4],
+    [18,5],[19,5],[20,5],[21,5],
+    [18,6],[19,6],[20,6],[21,6]
+  ];
+  rightEarInner.forEach(([x,y]) => setPixel(ctx, x, y, P));
 
   // --- EYE (smaller, facing left) ---
   fillCircle(ctx, 12, 18, 3, E);
@@ -336,10 +355,10 @@ function drawRunCat(ctx) {
   setPixel(ctx, 8, 26, B);
   setPixel(ctx, 9, 25, M);
 
-  // --- WHISKERS (pointing toward tail / backward) ---
-  drawLine(ctx, 2, 17, 10, 20, K);
-  drawLine(ctx, 2, 22, 12, 22, K);
-  drawLine(ctx, 2, 27, 10, 24, K);
+  // --- WHISKERS (front side / facing left) ---
+  drawLine(ctx, 6, 20, -2, 18, K);
+  drawLine(ctx, 6, 22, -3, 22, K);
+  drawLine(ctx, 6, 24, -2, 26, K);
 }
 
 // === SLEEP CAT (curled up ball) ===

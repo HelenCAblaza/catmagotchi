@@ -107,86 +107,85 @@ def draw_run_cat(img):
     fill_rect(img, 26, 44, 3, 4, S)
     fill_rect(img, 27, 47, 2, 2, P)
 
-    # --- HEAD (small round circle, facing left) ---
-    # Smaller radius than before — compact and cute
-    for y in range(14, 34):
-        for x in range(10, 30):
-            dx = x - 20
-            dy = y - 24
-            if dx * dx + dy * dy <= 95:
+    # --- HEAD (bigger round circle, facing left) ---
+    for y in range(12, 38):
+        for x in range(8, 34):
+            dx = x - 21
+            dy = y - 25
+            if dx * dx + dy * dy <= 150:
                 set_pixel(img, x, y, W)
     # Head shadow (right side)
-    for y in range(26, 34):
-        for x in range(22, 30):
-            dx = x - 20
-            dy = y - 24
-            if dx * dx + dy * dy <= 95 and dx > 3:
+    for y in range(27, 36):
+        for x in range(24, 34):
+            dx = x - 21
+            dy = y - 25
+            if dx * dx + dy * dy <= 150 and dx > 4:
                 set_pixel(img, x, y, S)
 
     # --- EARS (small triangles pointing UP — symmetric, flip-safe) ---
-    # Main ear (left/top of head)
+    # Main ear (left/top of head) — moved up for bigger head
     ear = [
-        (12, 8), (13, 7), (14, 6), (15, 5), (16, 5), (17, 6),
-        (11, 9), (12, 9), (13, 9), (14, 9), (15, 9), (16, 9), (17, 9), (18, 9),
-        (11, 10), (12, 10), (13, 10), (14, 10), (15, 10), (16, 10), (17, 10), (18, 10),
-        (12, 11), (13, 11), (14, 11), (15, 11), (16, 11), (17, 11),
-        (13, 12), (14, 12), (15, 12), (16, 12)
+        (14, 2), (15, 1), (16, 0), (17, 0), (18, 1), (19, 2),
+        (13, 3), (14, 3), (15, 3), (16, 3), (17, 3), (18, 3), (19, 3), (20, 3),
+        (13, 4), (14, 4), (15, 4), (16, 4), (17, 4), (18, 4), (19, 4), (20, 4), (21, 4),
+        (14, 5), (15, 5), (16, 5), (17, 5), (18, 5), (19, 5), (20, 5),
+        (15, 6), (16, 6), (17, 6), (18, 6), (19, 6)
     ]
     for x, y in ear:
         set_pixel(img, x, y, W)
     ear_inner = [
-        (14, 7), (15, 6), (16, 6),
-        (13, 8), (14, 8), (15, 8), (16, 8),
-        (13, 9), (14, 9), (15, 9), (16, 9),
-        (14, 10), (15, 10), (16, 10),
-        (14, 11), (15, 11)
+        (16, 1), (17, 1),
+        (15, 2), (16, 2), (17, 2), (18, 2),
+        (15, 3), (16, 3), (17, 3), (18, 3),
+        (15, 4), (16, 4), (17, 4), (18, 4),
+        (16, 5), (17, 5), (18, 5)
     ]
     for x, y in ear_inner:
         set_pixel(img, x, y, P)
 
     # Second ear (slightly behind, also pointing UP)
     ear2 = [
-        (20, 9), (21, 8), (22, 7), (23, 7), (24, 8),
-        (19, 10), (20, 10), (21, 10), (22, 10), (23, 10), (24, 10), (25, 10),
-        (20, 11), (21, 11), (22, 11), (23, 11), (24, 11), (25, 11),
-        (21, 12), (22, 12), (23, 12), (24, 12)
+        (22, 3), (23, 2), (24, 1), (25, 1), (26, 2), (27, 3),
+        (22, 4), (23, 4), (24, 4), (25, 4), (26, 4), (27, 4), (28, 4),
+        (22, 5), (23, 5), (24, 5), (25, 5), (26, 5), (27, 5), (28, 5),
+        (23, 6), (24, 6), (25, 6), (26, 6), (27, 6),
+        (24, 7), (25, 7), (26, 7)
     ]
     for x, y in ear2:
         set_pixel(img, x, y, W)
     ear2_inner = [
-        (22, 8), (23, 8),
-        (21, 9), (22, 9), (23, 9), (24, 9),
-        (21, 10), (22, 10), (23, 10), (24, 10),
-        (22, 11), (23, 11)
+        (24, 2), (25, 2),
+        (23, 3), (24, 3), (25, 3), (26, 3),
+        (23, 4), (24, 4), (25, 4), (26, 4),
+        (24, 5), (25, 5), (26, 5)
     ]
     for x, y in ear2_inner:
         set_pixel(img, x, y, P)
 
     # --- EYE (big sparkly brown, facing left) ---
-    fill_circle(img, 14, 20, 4, E)
-    fill_circle(img, 12, 17, 2, W)     # big white shine
-    fill_circle(img, 16, 21, 1, W)     # small shine
-    set_pixel(img, 11, 16, W)
+    fill_circle(img, 15, 21, 5, E)
+    fill_circle(img, 13, 18, 2.5, W)     # big white shine
+    fill_circle(img, 17, 22, 1.5, W)     # small shine
+    set_pixel(img, 12, 17, W)
 
     # --- BLUSH on cheek ---
-    fill_circle(img, 16, 26, 3, P)
-    fill_circle(img, 15, 26, 2, PI)
+    fill_circle(img, 18, 27, 3.5, P)
+    fill_circle(img, 17, 27, 2.5, PI)
 
     # --- NOSE (small pink) ---
-    set_pixel(img, 8, 24, B)
-    set_pixel(img, 7, 25, B)
     set_pixel(img, 8, 25, B)
+    set_pixel(img, 7, 26, B)
+    set_pixel(img, 8, 26, B)
 
     # --- MOUTH (tiny happy) ---
-    set_pixel(img, 9, 26, M)
-    set_pixel(img, 10, 27, B)
-    set_pixel(img, 11, 26, M)
+    set_pixel(img, 10, 27, M)
+    set_pixel(img, 11, 28, B)
+    set_pixel(img, 12, 27, M)
 
     # --- WHISKERS (tiny cheek marks, flip-safe) ---
-    # Small dots instead of long lines — subtle and cute
-    set_pixel(img, 18, 27, K)
-    set_pixel(img, 19, 28, K)
-    set_pixel(img, 17, 29, K)
+    set_pixel(img, 20, 28, K)
+    set_pixel(img, 21, 29, K)
+    set_pixel(img, 19, 30, K)
 
 
 if __name__ == '__main__':

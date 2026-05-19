@@ -24,4 +24,23 @@ const config = {
     ]
 };
 
-window.game = new Phaser.Game(config);
+// Wait for Poppins font to load before starting the game
+function startGame() {
+    window.game = new Phaser.Game(config);
+}
+
+if (window._fontsLoaded) {
+    startGame();
+} else {
+    // Poll for font readiness
+    const checkFont = setInterval(() => {
+        if (window._fontsLoaded) {
+            clearInterval(checkFont);
+            startGame();
+        }
+    }, 100);
+    // Fallback: start anyway after 3 seconds
+    setTimeout(() => {
+        if (!window.game) startGame();
+    }, 3000);
+}

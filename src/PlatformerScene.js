@@ -18,7 +18,7 @@ class PlatformerScene extends Phaser.Scene {
         this.createLevel();
 
         // Cat player - 64x64 sprite at 1x scale = 64px tall (fits under platforms)
-        this.player = this.physics.add.sprite(100, 500, 'cat_idle');
+        this.player = this.physics.add.sprite(100, 500, 'cat_adventure_idle');
         this.player.setScale(1);
         // Physics body matches the visible cat within the 64x64 sprite
         this.player.body.setSize(32, 40);
@@ -362,7 +362,7 @@ class PlatformerScene extends Phaser.Scene {
             this.player.setTexture('cat_run');
             this.playerRunTexture = true;
         } else if (!isMoving && this.playerRunTexture) {
-            this.player.setTexture('cat_idle');
+            this.player.setTexture('cat_adventure_idle');
             this.playerRunTexture = false;
         }
 

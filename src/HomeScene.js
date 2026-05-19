@@ -104,18 +104,15 @@ class HomeScene extends Phaser.Scene {
         this.add.image(W * 0.85, decoY, 'bowl').setScale(1.8);
         this.add.image(W / 2, decoY + 40, 'yarn').setScale(1.8);
 
-        // === BUTTONS (bottom area) - rounded pill shape ===
+        // === BUTTONS (bottom area) - circle buttons like Tamagotchi ===
         const btnY1 = H * 0.74;
-        const btnY2 = btnY1 + 52;
-        const btnY3 = btnY2 + 52;
-        const btnW = 160;
-        const btnH = 44;
-        const btnRadius = 22;
+        const btnY2 = btnY1 + 70;
+        const circleR = 32;
 
-        this.createPillButton(W * 0.25, btnY1, '\ud83d\udecf\ufe0f Sleep', () => this.sleep(), btnW, btnH, btnRadius, 0x9999dd);
-        this.createPillButton(W * 0.75, btnY1, '\ud83c\udf57 Feed', () => this.feed(), btnW, btnH, btnRadius, 0xdd9999);
-        this.createPillButton(W * 0.25, btnY2, '\ud83e\uddf6 Play', () => this.play(), btnW, btnH, btnRadius, 0xdd99dd);
-        this.createPillButton(W * 0.75, btnY2, '\ud83e\uddfc Bath', () => this.cleanCat(), btnW, btnH, btnRadius, 0x77bbdd);
+        this.createCircleButton(W * 0.25, btnY1, '🛏️', 'Sleep', () => this.sleep(), circleR, 0x9999dd);
+        this.createCircleButton(W * 0.75, btnY1, '🍗', 'Feed', () => this.feed(), circleR, 0xdd9999);
+        this.createCircleButton(W * 0.25, btnY2, '🧶', 'Play', () => this.play(), circleR, 0xdd99dd);
+        this.createCircleButton(W * 0.75, btnY2, '🛁', 'Bath', () => this.cleanCat(), circleR, 0x77bbdd);
 
         // === ADVENTURE BUTTON - round pastel world button at bottom right ===
         this.createAdventureButton(W - 55, H - 55);
@@ -231,19 +228,29 @@ class HomeScene extends Phaser.Scene {
         }
     }
 
-    createPillButton(x, y, text, callback, w, h, radius, color) {
+    createCircleButton(x, y, icon, label, callback, radius, color) {
         const btn = this.add.graphics();
         btn.fillStyle(color, 1);
-        btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+        btn.fillCircle(x, y, radius);
+        btn.lineStyle(3, 0xffffff, 0.4);
+        btn.strokeCircle(x, y, radius);
         btn.setInteractive(
-            new Phaser.Geom.Rectangle(x - w / 2, y - h / 2, w, h),
-            Phaser.Geom.Rectangle.Contains
+            new Phaser.Geom.Circle(x, y, radius),
+            Phaser.Geom.Circle.Contains
         );
         btn.setScrollFactor(0);
 
-        const lbl = this.add.text(x, y, text, {
-            fontSize: '15px',
+        // Emoji icon centered in circle
+        this.add.text(x, y - 2, icon, {
+            fontSize: '22px',
             color: '#ffffff',
+            fontFamily: '"Poppins", sans-serif'
+        }).setOrigin(0.5);
+
+        // Label below circle
+        this.add.text(x, y + radius + 10, label, {
+            fontSize: '11px',
+            color: '#8888aa',
             fontFamily: '"Poppins", sans-serif',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -253,12 +260,16 @@ class HomeScene extends Phaser.Scene {
             btn.clear();
             const lighter = this.lightenColor(color, 0x222222);
             btn.fillStyle(lighter, 1);
-            btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+            btn.fillCircle(x, y, radius);
+            btn.lineStyle(3, 0xffffff, 0.6);
+            btn.strokeCircle(x, y, radius);
         });
         btn.on('pointerout', () => {
             btn.clear();
             btn.fillStyle(color, 1);
-            btn.fillRoundedRect(x - w / 2, y - h / 2, w, h, radius);
+            btn.fillCircle(x, y, radius);
+            btn.lineStyle(3, 0xffffff, 0.4);
+            btn.strokeCircle(x, y, radius);
         });
         btn.on('pointerdown', callback);
     }

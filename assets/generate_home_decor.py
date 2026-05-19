@@ -272,8 +272,6 @@ def make_food_tray():
     fill_rect(img, 103, 40, 3, 10, (155, 110, 65, 255))
 
     # === Left food bowl ===
-    # bowl shadow on table
-    fill_ellipse(img, 42, 40, 16, 5, (180, 150, 120, 80))
     # bowl outer
     fill_ellipse(img, 42, 32, 16, 12, WHITE)
     fill_ellipse(img, 42, 33, 14, 10, (255, 245, 240, 255))
@@ -291,8 +289,6 @@ def make_food_tray():
     fill_ellipse(img, 42, 36, 12, 4, (240, 230, 225, 100))
 
     # === Right water bowl ===
-    # bowl shadow on table
-    fill_ellipse(img, 78, 40, 16, 5, (180, 150, 120, 80))
     # bowl outer
     fill_ellipse(img, 78, 32, 16, 12, WHITE)
     fill_ellipse(img, 78, 33, 14, 10, (248, 248, 255, 255))

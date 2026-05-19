@@ -10,7 +10,7 @@ class BootScene extends Phaser.Scene {
         this.load.image('cat_sleep', 'assets/cat-sleep.png?v=306');
         this.load.image('cat_bed', 'assets/cat-bed.png?v=12');
         this.load.image('yarn_toy', 'assets/yarn-toy.png?v=2');
-        this.load.image('food_tray', 'assets/food-tray.png?v=5');
+        this.load.image('food_tray', 'assets/food-tray.png?v=6');
 
         // Generate other textures programmatically
         this.createTexture('platform', '#8b7355', 32, 32, 'rect');
@@ -163,7 +163,7 @@ class BootScene extends Phaser.Scene {
         gfx.fillStyle(0xe0d8ce, 1);
         gfx.fillRect(0, h * 0.56, w, h * 0.44);
         gfx.fillStyle(0xc4b8a8, 1);
-        gfx.fillRect(0, h * 0.555, w, 6);
+        gfx.fillRect(0, h * 0.555, w, 3);
 
         // Window glow
         gfx.fillStyle(0xb9e8ff, 0.5);

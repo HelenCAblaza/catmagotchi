@@ -19,7 +19,7 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xe0d8ce, 1);
         room.fillRect(0, H * 0.56, W, H * 0.44);
         room.fillStyle(0xc4b8a8, 1);
-        room.fillRect(0, H * 0.555, W, 6);
+        room.fillRect(0, H * 0.555, W, 3);
 
         // Window
         room.fillStyle(0xbfe8ff, 1);

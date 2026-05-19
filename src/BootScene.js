@@ -426,10 +426,11 @@ class BootScene extends Phaser.Scene {
         g.lineStyle(3, 0xffffff, 1);
         g.beginPath();
         g.moveTo(cx + 8, cy + hr + 4);
-        g.quadraticCurveTo(cx + 20, cy + hr - 4, cx + 18, cy + hr - 12);
+        g.lineTo(cx + 14, cy + hr - 2);
+        g.lineTo(cx + 18, cy + hr - 10);
         g.strokePath();
         g.fillStyle(0xffffff, 1);
-        g.fillCircle(cx + 18, cy + hr - 12, 3);
+        g.fillCircle(cx + 18, cy + hr - 10, 3);
 
         g.generateTexture(key, w, h);
         g.destroy();

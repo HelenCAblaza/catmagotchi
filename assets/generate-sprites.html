@@ -266,19 +266,26 @@ function drawRunCat(ctx) {
     }
   }
 
-  // --- LEGS (running pose) ---
-  // Back leg (stretched back)
-  fillRect(ctx, 44, 40, 3, 7, W);
-  fillRect(ctx, 46, 46, 3, 4, W);
-  fillRect(ctx, 47, 49, 2, 2, P);
-  // Front leg (stretched forward)
-  fillRect(ctx, 18, 40, 3, 7, W);
-  fillRect(ctx, 14, 46, 4, 4, W);
-  fillRect(ctx, 15, 49, 2, 2, P);
-  // Other back leg tucked
-  fillRect(ctx, 38, 42, 3, 5, S);
-  // Other front leg tucked
-  fillRect(ctx, 24, 42, 3, 5, S);
+  // --- LEGS (running pose, natural shapes) ---
+  // Back leg (stretched back) — thinner, curved
+  const backLeg = [
+    [42,38],[43,39],[44,40],[45,41],
+    [45,42],[46,43],[47,44],[48,45],[49,46],
+    [49,47],[50,48],[48,48],[49,49],[50,49]
+  ];
+  backLeg.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  setPixel(ctx, 50, 50, P); setPixel(ctx, 49, 50, P); // paw
+  // Front leg (stretched forward) — thinner, curved
+  const frontLeg = [
+    [22,38],[21,39],[20,40],[19,41],
+    [18,42],[17,43],[16,44],[15,45],[14,46],
+    [13,47],[12,48],[14,48],[13,49],[12,49]
+  ];
+  frontLeg.forEach(([x,y]) => setPixel(ctx, x, y, W));
+  setPixel(ctx, 12, 50, P); setPixel(ctx, 13, 50, P); // paw
+  // Tucked legs (barely visible nubs behind body)
+  setPixel(ctx, 38, 41, S); setPixel(ctx, 39, 41, S);
+  setPixel(ctx, 25, 41, S); setPixel(ctx, 26, 41, S);
 
   // --- HEAD (round, facing left, shorter chin) ---
   for (let y = 10; y <= 33; y++) {
@@ -346,9 +353,11 @@ function drawRunCat(ctx) {
   // --- BLUSH (back/side of head, slightly toward front) ---
   fillCircle(ctx, 22, 22, 3, P);
 
-  // --- NOSE ---
+  // --- NOSE (tiny tip highlight) ---
   setPixel(ctx, 6, 20, B);
   setPixel(ctx, 5, 21, B);
+  setPixel(ctx, 4, 20, W); // tip highlight
+  setPixel(ctx, 5, 20, B); // tip pixel
 
   // --- MOUTH ---
   setPixel(ctx, 7, 23, M);

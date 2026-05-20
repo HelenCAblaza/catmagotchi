@@ -88,22 +88,22 @@ class PlatformerScene extends Phaser.Scene {
             this.scene.start('HomeScene');
         });
 
-        // Inventory display - top left
-        this.fishText = this.add.text(10, 10, '\ud83d\udc1f: 0', {
+        // Inventory display - centered in ground area
+        this.fishText = this.add.text(W / 2 - 35, 560, '\ud83d\udc1f: 0', {
             fontSize: '15px',
             color: '#ffffff',
             fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 3
-        }).setScrollFactor(0);
+        }).setOrigin(0.5).setScrollFactor(0);
 
-        this.toyText = this.add.text(10, 32, '\ud83e\uddf6: 0', {
+        this.toyText = this.add.text(W / 2 + 35, 560, '\ud83e\uddf6: 0', {
             fontSize: '15px',
             color: '#ffffff',
             fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 3
-        }).setScrollFactor(0);
+        }).setOrigin(0.5).setScrollFactor(0);
 
         // Hint text (shows on mobile, fades after 4s)
         if (isMobile) {

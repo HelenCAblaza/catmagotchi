@@ -178,8 +178,8 @@ class BootScene extends Phaser.Scene {
         }
 
         // Cute wall detail: tiny floating shelf with a succulent plant
-        const shelfX = 110;
-        const shelfY = 150;
+        const shelfX = 185;
+        const shelfY = 118;
         gfx.fillStyle(0xccb8a5, 1);
         gfx.fillRect(shelfX - 2, shelfY + 3, 36, 4);
         gfx.fillStyle(0xbfa890, 1);

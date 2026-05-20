@@ -35,8 +35,9 @@ class HomeScene extends Phaser.Scene {
         }
 
         // Cute wall detail: tiny floating shelf with a succulent plant
-        const shelfX = 110;
-        const shelfY = 150;
+        // Placed between the picture frame and the window
+        const shelfX = 185;
+        const shelfY = 118;
         // Shelf shadow
         room.fillStyle(0xccb8a5, 1);
         room.fillRect(shelfX - 2, shelfY + 3, 36, 4);

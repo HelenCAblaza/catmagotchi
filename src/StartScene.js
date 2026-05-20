@@ -34,10 +34,10 @@ class StartScene extends Phaser.Scene {
 
         // === Helper: draw 3D flower pot ===
         const drawFlowerPot = (gfx, x, y, potColor, flowerColor, size = 1) => {
-            const pw = 28 * size;
-            const ph = 22 * size;
-            const pr = 5 * size;
-            const rimH = 6 * size;
+            const pw = 22 * size;  // narrower pot
+            const ph = 16 * size;  // shorter pot
+            const pr = 4 * size;
+            const rimH = 5 * size;
             // darker shade for 3D
             const r = (potColor >> 16) & 0xff;
             const g = (potColor >> 8) & 0xff;
@@ -47,17 +47,17 @@ class StartScene extends Phaser.Scene {
 
             // Shadow
             gfx.fillStyle(0xcc9999, 0.35);
-            gfx.fillEllipse(x + 3, y + 3, pw + 4, 10 * size);
+            gfx.fillEllipse(x + 3, y + 3, pw + 4, 8 * size);
 
             // Pot body (front face)
             gfx.fillStyle(potColor, 1);
             gfx.fillRoundedRect(x - pw / 2, y - ph, pw, ph, pr);
             // Left highlight
             gfx.fillStyle(lighter, 0.5);
-            gfx.fillRoundedRect(x - pw / 2, y - ph, 5 * size, ph, { tl: pr, tr: 0, bl: pr, br: 0 });
+            gfx.fillRoundedRect(x - pw / 2, y - ph, 4 * size, ph, { tl: pr, tr: 0, bl: pr, br: 0 });
             // Right shadow edge
             gfx.fillStyle(darker, 0.6);
-            gfx.fillRoundedRect(x + pw / 2 - 5 * size, y - ph, 5 * size, ph, { tl: 0, tr: pr, bl: 0, br: pr });
+            gfx.fillRoundedRect(x + pw / 2 - 4 * size, y - ph, 4 * size, ph, { tl: 0, tr: pr, bl: 0, br: pr });
 
             // Pot rim (top, slightly wider)
             gfx.fillStyle(lighter, 1);
@@ -67,30 +67,30 @@ class StartScene extends Phaser.Scene {
 
             // Soil
             gfx.fillStyle(0x5a4a3a, 1);
-            gfx.fillRoundedRect(x - pw / 2 + 3 * size, y - ph - 2 * size, pw - 6 * size, 5 * size, 2 * size);
+            gfx.fillRoundedRect(x - pw / 2 + 3 * size, y - ph - 2 * size, pw - 6 * size, 4 * size, 2 * size);
 
-            // Stem
+            // Stem (taller since pot is shorter)
             gfx.fillStyle(0x77aa77, 1);
-            gfx.fillRect(x - 1.5 * size, y - ph - 16 * size, 3 * size, 18 * size);
+            gfx.fillRect(x - 1.5 * size, y - ph - 22 * size, 3 * size, 24 * size);
 
             // Leaves
             gfx.fillStyle(0x88bb88, 1);
-            gfx.fillCircle(x - 6 * size, y - ph - 10 * size, 4 * size);
-            gfx.fillCircle(x + 6 * size, y - ph - 8 * size, 4 * size);
+            gfx.fillCircle(x - 6 * size, y - ph - 14 * size, 4 * size);
+            gfx.fillCircle(x + 6 * size, y - ph - 12 * size, 4 * size);
             gfx.fillStyle(0x99cc99, 1);
-            gfx.fillCircle(x - 5 * size, y - ph - 11 * size, 2 * size);
-            gfx.fillCircle(x + 7 * size, y - ph - 9 * size, 2 * size);
+            gfx.fillCircle(x - 5 * size, y - ph - 15 * size, 2 * size);
+            gfx.fillCircle(x + 7 * size, y - ph - 13 * size, 2 * size);
 
-            // Flower bloom
+            // Flower bloom (higher up since pot is shorter)
             gfx.fillStyle(flowerColor, 1);
-            gfx.fillCircle(x, y - ph - 20 * size, 6 * size);
-            gfx.fillCircle(x - 5 * size, y - ph - 18 * size, 4 * size);
-            gfx.fillCircle(x + 5 * size, y - ph - 18 * size, 4 * size);
-            gfx.fillCircle(x - 3 * size, y - ph - 24 * size, 4 * size);
-            gfx.fillCircle(x + 3 * size, y - ph - 24 * size, 4 * size);
+            gfx.fillCircle(x, y - ph - 28 * size, 6 * size);
+            gfx.fillCircle(x - 5 * size, y - ph - 26 * size, 4 * size);
+            gfx.fillCircle(x + 5 * size, y - ph - 26 * size, 4 * size);
+            gfx.fillCircle(x - 3 * size, y - ph - 32 * size, 4 * size);
+            gfx.fillCircle(x + 3 * size, y - ph - 32 * size, 4 * size);
             // Center
             gfx.fillStyle(0xffeeaa, 1);
-            gfx.fillCircle(x, y - ph - 20 * size, 3 * size);
+            gfx.fillCircle(x, y - ph - 28 * size, 3 * size);
         };
 
         // === Helper: draw 3D tree in pot ===

@@ -271,51 +271,57 @@ class StartScene extends Phaser.Scene {
 
         // === 3D Start Button ===
         const btnW = 200;
-        const btnH = 54;
-        const btnDepth = 8;
-        const btnY = H * 0.72;
+        const btnH = 56;
+        const btnDepth = 10;
+        const btnY = H * 0.78;
         const btnX = W / 2;
 
         const btnShadow = this.add.graphics();
         const btnBg = this.add.graphics();
         const btnFace = this.add.graphics();
+        const btnBevel = this.add.graphics();
 
-        // Draw full 3D button
-        const draw3DButton = (bg, face, shadow, baseColor, hover) => {
+        // Draw full 3D button with bevel
+        const draw3DButton = (bg, face, shadow, bevel, baseColor, hover) => {
             shadow.clear();
             bg.clear();
             face.clear();
+            bevel.clear();
 
             const r = btnH / 2;
-            const lift = hover ? -3 : 0;
-            const shadowAlpha = hover ? 0.2 : 0.35;
+            const lift = hover ? -4 : 0;
+            const shadowAlpha = hover ? 0.15 : 0.4;
+            const depth = btnDepth + (hover ? 2 : 0);
 
-            // Drop shadow (offset down-right)
-            shadow.fillStyle(0x884455, shadowAlpha);
-            shadow.fillRoundedRect(btnX - btnW / 2 + 4, btnY - btnH / 2 + btnDepth + 4 + lift, btnW, btnH, r);
+            // Soft drop shadow (large, blurred feel)
+            shadow.fillStyle(0x885566, shadowAlpha);
+            shadow.fillRoundedRect(btnX - btnW / 2 + 6, btnY - btnH / 2 + depth + 6 + lift, btnW, btnH, r);
+            shadow.fillStyle(0x885566, shadowAlpha * 0.5);
+            shadow.fillRoundedRect(btnX - btnW / 2 + 10, btnY - btnH / 2 + depth + 10 + lift, btnW, btnH, r);
 
-            // Button thickness (side face)
-            const darker = 0xee6699;
+            // Bottom thickness face (darker side wall)
+            const darker = 0xdd5588;
             face.fillStyle(darker, 1);
-            face.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + btnDepth + lift, btnW, btnH, r);
-            // Cut off top half of thickness so only bottom edge shows
-            face.fillStyle(baseColor, 1);
-            face.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + lift, btnW, btnH - 2, r);
+            face.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + depth + lift, btnW, btnH, r);
 
             // Main button face
             bg.fillStyle(baseColor, 1);
             bg.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + lift, btnW, btnH, r);
 
-            // Top highlight (glossy 3D feel)
-            bg.fillStyle(0xffffff, 0.35);
-            bg.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + lift, btnW, r, { tl: r, tr: r, bl: 0, br: 0 });
+            // Bevel highlight (top-left inner edge)
+            bevel.fillStyle(0xffffff, 0.45);
+            bevel.fillRoundedRect(btnX - btnW / 2 + 2, btnY - btnH / 2 + lift + 2, btnW - 4, r - 2, { tl: r - 2, tr: r - 2, bl: 0, br: 0 });
 
-            // Bottom shadow edge
-            bg.fillStyle(0x000000, 0.08);
-            bg.fillRoundedRect(btnX - btnW / 2, btnY + btnH / 2 - 6 + lift, btnW, 6, { tl: 0, tr: 0, bl: r, br: r });
+            // Bottom shadow bevel (right-bottom inner edge)
+            bevel.fillStyle(0x000000, 0.12);
+            bevel.fillRoundedRect(btnX - btnW / 2 + 2, btnY + btnH / 2 - r + 2 + lift, btnW - 4, r - 2, { tl: 0, tr: 0, bl: r - 2, br: r - 2 });
+
+            // Specular spot (glossy shine)
+            bg.fillStyle(0xffffff, 0.25);
+            bg.fillEllipse(btnX - btnW / 2 + 30, btnY - btnH / 2 + lift + 10, 40, 12);
         };
 
-        draw3DButton(btnBg, btnFace, btnShadow, 0xff88bb, false);
+        draw3DButton(btnBg, btnFace, btnShadow, btnBevel, 0xff88bb, false);
 
         // Button text
         const btnText = this.add.text(btnX, btnY, '\ud83d\udc3e Start Game!', {
@@ -331,22 +337,22 @@ class StartScene extends Phaser.Scene {
 
         // Hover effect - lift up and brighten
         hitArea.on('pointerover', () => {
-            draw3DButton(btnBg, btnFace, btnShadow, 0xffaacc, true);
+            draw3DButton(btnBg, btnFace, btnShadow, btnBevel, 0xffaacc, true);
             btnText.setScale(1.05);
-            btnText.y = btnY - 3;
+            btnText.y = btnY - 4;
         });
 
         hitArea.on('pointerout', () => {
-            draw3DButton(btnBg, btnFace, btnShadow, 0xff88bb, false);
+            draw3DButton(btnBg, btnFace, btnShadow, btnBevel, 0xff88bb, false);
             btnText.setScale(1);
             btnText.y = btnY;
         });
 
         hitArea.on('pointerdown', () => {
             // Press down effect
-            draw3DButton(btnBg, btnFace, btnShadow, 0xff6699, false);
+            draw3DButton(btnBg, btnFace, btnShadow, btnBevel, 0xff6699, false);
             btnText.setScale(0.95);
-            btnText.y = btnY + 2;
+            btnText.y = btnY + 3;
             this.tweens.add({
                 targets: [cat, btnText],
                 scaleX: 0.9,
@@ -360,6 +366,24 @@ class StartScene extends Phaser.Scene {
                     });
                 }
             });
+        });
+
+        // === Floating emoji spawns (heart + wink) around button ===
+        this.emojis = this.add.group();
+        this.time.addEvent({
+            delay: 800,
+            loop: true,
+            callback: () => {
+                const isHeart = Math.random() > 0.4;
+                const ex = btnX - 80 + Math.random() * 160;
+                const ey = btnY - 30 - Math.random() * 20;
+                const emoji = this.add.text(ex, ey, isHeart ? '❤️' : '😉', {
+                    fontSize: (16 + Math.random() * 12) + 'px'
+                }).setOrigin(0.5).setAlpha(0.8);
+                emoji.speedY = 0.4 + Math.random() * 0.6;
+                emoji.wobble = Math.random() * Math.PI * 2;
+                this.emojis.add(emoji);
+            }
         });
 
         // Hint text
@@ -384,6 +408,17 @@ class StartScene extends Phaser.Scene {
             heart.alpha -= 0.006;
             if (heart.alpha <= 0) {
                 heart.destroy();
+            }
+        });
+
+        // Float emojis (hearts + winks) from button
+        this.emojis.children.each((emoji) => {
+            emoji.y -= emoji.speedY;
+            emoji.x += Math.sin(emoji.wobble) * 0.3;
+            emoji.wobble += 0.05;
+            emoji.alpha -= 0.008;
+            if (emoji.alpha <= 0) {
+                emoji.destroy();
             }
         });
     }

@@ -83,8 +83,8 @@ class PlatformerScene extends Phaser.Scene {
         }
 
         // === UI ===
-        // Home button - top right
-        this.createButton(W - 60, 30, '\ud83c\udfe0 Home', () => {
+        // Home button - bottom right, round pastel
+        this.createRoundButton(W - 45, H - 45, '\ud83c\udfe0', () => {
             this.scene.start('HomeScene');
         });
 
@@ -433,29 +433,34 @@ class PlatformerScene extends Phaser.Scene {
         }
     }
 
-    createButton(x, y, text, callback) {
-        // Single container approach - one interactive area
+    createRoundButton(x, y, text, callback) {
+        // Round pastel button with matching outline
         const btn = this.add.container(x, y);
         btn.setScrollFactor(0).setDepth(50);
 
-        // Background rectangle
-        const bg = this.add.rectangle(0, 0, 120, 44, 0x5555aa)
-            .setStrokeStyle(2, 0x8888cc, 0.5);
+        // Background circle - soft pastel lavender
+        const bg = this.add.circle(0, 0, 32, 0xd4c4e0)
+            .setStrokeStyle(3, 0xb8a8cc, 1);  // slightly darker lavender outline
         btn.add(bg);
 
-        // Text label
-        const lbl = this.add.text(0, 0, text, {
-            fontSize: '14px',
-            color: '#ffffff',
+        // Emoji/text label centered
+        const lbl = this.add.text(0, 1, text, {
+            fontSize: '24px',
             fontFamily: 'Poppins'
         }).setOrigin(0.5);
         btn.add(lbl);
 
-        // Make container interactive with a hit area
-        bg.setInteractive({ useHandCursor: true });
+        // Make circle interactive
+        bg.setInteractive({ useHandCursor: true, hitArea: new Phaser.Geom.Circle(0, 0, 32), hitAreaCallback: Phaser.Geom.Circle.Contains });
 
-        const onOver = () => bg.setFillStyle(0x7777cc);
-        const onOut = () => bg.setFillStyle(0x5555aa);
+        const onOver = () => {
+            bg.setFillStyle(0xe0d0ec);
+            bg.setStrokeStyle(3, 0xc4b4d8, 1);
+        };
+        const onOut = () => {
+            bg.setFillStyle(0xd4c4e0);
+            bg.setStrokeStyle(3, 0xb8a8cc, 1);
+        };
         const onClick = () => callback();
 
         bg.on('pointerover', onOver);

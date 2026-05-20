@@ -350,8 +350,8 @@ class HomeScene extends Phaser.Scene {
         // spawn hearts close to the cat (center of screen, cat Y area)
         const catX = W * 0.5;
         const catY = H * 0.51;
-        const x = catX + (Math.random() - 0.5) * 120;
-        const y = catY + (Math.random() - 0.5) * 80;
+        const x = catX + (Math.random() - 0.5) * 180;
+        const y = catY + (Math.random() - 0.5) * 120;
         const heart = this.add.image(x, y, 'heart')
             .setScale(0.3 + Math.random() * 0.4)
             .setAlpha(0.7);

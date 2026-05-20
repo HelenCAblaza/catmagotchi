@@ -231,6 +231,54 @@ class HomeScene extends Phaser.Scene {
 
         this.clouds = []; // kept for update() compatibility, but no clouds in the room
 
+        // === Simple 3D White Cabinet (left side) ===
+        const cabX = 20;
+        const cabY = 380;
+        const cabW = 50;
+        const cabH = 65;
+        const cabDepth = 6;
+
+        // Cabinet shadow (floor)
+        room.fillStyle(0xccb8a5, 1);
+        room.fillRoundedRect(cabX + 4, cabY + cabH + 2, cabW, 6, 2);
+
+        // Cabinet body (white)
+        room.fillStyle(0xffffff, 1);
+        room.fillRoundedRect(cabX, cabY, cabW, cabH, 4);
+
+        // Top surface (lighter white for 3D depth)
+        room.fillStyle(0xfafafa, 1);
+        room.fillRoundedRect(cabX, cabY, cabW, 6, 3);
+
+        // Right side shadow (3D depth)
+        room.fillStyle(0xe8e8e8, 1);
+        room.fillRect(cabX + cabW - 6, cabY + 4, 6, cabH - 8);
+
+        // Drawer seam (top drawer line)
+        room.fillStyle(0xeeeeee, 1);
+        room.fillRect(cabX + 6, cabY + cabH * 0.35, cabW - 12, 2);
+
+        // Drawer seam (bottom drawer line)
+        room.fillStyle(0xeeeeee, 1);
+        room.fillRect(cabX + 6, cabY + cabH * 0.72, cabW - 12, 2);
+
+        // Top drawer knob
+        room.fillStyle(0xcccccc, 1);
+        room.fillCircle(cabX + cabW / 2, cabY + cabH * 0.17, 3);
+
+        // Bottom drawer knob
+        room.fillStyle(0xcccccc, 1);
+        room.fillCircle(cabX + cabW / 2, cabY + cabH * 0.55, 3);
+
+        // Tiny cat toy (yarn ball) on top of cabinet
+        room.fillStyle(0xffb8cc, 1);
+        room.fillCircle(cabX + cabW * 0.6, cabY - 5, 5);
+        room.fillStyle(0xffccd8, 1);
+        room.fillCircle(cabX + cabW * 0.6, cabY - 6, 3);
+        // Yarn tail
+        room.fillStyle(0xffb8cc, 1);
+        room.fillRect(cabX + cabW * 0.6 + 3, cabY - 3, 8, 2);
+
         // Floating hearts particles around the cat area
         this.hearts = this.add.group();
         this.time.addEvent({

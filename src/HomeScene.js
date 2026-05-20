@@ -21,17 +21,54 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xc4b8a8, 1);
         room.fillRect(0, H * 0.535, W, 3);
 
-        // Window
-        room.fillStyle(0xbfe8ff, 1);
-        room.fillRoundedRect(W * 0.66, 92, 126, 150, 12);
-        room.fillStyle(0xeaf9ff, 0.85);
-        room.fillRoundedRect(W * 0.66 + 8, 100, 110, 134, 10);
-        room.fillStyle(0xffffff, 0.5);
-        room.fillRect(W * 0.66 + 61, 100, 4, 134);
-        room.fillRect(W * 0.66 + 8, 165, 110, 4);
-        room.fillStyle(0xffd7c2, 1);
-        room.fillRoundedRect(W * 0.64, 86, 20, 162, 8);
-        room.fillRoundedRect(W * 0.80, 86, 20, 162, 8);
+        // === 3D Window ===
+        const winX = W * 0.66;
+        const winY = 92;
+        const winW = 126;
+        const winH = 150;
+        const frameThick = 8;
+
+        // Outer wall shadow (gives depth that the frame protrudes)
+        room.fillStyle(0xc4a882, 1);
+        room.fillRoundedRect(winX - 6, winY - 6, winW + 12, winH + 12, 14);
+
+        // Outer frame (dark wood edge)
+        room.fillStyle(0x8a6e4b, 1);
+        room.fillRoundedRect(winX, winY, winW, winH, 12);
+
+        // Inner frame (lighter wood face)
+        room.fillStyle(0xbc9466, 1);
+        room.fillRoundedRect(winX + 3, winY + 3, winW - 6, winH - 6, 10);
+
+        // Glass pane (sky)
+        room.fillStyle(0xb8e8ff, 1);
+        room.fillRoundedRect(winX + frameThick, winY + frameThick, winW - frameThick * 2, winH - frameThick * 2, 6);
+
+        // Sky gradient hint (top lighter, bottom slightly deeper)
+        room.fillStyle(0xe0f4ff, 0.6);
+        room.fillRoundedRect(winX + frameThick + 4, winY + frameThick + 4, winW - frameThick * 2 - 8, 50, 4);
+
+        // Window cross bars (white wood)
+        const barColor = 0xf5efe6;
+        room.fillStyle(barColor, 1);
+        // Horizontal bar
+        room.fillRect(winX + frameThick, winY + winH / 2 - 3, winW - frameThick * 2, 6);
+        // Vertical bar
+        room.fillRect(winX + winW / 2 - 3, winY + frameThick, 6, winH - frameThick * 2);
+
+        // Window sill (3D protruding ledge at bottom)
+        room.fillStyle(0x9c7a52, 1);
+        room.fillRect(winX - 10, winY + winH - 6, winW + 20, 14);
+        room.fillStyle(0xb08d64, 1);
+        room.fillRect(winX - 8, winY + winH - 8, winW + 16, 6);
+        // Sill highlight
+        room.fillStyle(0xd4b896, 1);
+        room.fillRect(winX - 6, winY + winH - 8, winW + 12, 2);
+
+        // Glass highlight / reflection streak
+        room.fillStyle(0xffffff, 0.35);
+        room.fillRect(winX + frameThick + 10, winY + frameThick + 12, 18, 3);
+        room.fillRect(winX + frameThick + 14, winY + frameThick + 18, 10, 2);
 
         // Picture frame on the wall
         room.fillStyle(0xd9b38c, 1);

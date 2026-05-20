@@ -166,16 +166,43 @@ class BootScene extends Phaser.Scene {
         gfx.fillRect(0, h * 0.535, w, 3);
 
         // Window glow
-        gfx.fillStyle(0xb9e8ff, 0.5);
-        gfx.fillRoundedRect(w * 0.65, 88, 138, 160, 14);
-        gfx.fillStyle(0xeefaff, 0.6);
-        gfx.fillRoundedRect(w * 0.65 + 10, 98, 118, 140, 12);
-        gfx.fillStyle(0xffffff, 0.45);
-        gfx.fillRect(w * 0.65 + 59, 98, 4, 140);
-        gfx.fillRect(w * 0.65 + 10, 166, 118, 4);
-        gfx.fillStyle(0xffd6c2, 0.95);
-        gfx.fillRoundedRect(w * 0.63, 82, 20, 172, 8);
-        gfx.fillRoundedRect(w * 0.82, 82, 20, 172, 8);
+        const winX = w * 0.65;
+        const winY = 88;
+        const winW = 138;
+        const winH = 160;
+        const ft = 8;
+
+        // Outer wall shadow
+        gfx.fillStyle(0xc4a882, 1);
+        gfx.fillRoundedRect(winX - 6, winY - 6, winW + 12, winH + 12, 14);
+        // Outer frame (dark wood)
+        gfx.fillStyle(0x8a6e4b, 1);
+        gfx.fillRoundedRect(winX, winY, winW, winH, 12);
+        // Inner frame (lighter wood)
+        gfx.fillStyle(0xbc9466, 1);
+        gfx.fillRoundedRect(winX + 3, winY + 3, winW - 6, winH - 6, 10);
+        // Glass pane
+        gfx.fillStyle(0xb8e8ff, 1);
+        gfx.fillRoundedRect(winX + ft, winY + ft, winW - ft * 2, winH - ft * 2, 6);
+        // Sky gradient hint
+        gfx.fillStyle(0xe0f4ff, 0.6);
+        gfx.fillRoundedRect(winX + ft + 4, winY + ft + 4, winW - ft * 2 - 8, 50, 4);
+        // Cross bars
+        const barColor = 0xf5efe6;
+        gfx.fillStyle(barColor, 1);
+        gfx.fillRect(winX + ft, winY + winH / 2 - 3, winW - ft * 2, 6);
+        gfx.fillRect(winX + winW / 2 - 3, winY + ft, 6, winH - ft * 2);
+        // Sill
+        gfx.fillStyle(0x9c7a52, 1);
+        gfx.fillRect(winX - 10, winY + winH - 6, winW + 20, 14);
+        gfx.fillStyle(0xb08d64, 1);
+        gfx.fillRect(winX - 8, winY + winH - 8, winW + 16, 6);
+        gfx.fillStyle(0xd4b896, 1);
+        gfx.fillRect(winX - 6, winY + winH - 8, winW + 12, 2);
+        // Reflection
+        gfx.fillStyle(0xffffff, 0.35);
+        gfx.fillRect(winX + ft + 10, winY + ft + 12, 18, 3);
+        gfx.fillRect(winX + ft + 14, winY + ft + 18, 10, 2);
 
         // Picture frame
         gfx.fillStyle(0xd8b18a, 1);

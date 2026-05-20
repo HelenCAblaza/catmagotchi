@@ -14,11 +14,11 @@ class HomeScene extends Phaser.Scene {
         // Cozy room overlay: warm walls, wood floor, window, picture, and rug
         const room = this.add.graphics();
         room.setDepth(-1);
-        room.fillStyle(0xebd7bf, 1);
+        room.fillStyle(0xf2e6d8, 1);
         room.fillRect(0, 0, W, H * 0.54);
-        room.fillStyle(0xe0d8ce, 1);
+        room.fillStyle(0xefe8df, 1);
         room.fillRect(0, H * 0.54, W, H * 0.46);
-        room.fillStyle(0xc4b8a8, 1);
+        room.fillStyle(0xd6c9bc, 1);
         room.fillRect(0, H * 0.535, W, 3);
 
         // === 3D Window ===

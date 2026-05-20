@@ -111,6 +111,42 @@ class HomeScene extends Phaser.Scene {
         room.fillRect(winX + frameThick + 10, winY + frameThick + 12, 18, 3);
         room.fillRect(winX + frameThick + 14, winY + frameThick + 18, 10, 2);
 
+        // === Cute flower pot on right wall (below window) ===
+        const potX = 420;
+        const potY = 365;
+        // Pot shadow
+        room.fillStyle(0xccb8a5, 1);
+        room.fillRect(potX - 2, potY + 4, 26, 5);
+        // Pot body
+        room.fillStyle(0xd68a7a, 1);
+        room.fillRoundedRect(potX, potY, 22, 18, 3);
+        // Pot rim highlight
+        room.fillStyle(0xe8a090, 1);
+        room.fillRect(potX + 2, potY, 18, 4);
+        // Soil
+        room.fillStyle(0x8a6e50, 1);
+        room.fillRect(potX + 4, potY - 2, 14, 4);
+        // Stem
+        room.fillStyle(0x66aa66, 1);
+        room.fillRect(potX + 10, potY - 18, 2, 16);
+        // Leaves
+        room.fillStyle(0x88cc88, 1);
+        room.fillCircle(potX + 6, potY - 12, 4);
+        room.fillCircle(potX + 16, potY - 14, 4);
+        room.fillStyle(0xaaddaa, 1);
+        room.fillCircle(potX + 5, potY - 16, 3);
+        room.fillCircle(potX + 17, potY - 18, 3);
+        // Pink flower blossom
+        room.fillStyle(0xff99bb, 1);
+        room.fillCircle(potX + 11, potY - 24, 5);
+        room.fillCircle(potX + 8, potY - 22, 4);
+        room.fillCircle(potX + 14, potY - 22, 4);
+        room.fillStyle(0xffbbdd, 1);
+        room.fillCircle(potX + 11, potY - 26, 3);
+        // Flower center
+        room.fillStyle(0xffeeaa, 1);
+        room.fillCircle(potX + 11, potY - 24, 2);
+
         // === 3D Picture Frame ===
         const picX = 60;
         const picY = 258;

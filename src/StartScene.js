@@ -240,14 +240,14 @@ class StartScene extends Phaser.Scene {
         }).setOrigin(0.5).setShadow(0, 5, '#dd6688aa', 2, true, true);
 
         // Cat sprite (large, centered) - uses real pixel-art PNG!
-        const cat = this.add.sprite(W / 2, H * 0.42, 'cat_idle')
-            .setScale(3)
+        const cat = this.add.sprite(W / 2, H * 0.52, 'cat_idle')
+            .setScale(3.15)
             .setOrigin(0.5);
 
         // Gentle bob animation
         this.tweens.add({
             targets: cat,
-            y: H * 0.42 - 12,
+            y: H * 0.52 - 12,
             duration: 1200,
             yoyo: true,
             repeat: -1,
@@ -464,7 +464,7 @@ class StartScene extends Phaser.Scene {
 
     spawnHeart() {
         const x = 80 + Math.random() * (this.scale.width - 160);
-        const y = this.scale.height * 0.35 + Math.random() * 120;
+        const y = this.scale.height * 0.45 + Math.random() * 120;
         const heart = this.add.image(x, y, 'heart')
             .setScale(0.3 + Math.random() * 0.3)
             .setAlpha(0.7);

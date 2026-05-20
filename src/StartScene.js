@@ -236,7 +236,7 @@ class StartScene extends Phaser.Scene {
             fontStyle: 'bold',
             stroke: '#ff88aa',
             strokeThickness: 3,
-            padding: { top: 4, bottom: 10 }
+            padding: { top: 6, bottom: 18, left: 6, right: 6 }
         }).setOrigin(0.5).setShadow(0, 4, '#ff88aa88', 0, true, true);
 
         // Cat sprite (large, centered) - uses real pixel-art PNG!

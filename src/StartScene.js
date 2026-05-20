@@ -14,43 +14,13 @@ class StartScene extends Phaser.Scene {
         const canvas = this.textures.createCanvas('bg_gradient', W, H);
         const ctx = canvas.context;
         const grd = ctx.createLinearGradient(0, 0, 0, H);
-        grd.addColorStop(0, '#ffe8e0');
-        grd.addColorStop(0.5, '#ffd4cc');
-        grd.addColorStop(1, '#ffc4c4');
+        grd.addColorStop(0, '#fff5f0');
+        grd.addColorStop(0.5, '#ffeeea');
+        grd.addColorStop(1, '#ffe8e4');
         ctx.fillStyle = grd;
         ctx.fillRect(0, 0, W, H);
         canvas.refresh();
         this.add.image(W / 2, H / 2, 'bg_gradient').setDepth(-20);
-
-        // Decorative archway frame (cute border around the stage area)
-        const archX = W / 2 - 130;
-        const archY = H * 0.12;
-        const archW = 260;
-        const archH = 340;
-        const archThick = 8;
-
-        // Outer arch shadow
-        bg.fillStyle(0xe0b0a8, 0.5);
-        bg.fillRoundedRect(archX + 4, archY + 4, archW, archH, archThick);
-        // Inner arch (peach-white)
-        bg.fillStyle(0xfff5f0, 0.85);
-        bg.fillRoundedRect(archX, archY, archW, archH, archThick);
-        // Arch highlight
-        bg.fillStyle(0xffffff, 0.7);
-        bg.fillRoundedRect(archX, archY, archW, 6, { tl: archThick, tr: archThick, bl: 0, br: 0 });
-
-        // Tiny decorative flowers along the arch bottom
-        const flowerColors = [0xff88aa, 0xffaa88, 0xffccaa, 0xffaacc];
-        for (let i = 0; i < 5; i++) {
-            const fx = archX + 30 + i * 50;
-            const fy = archY + archH - 12;
-            bg.fillStyle(0x88cc88, 1);
-            bg.fillRect(fx - 1, fy - 6, 2, 8);
-            bg.fillStyle(flowerColors[i % flowerColors.length], 1);
-            bg.fillCircle(fx, fy - 8, 4);
-            bg.fillStyle(0xffeeaa, 1);
-            bg.fillCircle(fx, fy - 8, 2);
-        }
 
         // Floating sparkle dots in background
         for (let i = 0; i < 20; i++) {

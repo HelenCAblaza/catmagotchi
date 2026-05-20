@@ -65,20 +65,20 @@ class HomeScene extends Phaser.Scene {
         // === 3D Window ===
         const winX = W * 0.66;
         const winY = 240;
-        const winW = 126;
-        const winH = 150;
-        const frameThick = 8;
+        const winW = 100;
+        const winH = 120;
+        const frameThick = 6;
 
         // Outer wall shadow (gives depth that the frame protrudes)
-        room.fillStyle(0xc4a882, 1);
+        room.fillStyle(0xdac4a8, 1);
         room.fillRoundedRect(winX - 6, winY - 6, winW + 12, winH + 12, 14);
 
-        // Outer frame (dark wood edge)
-        room.fillStyle(0x8a6e4b, 1);
+        // Outer frame (medium tan)
+        room.fillStyle(0xc4a882, 1);
         room.fillRoundedRect(winX, winY, winW, winH, 12);
 
-        // Inner frame (lighter wood face)
-        room.fillStyle(0xbc9466, 1);
+        // Inner frame (light tan face)
+        room.fillStyle(0xd4b896, 1);
         room.fillRoundedRect(winX + 3, winY + 3, winW - 6, winH - 6, 10);
 
         // Glass pane (sky)
@@ -87,7 +87,7 @@ class HomeScene extends Phaser.Scene {
 
         // Sky gradient hint (top lighter, bottom slightly deeper)
         room.fillStyle(0xe0f4ff, 0.6);
-        room.fillRoundedRect(winX + frameThick + 4, winY + frameThick + 4, winW - frameThick * 2 - 8, 50, 4);
+        room.fillRoundedRect(winX + frameThick + 4, winY + frameThick + 4, winW - frameThick * 2 - 8, 40, 4);
 
         // Window cross bars (white wood)
         const barColor = 0xf5efe6;
@@ -97,13 +97,13 @@ class HomeScene extends Phaser.Scene {
         // Vertical bar
         room.fillRect(winX + winW / 2 - 3, winY + frameThick, 6, winH - frameThick * 2);
 
-        // Window sill (3D protruding ledge at bottom)
-        room.fillStyle(0x9c7a52, 1);
+        // Window sill (lighter 3D protruding ledge at bottom)
+        room.fillStyle(0xbc9466, 1);
         room.fillRect(winX - 10, winY + winH - 6, winW + 20, 14);
-        room.fillStyle(0xb08d64, 1);
+        room.fillStyle(0xd4b896, 1);
         room.fillRect(winX - 8, winY + winH - 8, winW + 16, 6);
         // Sill highlight
-        room.fillStyle(0xd4b896, 1);
+        room.fillStyle(0xe8d4b0, 1);
         room.fillRect(winX - 6, winY + winH - 8, winW + 12, 2);
 
         // Glass highlight / reflection streak

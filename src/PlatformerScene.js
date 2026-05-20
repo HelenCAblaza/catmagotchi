@@ -359,10 +359,10 @@ class PlatformerScene extends Phaser.Scene {
 
         let velocityX = 0;
         if (left) {
-            velocityX = this.joyActive ? -200 * Math.abs(this.joyX) : -200;
+            velocityX = this.joyActive ? -130 * Math.abs(this.joyX) : -130;
             this.player.setFlipX(false);  // face left (default sprite direction)
         } else if (right) {
-            velocityX = this.joyActive ? 200 * Math.abs(this.joyX) : 200;
+            velocityX = this.joyActive ? 130 * Math.abs(this.joyX) : 130;
             this.player.setFlipX(true);   // flip to face right
         }
         this.player.setVelocityX(velocityX);

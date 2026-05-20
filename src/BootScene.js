@@ -158,21 +158,21 @@ class BootScene extends Phaser.Scene {
         gfx.fillRect(0, 0, w, h);
 
         // Wall and floor split
-        gfx.fillStyle(0xf5e2d6, 1);
+        gfx.fillStyle(0xf8ddd5, 1);
         gfx.fillRect(0, 0, w, h * 0.54);
-        gfx.fillStyle(0xecddd2, 1);
+        gfx.fillStyle(0xf0d8d0, 1);
         gfx.fillRect(0, h * 0.54, w, h * 0.46);
-        gfx.fillStyle(0xd8cab8, 1);
+        gfx.fillStyle(0xe0c4b8, 1);
         gfx.fillRect(0, h * 0.535, w, 3);
 
         // Wood floor planks for cozy detail
-        gfx.fillStyle(0xe5d8cc, 1);
+        gfx.fillStyle(0xead0c8, 1);
         const floorStart = h * 0.54;
         const plankGap = 28;
         for (let py = floorStart + plankGap; py < h; py += plankGap) {
             gfx.fillRect(0, py, w, 2);
         }
-        gfx.fillStyle(0xe0d4c8, 0.35);
+        gfx.fillStyle(0xe4ccc4, 0.35);
         for (let py = floorStart + plankGap * 2; py < h; py += plankGap * 2) {
             gfx.fillRect(0, py - plankGap + 2, w, plankGap - 2);
         }
@@ -180,15 +180,15 @@ class BootScene extends Phaser.Scene {
         // Cute wall detail: tiny floating shelf with a succulent plant
         const shelfX = 185;
         const shelfY = 118;
-        gfx.fillStyle(0xddd0c0, 1);
+        gfx.fillStyle(0xe0ccc4, 1);
         gfx.fillRect(shelfX - 2, shelfY + 3, 36, 4);
-        gfx.fillStyle(0xbfa890, 1);
+        gfx.fillStyle(0xc4a498, 1);
         gfx.fillRect(shelfX - 2, shelfY, 36, 4);
-        gfx.fillStyle(0xd4b896, 1);
+        gfx.fillStyle(0xd8b0a0, 1);
         gfx.fillRect(shelfX - 2, shelfY - 1, 36, 2);
         gfx.fillStyle(0xd68a7a, 1);
         gfx.fillRect(shelfX + 6, shelfY - 8, 14, 9);
-        gfx.fillStyle(0xe8a090, 1);
+        gfx.fillStyle(0xe8a8a0, 1);
         gfx.fillRect(shelfX + 8, shelfY - 10, 10, 3);
         gfx.fillStyle(0x88cc88, 1);
         gfx.fillCircle(shelfX + 13, shelfY - 14, 4);
@@ -231,7 +231,7 @@ class BootScene extends Phaser.Scene {
         gfx.fillRect(winX - 10, winY + winH - 6, winW + 20, 14);
         gfx.fillStyle(0xb08d64, 1);
         gfx.fillRect(winX - 8, winY + winH - 8, winW + 16, 6);
-        gfx.fillStyle(0xd4b896, 1);
+        gfx.fillStyle(0xd8b0a0, 1);
         gfx.fillRect(winX - 6, winY + winH - 8, winW + 12, 2);
         // Reflection
         gfx.fillStyle(0xffffff, 0.35);

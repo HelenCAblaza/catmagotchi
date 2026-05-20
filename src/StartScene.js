@@ -32,99 +32,157 @@ class StartScene extends Phaser.Scene {
             bg.fillCircle(sx, sy, size);
         }
 
-        // Cute flower pots and tiny trees in corners
-        // === Left flower pot ===
-        const lpX = 30;
-        const lpY = H * 0.78;
-        // Pot shadow
-        bg.fillStyle(0xcc9999, 0.3);
-        bg.fillEllipse(lpX + 2, lpY + 2, 22, 8);
-        // Pot body (terracotta)
-        bg.fillStyle(0xdd8877, 1);
-        bg.fillRoundedRect(lpX - 10, lpY - 14, 20, 18, 4);
-        bg.fillStyle(0xcc7766, 1);
-        bg.fillRoundedRect(lpX - 10, lpY - 14, 20, 6, { tl: 4, tr: 4, bl: 0, br: 0 });
-        // Soil
-        bg.fillStyle(0x665544, 1);
-        bg.fillRect(lpX - 8, lpY - 16, 16, 4);
-        // Stem
-        bg.fillStyle(0x88bb88, 1);
-        bg.fillRect(lpX - 1, lpY - 28, 2, 14);
-        // Leaves
-        bg.fillCircle(lpX - 4, lpY - 26, 3);
-        bg.fillCircle(lpX + 4, lpY - 24, 3);
-        // Pink flower
-        bg.fillStyle(0xff99bb, 1);
-        bg.fillCircle(lpX, lpY - 32, 4);
-        bg.fillStyle(0xffeeaa, 1);
-        bg.fillCircle(lpX, lpY - 32, 2);
+        // === Helper: draw 3D flower pot ===
+        const drawFlowerPot = (gfx, x, y, potColor, flowerColor, size = 1) => {
+            const pw = 28 * size;
+            const ph = 22 * size;
+            const pr = 5 * size;
+            const rimH = 6 * size;
+            // darker shade for 3D
+            const r = (potColor >> 16) & 0xff;
+            const g = (potColor >> 8) & 0xff;
+            const b = potColor & 0xff;
+            const darker = ((Math.floor(r * 0.75)) << 16) | ((Math.floor(g * 0.75)) << 8) | (Math.floor(b * 0.75));
+            const lighter = ((Math.min(255, Math.floor(r * 1.2))) << 16) | ((Math.min(255, Math.floor(g * 1.2))) << 8) | (Math.min(255, Math.floor(b * 1.2)));
 
-        // === Left tiny tree ===
-        const ltX = 58;
-        const ltY = H * 0.82;
-        // Pot
-        bg.fillStyle(0xcc9999, 0.3);
-        bg.fillEllipse(ltX + 2, ltY + 2, 18, 6);
-        bg.fillStyle(0xbbaadd, 1);
-        bg.fillRoundedRect(ltX - 8, ltY - 10, 16, 14, 3);
-        // Trunk
-        bg.fillStyle(0x997755, 1);
-        bg.fillRect(ltX - 2, ltY - 24, 4, 16);
-        // Tree top (round)
-        bg.fillStyle(0x88cc88, 1);
-        bg.fillCircle(ltX, ltY - 30, 10);
-        bg.fillStyle(0xaaddaa, 1);
-        bg.fillCircle(ltX - 3, ltY - 33, 5);
-        bg.fillCircle(ltX + 4, ltY - 32, 4);
-        // Tiny apple
-        bg.fillStyle(0xff6666, 1);
-        bg.fillCircle(ltX + 5, ltY - 28, 2);
+            // Shadow
+            gfx.fillStyle(0xcc9999, 0.35);
+            gfx.fillEllipse(x + 3, y + 3, pw + 4, 10 * size);
 
-        // === Right flower pot ===
-        const rpX = W - 50;
-        const rpY = H * 0.76;
-        // Shadow
-        bg.fillStyle(0xcc9999, 0.3);
-        bg.fillEllipse(rpX + 2, rpY + 2, 24, 8);
-        // Pot (mint green)
-        bg.fillStyle(0x88ccaa, 1);
-        bg.fillRoundedRect(rpX - 11, rpY - 14, 22, 18, 4);
-        bg.fillStyle(0x77bb99, 1);
-        bg.fillRoundedRect(rpX - 11, rpY - 14, 22, 6, { tl: 4, tr: 4, bl: 0, br: 0 });
-        // Soil
-        bg.fillStyle(0x665544, 1);
-        bg.fillRect(rpX - 9, rpY - 16, 18, 4);
-        // Stems
-        bg.fillStyle(0x88bb88, 1);
-        bg.fillRect(rpX - 3, rpY - 26, 2, 12);
-        bg.fillRect(rpX + 2, rpY - 24, 2, 10);
-        // Leaves
-        bg.fillCircle(rpX - 6, rpY - 22, 3);
-        bg.fillCircle(rpX + 5, rpY - 20, 3);
-        // Lavender flowers
-        bg.fillStyle(0xcc99ff, 1);
-        bg.fillCircle(rpX - 3, rpY - 30, 3);
-        bg.fillCircle(rpX + 2, rpY - 28, 3);
-        bg.fillStyle(0xffeeff, 1);
-        bg.fillCircle(rpX - 3, rpY - 30, 1);
-        bg.fillCircle(rpX + 2, rpY - 28, 1);
+            // Pot body (front face)
+            gfx.fillStyle(potColor, 1);
+            gfx.fillRoundedRect(x - pw / 2, y - ph, pw, ph, pr);
+            // Left highlight
+            gfx.fillStyle(lighter, 0.5);
+            gfx.fillRoundedRect(x - pw / 2, y - ph, 5 * size, ph, { tl: pr, tr: 0, bl: pr, br: 0 });
+            // Right shadow edge
+            gfx.fillStyle(darker, 0.6);
+            gfx.fillRoundedRect(x + pw / 2 - 5 * size, y - ph, 5 * size, ph, { tl: 0, tr: pr, bl: 0, br: pr });
 
-        // === Right tiny tree ===
-        const rtX = W - 24;
-        const rtY = H * 0.80;
-        // Pot
-        bg.fillStyle(0xcc9999, 0.3);
-        bg.fillEllipse(rtX + 2, rtY + 2, 16, 6);
-        bg.fillStyle(0xffcc88, 1);
-        bg.fillRoundedRect(rtX - 7, rtY - 10, 14, 14, 3);
-        // Trunk
-        bg.fillStyle(0x997755, 1);
-        bg.fillRect(rtX - 2, rtY - 22, 4, 14);
-        // Tree top (pointy/pine style)
-        bg.fillStyle(0x66aa88, 1);
-        bg.fillTriangle(rtX, rtY - 38, rtX - 10, rtY - 22, rtX + 10, rtY - 22);
-        bg.fillStyle(0x88ccaa, 1);
-        bg.fillTriangle(rtX, rtY - 34, rtX - 7, rtY - 24, rtX + 7, rtY - 24);
+            // Pot rim (top, slightly wider)
+            gfx.fillStyle(lighter, 1);
+            gfx.fillRoundedRect(x - pw / 2 - 2 * size, y - ph - rimH, pw + 4 * size, rimH, 3 * size);
+            gfx.fillStyle(potColor, 1);
+            gfx.fillRoundedRect(x - pw / 2 - 2 * size, y - ph - rimH + 2 * size, pw + 4 * size, rimH - 2 * size, 3 * size);
+
+            // Soil
+            gfx.fillStyle(0x5a4a3a, 1);
+            gfx.fillRoundedRect(x - pw / 2 + 3 * size, y - ph - 2 * size, pw - 6 * size, 5 * size, 2 * size);
+
+            // Stem
+            gfx.fillStyle(0x77aa77, 1);
+            gfx.fillRect(x - 1.5 * size, y - ph - 16 * size, 3 * size, 18 * size);
+
+            // Leaves
+            gfx.fillStyle(0x88bb88, 1);
+            gfx.fillCircle(x - 6 * size, y - ph - 10 * size, 4 * size);
+            gfx.fillCircle(x + 6 * size, y - ph - 8 * size, 4 * size);
+            gfx.fillStyle(0x99cc99, 1);
+            gfx.fillCircle(x - 5 * size, y - ph - 11 * size, 2 * size);
+            gfx.fillCircle(x + 7 * size, y - ph - 9 * size, 2 * size);
+
+            // Flower bloom
+            gfx.fillStyle(flowerColor, 1);
+            gfx.fillCircle(x, y - ph - 20 * size, 6 * size);
+            gfx.fillCircle(x - 5 * size, y - ph - 18 * size, 4 * size);
+            gfx.fillCircle(x + 5 * size, y - ph - 18 * size, 4 * size);
+            gfx.fillCircle(x - 3 * size, y - ph - 24 * size, 4 * size);
+            gfx.fillCircle(x + 3 * size, y - ph - 24 * size, 4 * size);
+            // Center
+            gfx.fillStyle(0xffeeaa, 1);
+            gfx.fillCircle(x, y - ph - 20 * size, 3 * size);
+        };
+
+        // === Helper: draw 3D tree in pot ===
+        const drawTreePot = (gfx, x, y, potColor, treeType = 'round', size = 1) => {
+            const pw = 26 * size;
+            const ph = 20 * size;
+            const pr = 4 * size;
+            const rimH = 5 * size;
+            const r = (potColor >> 16) & 0xff;
+            const g = (potColor >> 8) & 0xff;
+            const b = potColor & 0xff;
+            const darker = ((Math.floor(r * 0.75)) << 16) | ((Math.floor(g * 0.75)) << 8) | (Math.floor(b * 0.75));
+            const lighter = ((Math.min(255, Math.floor(r * 1.2))) << 16) | ((Math.min(255, Math.floor(g * 1.2))) << 8) | (Math.min(255, Math.floor(b * 1.2)));
+
+            // Shadow
+            gfx.fillStyle(0xcc9999, 0.35);
+            gfx.fillEllipse(x + 3, y + 3, pw + 4, 9 * size);
+
+            // Pot body
+            gfx.fillStyle(potColor, 1);
+            gfx.fillRoundedRect(x - pw / 2, y - ph, pw, ph, pr);
+            gfx.fillStyle(lighter, 0.5);
+            gfx.fillRoundedRect(x - pw / 2, y - ph, 4 * size, ph, { tl: pr, tr: 0, bl: pr, br: 0 });
+            gfx.fillStyle(darker, 0.6);
+            gfx.fillRoundedRect(x + pw / 2 - 4 * size, y - ph, 4 * size, ph, { tl: 0, tr: pr, bl: 0, br: pr });
+
+            // Rim
+            gfx.fillStyle(lighter, 1);
+            gfx.fillRoundedRect(x - pw / 2 - 2 * size, y - ph - rimH, pw + 4 * size, rimH, 3 * size);
+            gfx.fillStyle(potColor, 1);
+            gfx.fillRoundedRect(x - pw / 2 - 2 * size, y - ph - rimH + 2 * size, pw + 4 * size, rimH - 2 * size, 3 * size);
+
+            // Soil
+            gfx.fillStyle(0x5a4a3a, 1);
+            gfx.fillRoundedRect(x - pw / 2 + 3 * size, y - ph - 2 * size, pw - 6 * size, 5 * size, 2 * size);
+
+            // Trunk
+            gfx.fillStyle(0x8a6e4b, 1);
+            gfx.fillRect(x - 2.5 * size, y - ph - 18 * size, 5 * size, 20 * size);
+            gfx.fillStyle(0x997755, 1);
+            gfx.fillRect(x - 1.5 * size, y - ph - 18 * size, 2 * size, 20 * size);
+
+            if (treeType === 'round') {
+                // Round leafy canopy
+                gfx.fillStyle(0x66aa77, 1);
+                gfx.fillCircle(x, y - ph - 30 * size, 14 * size);
+                gfx.fillStyle(0x88cc99, 1);
+                gfx.fillCircle(x - 5 * size, y - ph - 34 * size, 8 * size);
+                gfx.fillCircle(x + 6 * size, y - ph - 32 * size, 7 * size);
+                gfx.fillStyle(0xaaddaa, 1);
+                gfx.fillCircle(x - 2 * size, y - ph - 38 * size, 5 * size);
+                // Tiny fruit
+                gfx.fillStyle(0xff8888, 1);
+                gfx.fillCircle(x + 8 * size, y - ph - 28 * size, 3 * size);
+                gfx.fillStyle(0xffcccc, 1);
+                gfx.fillCircle(x + 8 * size, y - ph - 28 * size, 1.5 * size);
+            } else if (treeType === 'pine') {
+                // Pointy pine tree layers
+                gfx.fillStyle(0x448866, 1);
+                gfx.fillTriangle(x, y - ph - 44 * size, x - 12 * size, y - ph - 24 * size, x + 12 * size, y - ph - 24 * size);
+                gfx.fillStyle(0x66aa88, 1);
+                gfx.fillTriangle(x, y - ph - 40 * size, x - 10 * size, y - ph - 26 * size, x + 10 * size, y - ph - 26 * size);
+                gfx.fillStyle(0x88ccaa, 1);
+                gfx.fillTriangle(x, y - ph - 36 * size, x - 7 * size, y - ph - 28 * size, x + 7 * size, y - ph - 28 * size);
+            } else if (treeType === 'bush') {
+                // Bushy round tree
+                gfx.fillStyle(0x559977, 1);
+                gfx.fillCircle(x, y - ph - 28 * size, 12 * size);
+                gfx.fillCircle(x - 8 * size, y - ph - 26 * size, 9 * size);
+                gfx.fillCircle(x + 8 * size, y - ph - 26 * size, 9 * size);
+                gfx.fillStyle(0x77bb99, 1);
+                gfx.fillCircle(x - 4 * size, y - ph - 32 * size, 6 * size);
+                gfx.fillCircle(x + 5 * size, y - ph - 30 * size, 5 * size);
+            }
+        };
+
+        // === Place decorations around the scene ===
+        // Left side cluster
+        drawFlowerPot(bg, 34, H * 0.75, 0xdd8877, 0xff99bb, 1.2);
+        drawTreePot(bg, 72, H * 0.80, 0xbbaadd, 'round', 1.1);
+        drawTreePot(bg, 22, H * 0.88, 0x88ccaa, 'pine', 0.9);
+
+        // Far left small accent
+        drawFlowerPot(bg, 58, H * 0.92, 0xffcc88, 0xffaa88, 0.8);
+
+        // Right side cluster
+        drawTreePot(bg, W - 30, H * 0.74, 0xffcc88, 'pine', 1.2);
+        drawFlowerPot(bg, W - 65, H * 0.79, 0x88ccaa, 0xcc99ff, 1.1);
+        drawTreePot(bg, W - 18, H * 0.86, 0xbbaadd, 'bush', 0.9);
+
+        // Far right small accent
+        drawFlowerPot(bg, W - 48, H * 0.92, 0xffaacc, 0xffdd88, 0.8);
 
         // Decorative floating clouds
         for (let i = 0; i < 5; i++) {

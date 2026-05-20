@@ -63,7 +63,7 @@ class HomeScene extends Phaser.Scene {
         room.fillCircle(shelfX + 15, shelfY - 13, 2);
 
         // === 3D Window ===
-        const winX = W * 0.68;
+        const winX = W * 0.65;
         const winY = 240;
         const winW = 130;
         const winH = 120;

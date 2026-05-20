@@ -16,10 +16,23 @@ class HomeScene extends Phaser.Scene {
         room.setDepth(-1);
         room.fillStyle(0xf2e6d8, 1);
         room.fillRect(0, 0, W, H * 0.54);
-        room.fillStyle(0xefe8df, 1);
+        room.fillStyle(0xe0d4c8, 1);
         room.fillRect(0, H * 0.54, W, H * 0.46);
-        room.fillStyle(0xd6c9bc, 1);
+        room.fillStyle(0xc4b8a8, 1);
         room.fillRect(0, H * 0.535, W, 3);
+
+        // Wood floor planks for cozy detail
+        room.fillStyle(0xd9cdc2, 1);
+        const floorStart = H * 0.54;
+        const plankGap = 28;
+        for (let py = floorStart + plankGap; py < H; py += plankGap) {
+            room.fillRect(0, py, W, 2);
+        }
+        // Subtle plank shading (alternating every other plank)
+        room.fillStyle(0xd5c9be, 0.35);
+        for (let py = floorStart + plankGap * 2; py < H; py += plankGap * 2) {
+            room.fillRect(0, py - plankGap + 2, W, plankGap - 2);
+        }
 
         // === 3D Window ===
         const winX = W * 0.66;

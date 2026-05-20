@@ -160,10 +160,22 @@ class BootScene extends Phaser.Scene {
         // Wall and floor split
         gfx.fillStyle(0xf2e6d8, 1);
         gfx.fillRect(0, 0, w, h * 0.54);
-        gfx.fillStyle(0xefe8df, 1);
+        gfx.fillStyle(0xe0d4c8, 1);
         gfx.fillRect(0, h * 0.54, w, h * 0.46);
-        gfx.fillStyle(0xd6c9bc, 1);
+        gfx.fillStyle(0xc4b8a8, 1);
         gfx.fillRect(0, h * 0.535, w, 3);
+
+        // Wood floor planks for cozy detail
+        gfx.fillStyle(0xd9cdc2, 1);
+        const floorStart = h * 0.54;
+        const plankGap = 28;
+        for (let py = floorStart + plankGap; py < h; py += plankGap) {
+            gfx.fillRect(0, py, w, 2);
+        }
+        gfx.fillStyle(0xd5c9be, 0.35);
+        for (let py = floorStart + plankGap * 2; py < h; py += plankGap * 2) {
+            gfx.fillRect(0, py - plankGap + 2, w, plankGap - 2);
+        }
 
         // Window glow
         const winX = w * 0.65;

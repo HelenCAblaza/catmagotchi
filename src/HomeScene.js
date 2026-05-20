@@ -818,12 +818,19 @@ class HomeScene extends Phaser.Scene {
         const stats = this.registry.get('stats');
         const inv = this.registry.get('inventory');
 
+        if (inv.toys <= 0) {
+            this.showFloatingText(this.cat.x, this.cat.y - 40, '🧶 No yarn!');
+            this.registry.set('stats', stats);
+            this.registry.set('inventory', inv);
+            return;
+        }
+
         if (stats.energy > 10) {
             stats.happiness = Math.min(100, stats.happiness + 15);
             stats.energy = Math.max(0, stats.energy - 10);
             stats.hygiene = Math.max(0, stats.hygiene - 15);
-            inv.toys++;
-            this.showFloatingText(this.cat.x, this.cat.y - 40, '\ud83d\ude38 Fun!');
+            inv.toys--;
+            this.showFloatingText(this.cat.x, this.cat.y - 40, '😸 Fun!');
             this.spawnBurst(this.cat.x, this.cat.y - 20, 'star', 6);
 
             this.tweens.add({
@@ -833,7 +840,7 @@ class HomeScene extends Phaser.Scene {
                 yoyo: true
             });
         } else {
-            this.showFloatingText(this.cat.x, this.cat.y - 40, '\ud83d\ude34 Too tired...');
+            this.showFloatingText(this.cat.x, this.cat.y - 40, '😴 Too tired...');
         }
 
         this.registry.set('stats', stats);

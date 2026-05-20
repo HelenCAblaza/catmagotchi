@@ -192,7 +192,7 @@ class StartScene extends Phaser.Scene {
 
         // === Place decorations around the scene ===
         // Left side cluster
-        drawFlowerPot(bg, 34, H * 0.75, 0xdd8877, 0xff99bb, 1.2);
+        drawFlowerPot(bg, 34, H * 0.75, 0xdd8877, 0xff99bb, 1.5);
         drawTreePot(bg, 72, H * 0.80, 0xbbaadd, 'round', 1.1);
         drawTreePot(bg, 22, H * 0.88, 0x88ccaa, 'pine', 0.9);
 
@@ -293,14 +293,14 @@ class StartScene extends Phaser.Scene {
             const shadowAlpha = hover ? 0.15 : 0.4;
             const depth = btnDepth + (hover ? 2 : 0);
 
-            // Soft drop shadow (large, blurred feel)
-            shadow.fillStyle(0x885566, shadowAlpha);
+            // Soft drop shadow (light, barely visible)
+            shadow.fillStyle(0xddaaaa, shadowAlpha);
             shadow.fillRoundedRect(btnX - btnW / 2 + 6, btnY - btnH / 2 + depth + 6 + lift, btnW, btnH, r);
-            shadow.fillStyle(0x885566, shadowAlpha * 0.5);
+            shadow.fillStyle(0xddaaaa, shadowAlpha * 0.5);
             shadow.fillRoundedRect(btnX - btnW / 2 + 10, btnY - btnH / 2 + depth + 10 + lift, btnW, btnH, r);
 
-            // Bottom thickness face (darker side wall)
-            const darker = 0xdd5588;
+            // Bottom thickness face (light pink side wall)
+            const darker = 0xff99bb;
             face.fillStyle(darker, 1);
             face.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + depth + lift, btnW, btnH, r);
 

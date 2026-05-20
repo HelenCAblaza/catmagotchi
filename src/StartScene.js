@@ -255,9 +255,9 @@ class StartScene extends Phaser.Scene {
         });
 
         // Cat name
-        this.add.text(W / 2, H * 0.73, 'Meet Mitten', {
+        this.add.text(W / 2, H * 0.71, 'Meet Mitten', {
             fontSize: '20px',
-            color: '#dd6677',
+            color: '#ee8899',
             fontFamily: 'Poppins',
             fontStyle: 'bold'
         }).setOrigin(0.5);

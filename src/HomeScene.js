@@ -476,14 +476,14 @@ class HomeScene extends Phaser.Scene {
 
         // Title - matching StartScene style
         const titleText = this.add.text(W / 2, 62, 'Catmagotchi', {
-            fontSize: '42px',
+            fontSize: '48px',
             color: '#ffffff',
             fontFamily: 'Poppins',
             fontStyle: 'bold',
-            stroke: '#ff88cc',
-            strokeThickness: 3,
+            stroke: '#ee5588',
+            strokeThickness: 5,
             padding: { top: 6, bottom: 18, left: 6, right: 6 }
-        }).setOrigin(0.5).setShadow(0, 4, '#ff88cc88', 0, true, true);
+        }).setOrigin(0.5).setShadow(0, 5, '#dd6688aa', 2, true, true);
         titleText.setDepth(5);
 
         // Copyright watermark

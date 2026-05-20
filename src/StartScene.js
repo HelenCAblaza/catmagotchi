@@ -148,13 +148,36 @@ class StartScene extends Phaser.Scene {
                 gfx.fillStyle(0xffcccc, 1);
                 gfx.fillCircle(x + 8 * size, y - ph - 28 * size, 1.5 * size);
             } else if (treeType === 'pine') {
-                // Pointy pine tree layers
+                // Fluffy pine tree — rounded, organic layers instead of sharp triangles
+                const topY = y - ph - 46 * size;
+                const baseY = y - ph - 18 * size;
+
+                // Wide bottom layer (dark)
                 gfx.fillStyle(0x448866, 1);
-                gfx.fillTriangle(x, y - ph - 44 * size, x - 12 * size, y - ph - 24 * size, x + 12 * size, y - ph - 24 * size);
+                gfx.fillCircle(x, baseY, 14 * size);
+                gfx.fillCircle(x - 10 * size, baseY - 2 * size, 10 * size);
+                gfx.fillCircle(x + 10 * size, baseY - 2 * size, 10 * size);
+                gfx.fillCircle(x - 6 * size, baseY - 8 * size, 9 * size);
+                gfx.fillCircle(x + 6 * size, baseY - 8 * size, 9 * size);
+
+                // Middle layer (medium)
                 gfx.fillStyle(0x66aa88, 1);
-                gfx.fillTriangle(x, y - ph - 40 * size, x - 10 * size, y - ph - 26 * size, x + 10 * size, y - ph - 26 * size);
+                gfx.fillCircle(x, baseY - 12 * size, 12 * size);
+                gfx.fillCircle(x - 8 * size, baseY - 16 * size, 9 * size);
+                gfx.fillCircle(x + 8 * size, baseY - 16 * size, 9 * size);
+                gfx.fillCircle(x - 4 * size, baseY - 20 * size, 8 * size);
+                gfx.fillCircle(x + 4 * size, baseY - 20 * size, 8 * size);
+
+                // Top layer (light)
                 gfx.fillStyle(0x88ccaa, 1);
-                gfx.fillTriangle(x, y - ph - 36 * size, x - 7 * size, y - ph - 28 * size, x + 7 * size, y - ph - 28 * size);
+                gfx.fillCircle(x, baseY - 24 * size, 10 * size);
+                gfx.fillCircle(x - 6 * size, baseY - 28 * size, 7 * size);
+                gfx.fillCircle(x + 6 * size, baseY - 28 * size, 7 * size);
+                gfx.fillCircle(x, baseY - 32 * size, 7 * size);
+
+                // Tiny tip
+                gfx.fillStyle(0xaaddbb, 1);
+                gfx.fillCircle(x, topY + 6 * size, 5 * size);
             } else if (treeType === 'bush') {
                 // Bushy round tree
                 gfx.fillStyle(0x559977, 1);

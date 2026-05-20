@@ -110,10 +110,25 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xffffff, 0.6);
         room.fillRect(winX + 6, winY + 6, 3, 3);
         room.fillRect(winX + 12, winY + 8, 2, 2);
+        room.fillRect(winX + 18, winY + 5, 2, 2);
+        room.fillRect(winX + 24, winY + 7, 3, 3);
+        room.fillRect(winX + 30, winY + 9, 2, 2);
+        room.fillRect(winX + 36, winY + 6, 2, 2);
+        room.fillRect(winX + 42, winY + 8, 3, 3);
         room.fillRect(winX + winW - 10, winY + 10, 3, 3);
         room.fillRect(winX + winW - 16, winY + 7, 2, 2);
+        room.fillRect(winX + winW - 22, winY + 9, 2, 2);
+        room.fillRect(winX + winW - 28, winY + 6, 3, 3);
+        room.fillRect(winX + winW - 34, winY + 8, 2, 2);
+        room.fillRect(winX + winW - 40, winY + 10, 2, 2);
         room.fillRect(winX + winW - 10, winY + winH - 20, 3, 3);
         room.fillRect(winX + 8, winY + winH - 14, 2, 2);
+        room.fillRect(winX + 14, winY + winH - 18, 3, 3);
+        room.fillRect(winX + 20, winY + winH - 12, 2, 2);
+        room.fillRect(winX + 26, winY + winH - 16, 3, 3);
+        room.fillRect(winX + 32, winY + winH - 10, 2, 2);
+        room.fillRect(winX + 38, winY + winH - 14, 2, 2);
+        room.fillRect(winX + 44, winY + winH - 20, 3, 3);
 
         // Glass highlight / reflection streak
         room.fillStyle(0xffffff, 0.35);
@@ -188,10 +203,31 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xffffff, 0.6);
         room.fillRect(picX + 6, picY + 6, 3, 3);
         room.fillRect(picX + 10, picY + 9, 2, 2);
+        room.fillRect(picX + 14, picY + 5, 2, 2);
+        room.fillRect(picX + 18, picY + 8, 3, 3);
+        room.fillRect(picX + 22, picY + 6, 2, 2);
+        room.fillRect(picX + 26, picY + 10, 2, 2);
+        room.fillRect(picX + 30, picY + 7, 3, 3);
+        room.fillRect(picX + 34, picY + 5, 2, 2);
         room.fillRect(picX + picW - 10, picY + 5, 3, 3);
         room.fillRect(picX + picW - 7, picY + 10, 2, 2);
+        room.fillRect(picX + picW - 14, picY + 7, 2, 2);
+        room.fillRect(picX + picW - 18, picY + 11, 3, 3);
+        room.fillRect(picX + picW - 22, picY + 6, 2, 2);
+        room.fillRect(picX + picW - 26, picY + 9, 2, 2);
         room.fillRect(picX + 8, picY + picH - 8, 2, 2);
+        room.fillRect(picX + 12, picY + picH - 11, 3, 3);
+        room.fillRect(picX + 16, picY + picH - 6, 2, 2);
+        room.fillRect(picX + 20, picY + picH - 13, 3, 3);
+        room.fillRect(picX + 24, picY + picH - 8, 2, 2);
+        room.fillRect(picX + 28, picY + picH - 11, 2, 2);
+        room.fillRect(picX + 32, picY + picH - 6, 3, 3);
         room.fillRect(picX + picW - 12, picY + picH - 10, 3, 3);
+        room.fillRect(picX + picW - 16, picY + picH - 6, 2, 2);
+        room.fillRect(picX + picW - 20, picY + picH - 13, 3, 3);
+        room.fillRect(picX + picW - 24, picY + picH - 8, 2, 2);
+        room.fillRect(picX + picW - 28, picY + picH - 11, 2, 2);
+        room.fillRect(picX + picW - 32, picY + picH - 6, 3, 3);
 
         // Inner frame shadow inside inset
         room.fillStyle(0xe0d4c8, 1);

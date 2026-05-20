@@ -8,114 +8,55 @@ class PlatformerScene extends Phaser.Scene {
         const H = this.scale.height;  // 800
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-        // Adventure mode: collect items to add to your home inventory
+        // === ENDLESS WORLD SETUP ===
+        // No bounds - Mitten can walk forever!
+        this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 600);
+        this.player.setCollideWorldBounds(false); // handled manually by ground
 
-        // World bounds - wider adventure world
-        this.physics.world.setBounds(0, 0, 4000, 600);
+        this.bgWidth = 5760;           // display width of one bg segment
+        this.chunkSize = 2000;         // world chunk width for ground/decors/collectibles
+        this.spawnedChunks = new Set();
+        this.chunkData = new Map();    // chunkIndex -> {ground:[], decors:[], fish:[], toys:[]}
+        this.bgSegments = [];          // {image, index}
+        this.lastBgIndex = -1;
 
-        // Wide parallax background - 11520x1600 scaled to fit 800px height
-        this.bgImage = this.add.image(0, H / 2, 'adventure_bg')
-            .setOrigin(0, 0.5)
-            .setDisplaySize(5760, 800)
-            .setDepth(-20)
-            .setScrollFactor(0.15);  // slow parallax as Mitten walks
+        // Spawn initial background segment (unflipped)
+        this.spawnBgSegment(0);
 
-        // === FOREGROUND ELEMENTS (placed individually, easy to adjust) ===
-        // 9 Ponds - scattered across the 4000px world
-        const pondPositions = [300, 900, 1500, 2100, 2700, 3200, 3600, 3800, 3950];
-        pondPositions.forEach(px => {
-            this.add.image(px, 560, 'pond')
-                .setOrigin(0.5, 0)
-                .setScale(0.5)
-                .setDepth(5)
-                .setScrollFactor(1);
-        });
-
-        // Trees - scattered across the world
-        const treePositions = [150, 600, 1100, 1600, 2200, 2800, 3400, 3900];
-        treePositions.forEach(tx => {
-            this.add.image(tx, 565, 'tree')
-                .setOrigin(0.5, 1)
-                .setScale(0.5)
-                .setDepth(5)
-                .setScrollFactor(1);
-        });
-
-        // Flowers (clusters) - scattered across the world
-        const flowerPositions = [100, 250, 450, 700, 950, 1200, 1450, 1700, 1950, 2400, 2650, 2900, 3100, 3500, 3750, 3850];
-        flowerPositions.forEach(fx => {
-            const fy = 565 + Math.random() * 10;
-            const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(Math.random() * 4)];
-            this.add.image(fx, fy, 'flower')
-                .setOrigin(0.5, 1)
-                .setScale(0.6 + Math.random() * 0.3)
-                .setDepth(6)
-                .setScrollFactor(1)
-                .setTint(tint);
-        });
-
-        // Bushes - scattered across the world
-        const bushPositions = [200, 800, 1400, 2000, 2600, 3200, 3700];
-        bushPositions.forEach(bx => {
-            this.add.image(bx, 570, 'bush')
-                .setOrigin(0.5, 1)
-                .setScale(0.5)
-                .setDepth(5)
-                .setScrollFactor(1);
-        });
-
-        // Rocks - scattered across the world
-        const rockPositions = [350, 1000, 1800, 2500, 3300, 3850];
-        rockPositions.forEach(rx => {
-            this.add.image(rx, 570, 'rock')
-                .setOrigin(0.5, 1)
-                .setScale(0.5)
-                .setDepth(5)
-                .setScrollFactor(1);
-        });
-
-        // Platforms
+        // === FOREGROUND: initial chunks ===
         this.platforms = this.physics.add.staticGroup();
-        this.createLevel();
+        this.spawnChunk(0);
+        this.spawnChunk(1);
 
-        // Cat player - uses front-facing idle when still, side run when moving
+        // Cat player
         this.player = this.physics.add.sprite(100, 500, 'cat_idle');
         this.player.setScale(1);
-        // Physics body matches the visible cat within the 64x64 sprite
         this.player.body.setSize(32, 40);
         this.player.body.setOffset(16, 12);
         this.player.setBounce(0.1);
-        this.player.setCollideWorldBounds(true);
         this.physics.add.collider(this.player, this.platforms);
 
-        // Switch to run texture when moving
         this.playerRunTexture = false;
 
-        // Camera follow
+        // Camera follow - no bounds!
         this.cameras.main.startFollow(this.player);
-        this.cameras.main.setBounds(0, 0, 4000, 600);
+        this.cameras.main.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 600);
 
         // Collectibles
         this.fishes = this.physics.add.group();
         this.toys = this.physics.add.group();
-        this.spawnCollectibles();
-
         this.physics.add.overlap(this.player, this.fishes, (p, f) => this.collectFish(p, f));
         this.physics.add.overlap(this.player, this.toys, (p, t) => this.collectToy(p, t));
 
-        // Keyboard controls (desktop)
+        // Controls
         this.cursors = this.input.keyboard.createCursorKeys();
-
-        // Virtual joystick (mobile/touch)
         this.createVirtualJoystick();
 
         // === UI ===
-        // Home button - bottom right, round pastel (same size as Adventure button)
         this.createRoundButton(W - 55, H - 55, () => {
             this.scene.start('HomeScene');
         });
 
-        // Inventory display - centered in ground area
         this.fishText = this.add.text(W / 2 - 35, 560, '\ud83d\udc1f: 0', {
             fontSize: '15px',
             color: '#ffffff',
@@ -132,7 +73,6 @@ class PlatformerScene extends Phaser.Scene {
             strokeThickness: 3
         }).setOrigin(0.5).setScrollFactor(0);
 
-        // Hint text (shows on mobile, fades after 4s)
         if (isMobile) {
             this.hintText = this.add.text(W / 2, 70, '\ud83c\udfae Drag round controller to move & jump!', {
                 fontSize: '13px',
@@ -147,16 +87,146 @@ class PlatformerScene extends Phaser.Scene {
             });
         }
 
-        // Copyright watermark
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
             fontSize: '10px',
             color: '#887799',
             fontFamily: 'Poppins'
         }).setOrigin(0.5).setScrollFactor(0);
 
-        // Ground collision
         this.physics.add.collider(this.fishes, this.platforms);
         this.physics.add.collider(this.toys, this.platforms);
+    }
+
+    // === BACKGROUND SEGMENTS (unflipped -> flipped -> unflipped...) ===
+    spawnBgSegment(index) {
+        const x = index * this.bgWidth;
+        const flipped = (index % 2) !== 0; // 0=unflipped, 1=flipped, 2=unflipped...
+        const bg = this.add.image(x, this.scale.height / 2, 'adventure_bg')
+            .setOrigin(0, 0.5)
+            .setDisplaySize(this.bgWidth, 800)
+            .setDepth(-20)
+            .setScrollFactor(1);
+        if (flipped) bg.setFlipX(true);
+        this.bgSegments.push({ image: bg, index: index });
+        this.lastBgIndex = Math.max(this.lastBgIndex, index);
+    }
+
+    removeBgSegment(index) {
+        const idx = this.bgSegments.findIndex(s => s.index === index);
+        if (idx >= 0) {
+            this.bgSegments[idx].image.destroy();
+            this.bgSegments.splice(idx, 1);
+        }
+    }
+
+    // === WORLD CHUNKS (ground + decors + collectibles) ===
+    spawnChunk(chunkIndex) {
+        if (this.spawnedChunks.has(chunkIndex)) return;
+        this.spawnedChunks.add(chunkIndex);
+
+        const startX = chunkIndex * this.chunkSize;
+        const objects = { ground: [], decors: [], fish: [], toys: [] };
+
+        // Seeded random for deterministic decoration
+        let seed = chunkIndex * 16807;
+        const rand = () => {
+            seed = (seed * 16807) % 2147483647;
+            return (seed - 1) / 2147483646;
+        };
+
+        // Ground tiles
+        for (let x = startX; x < startX + this.chunkSize; x += 32) {
+            const tile = this.platforms.create(x, 568, 'ground').setScale(1).refreshBody();
+            objects.ground.push(tile);
+        }
+
+        // Ponds: 1-2 per chunk
+        const pondCount = 1 + Math.floor(rand() * 2);
+        for (let i = 0; i < pondCount; i++) {
+            const px = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
+            const pond = this.add.image(px, 560, 'pond')
+                .setOrigin(0.5, 0).setScale(0.5).setDepth(5).setScrollFactor(1);
+            objects.decors.push(pond);
+        }
+
+        // Trees: 1-3 per chunk
+        const treeCount = 1 + Math.floor(rand() * 3);
+        for (let i = 0; i < treeCount; i++) {
+            const tx = startX + 100 + Math.floor(rand() * (this.chunkSize - 200));
+            const tree = this.add.image(tx, 565, 'tree')
+                .setOrigin(0.5, 1).setScale(0.5).setDepth(5).setScrollFactor(1);
+            objects.decors.push(tree);
+        }
+
+        // Flowers: 2-4 per chunk
+        const flowerCount = 2 + Math.floor(rand() * 3);
+        for (let i = 0; i < flowerCount; i++) {
+            const fx = startX + 50 + Math.floor(rand() * (this.chunkSize - 100));
+            const fy = 565 + rand() * 10;
+            const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(rand() * 4)];
+            const flower = this.add.image(fx, fy, 'flower')
+                .setOrigin(0.5, 1).setScale(0.6 + rand() * 0.3).setDepth(6)
+                .setScrollFactor(1).setTint(tint);
+            objects.decors.push(flower);
+        }
+
+        // Bushes: 1-2 per chunk
+        const bushCount = 1 + Math.floor(rand() * 2);
+        for (let i = 0; i < bushCount; i++) {
+            const bx = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
+            const bush = this.add.image(bx, 570, 'bush')
+                .setOrigin(0.5, 1).setScale(0.5).setDepth(5).setScrollFactor(1);
+            objects.decors.push(bush);
+        }
+
+        // Rocks: 0-2 per chunk
+        const rockCount = Math.floor(rand() * 3);
+        for (let i = 0; i < rockCount; i++) {
+            const rx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
+            const rock = this.add.image(rx, 570, 'rock')
+                .setOrigin(0.5, 1).setScale(0.5).setDepth(5).setScrollFactor(1);
+            objects.decors.push(rock);
+        }
+
+        // Fish: 1-2 per chunk
+        const fishCount = 1 + Math.floor(rand() * 2);
+        for (let i = 0; i < fishCount; i++) {
+            const fx = startX + 300 + Math.floor(rand() * (this.chunkSize - 600));
+            const fy = 250 + Math.floor(rand() * 200);
+            const fish = this.fishes.create(fx, fy, 'fish');
+            this.tweens.add({
+                targets: fish, y: fy - 5,
+                duration: 800 + rand() * 400,
+                yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
+            });
+            objects.fish.push(fish);
+        }
+
+        // Toys: ~70% chance per chunk
+        if (rand() > 0.3) {
+            const tx = startX + 300 + Math.floor(rand() * (this.chunkSize - 600));
+            const ty = 300 + Math.floor(rand() * 150);
+            const toy = this.toys.create(tx, ty, 'yarn');
+            this.tweens.add({
+                targets: toy, y: ty - 6, angle: 10,
+                duration: 1000 + rand() * 500,
+                yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
+            });
+            objects.toys.push(toy);
+        }
+
+        this.chunkData.set(chunkIndex, objects);
+    }
+
+    removeChunk(chunkIndex) {
+        if (!this.chunkData.has(chunkIndex)) return;
+        const objects = this.chunkData.get(chunkIndex);
+        objects.ground.forEach(tile => tile.destroy());
+        objects.decors.forEach(d => d.destroy());
+        objects.fish.forEach(f => f.destroy());
+        objects.toys.forEach(t => t.destroy());
+        this.chunkData.delete(chunkIndex);
+        this.spawnedChunks.delete(chunkIndex);
     }
 
     createVirtualJoystick() {
@@ -173,14 +243,12 @@ class PlatformerScene extends Phaser.Scene {
         this.joyY = 0;
         this.joyJumpTriggered = false;
 
-        // Outer ring (base)
         this.joyBase = this.add.circle(0, 0, baseRadius, 0x444466, 0.22)
             .setStrokeStyle(3, 0xffffff, 0.35)
             .setScrollFactor(0)
             .setVisible(false)
             .setDepth(100);
 
-        // Direction hint arrows
         this.joyArrows = this.add.text(0, 0, '\u25c0  \u25b6\n\u25b2', {
             fontSize: '18px',
             color: '#ffffff',
@@ -189,20 +257,17 @@ class PlatformerScene extends Phaser.Scene {
             fontStyle: 'bold'
         }).setOrigin(0.5).setScrollFactor(0).setVisible(false).setDepth(100).setAlpha(0.35);
 
-        // Inner nub (draggable thumb stick)
         this.joyNub = this.add.circle(0, 0, nubRadius, 0x7777dd, 0.55)
             .setStrokeStyle(2, 0xffffff, 0.5)
             .setScrollFactor(0)
             .setVisible(false)
             .setDepth(101);
 
-        // Nub highlight
         this.joyNubGlow = this.add.circle(0, 0, nubRadius * 0.55, 0xaaaaff, 0.35)
             .setScrollFactor(0)
             .setVisible(false)
             .setDepth(101);
 
-        // Activate joystick when touching bottom half of screen
         const joyZoneTop = H * 0.45;
         this.input.on('pointerdown', (pointer) => {
             if (pointer.y > joyZoneTop && !this.joyActive) {
@@ -283,52 +348,6 @@ class PlatformerScene extends Phaser.Scene {
         });
     }
 
-    createLevel() {
-        for (let x = 0; x < 4100; x += 32) {
-            this.platforms.create(x, 568, 'ground').setScale(1).refreshBody();
-        }
-    }
-
-    spawnCollectibles() {
-        const fishPositions = [
-            [300, 400], [700, 330], [1200, 250],
-            [1700, 350], [2200, 270], [2700, 400],
-            [3200, 300], [3600, 230], [3900, 350]
-        ];
-
-        const toyPositions = [
-            [500, 420], [1500, 450], [2500, 370],
-            [3400, 420], [3800, 320]
-        ];
-
-        fishPositions.forEach(([x, y]) => {
-            const fish = this.fishes.create(x, y, 'fish');
-            // Gentle bob animation
-            this.tweens.add({
-                targets: fish,
-                y: y - 5,
-                duration: 800 + Math.random() * 400,
-                yoyo: true,
-                repeat: -1,
-                ease: 'Sine.easeInOut'
-            });
-        });
-
-        toyPositions.forEach(([x, y]) => {
-            const yarn = this.toys.create(x, y, 'yarn');
-            // Gentle spin and bob
-            this.tweens.add({
-                targets: yarn,
-                y: y - 6,
-                angle: 10,
-                duration: 1000 + Math.random() * 500,
-                yoyo: true,
-                repeat: -1,
-                ease: 'Sine.easeInOut'
-            });
-        });
-    }
-
     update() {
         const stats = this.registry.get('stats');
 
@@ -337,7 +356,7 @@ class PlatformerScene extends Phaser.Scene {
         this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
         this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
 
-        // Movement - keyboard OR joystick
+        // Movement
         let left = this.cursors.left.isDown;
         let right = this.cursors.right.isDown;
         let jump = this.cursors.up.isDown;
@@ -347,7 +366,6 @@ class PlatformerScene extends Phaser.Scene {
                 if (this.joyX < 0) left = true;
                 else right = true;
             }
-
             if (this.joyY < -0.4 && !this.joyJumpTriggered) {
                 jump = true;
                 this.joyJumpTriggered = true;
@@ -360,10 +378,10 @@ class PlatformerScene extends Phaser.Scene {
         let velocityX = 0;
         if (left) {
             velocityX = this.joyActive ? -130 * Math.abs(this.joyX) : -130;
-            this.player.setFlipX(false);  // face left (default sprite direction)
+            this.player.setFlipX(false);
         } else if (right) {
             velocityX = this.joyActive ? 130 * Math.abs(this.joyX) : 130;
-            this.player.setFlipX(true);   // flip to face right
+            this.player.setFlipX(true);
         }
         this.player.setVelocityX(velocityX);
 
@@ -393,6 +411,34 @@ class PlatformerScene extends Phaser.Scene {
         if (Math.abs(this.player.body.velocity.x) > 10) {
             stats.energy = Math.max(0, stats.energy - 0.02);
             this.registry.set('stats', stats);
+        }
+
+        // === ENDLESS SPAWNING / CLEANUP ===
+        const px = this.player.x;
+
+        // Background segments: spawn when within 1 segment distance of last
+        const lastBgEnd = (this.lastBgIndex + 1) * this.bgWidth;
+        if (px > lastBgEnd - this.bgWidth) {
+            this.spawnBgSegment(this.lastBgIndex + 1);
+        }
+        // Remove bg segments far behind (keep 2 behind)
+        this.bgSegments = this.bgSegments.filter(seg => {
+            const segEnd = (seg.index + 1) * this.bgWidth;
+            if (px > segEnd + this.bgWidth * 2) {
+                seg.image.destroy();
+                return false;
+            }
+            return true;
+        });
+
+        // World chunks: spawn ahead
+        const currentChunk = Math.floor(px / this.chunkSize);
+        for (let i = currentChunk; i <= currentChunk + 2; i++) {
+            if (i >= 0) this.spawnChunk(i);
+        }
+        // Remove chunks far behind
+        for (let i = currentChunk - 4; i >= 0; i--) {
+            this.removeChunk(i);
         }
     }
 
@@ -445,8 +491,8 @@ class PlatformerScene extends Phaser.Scene {
     createRoundButton(x, y, callback) {
         const radius = 45;
         const size = radius * 2;
-        const color = 0xd4c4e0;           // soft pastel lavender
-        const borderColor = 0xb8a8cc;      // slightly darker lavender outline
+        const color = 0xd4c4e0;
+        const borderColor = 0xb8a8cc;
         const border = 2;
 
         const btn = this.add.graphics();
@@ -455,7 +501,6 @@ class PlatformerScene extends Phaser.Scene {
         btn.fillStyle(color, 1);
         btn.fillCircle(0, 0, radius);
         btn.setPosition(x, y);
-        // Rectangle hit area that fully contains the circle + border
         btn.setInteractive(
             new Phaser.Geom.Rectangle(-radius - border, -radius - border, size + border * 2, size + border * 2),
             Phaser.Geom.Rectangle.Contains
@@ -463,13 +508,11 @@ class PlatformerScene extends Phaser.Scene {
         btn.setScrollFactor(0);
         btn.setDepth(50);
 
-        // Home icon
-        const icon = this.add.text(x, y - 6, '🏠', {
+        const icon = this.add.text(x, y - 6, '\ud83c\udfe0', {
             fontSize: '24px',
             fontFamily: 'Poppins'
         }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
-        // Home label
         this.add.text(x, y + 14, 'Home', {
             fontSize: '11px',
             color: '#8888aa',
@@ -477,7 +520,6 @@ class PlatformerScene extends Phaser.Scene {
             fontStyle: 'bold'
         }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
-        // Hover effect - brighten
         btn.on('pointerover', () => {
             btn.clear();
             const lighter = 0xe0d0ec;

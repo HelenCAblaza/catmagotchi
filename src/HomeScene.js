@@ -112,8 +112,8 @@ class HomeScene extends Phaser.Scene {
         room.fillRect(winX + frameThick + 14, winY + frameThick + 18, 10, 2);
 
         // === Cute flower pot on window sill ===
-        const potX = winX + winW / 2 - 11;
-        const potY = winY + winH - 18;
+        const potX = winX + winW - 32;
+        const potY = winY + winH - 21;
         // Pot shadow
         room.fillStyle(0xccb8a5, 1);
         room.fillRect(potX - 2, potY + 4, 26, 5);

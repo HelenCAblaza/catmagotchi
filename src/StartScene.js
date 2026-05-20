@@ -259,7 +259,7 @@ class StartScene extends Phaser.Scene {
             fontSize: '20px',
             color: '#ee8899',
             fontFamily: 'Poppins',
-            fontStyle: 'normal'
+            fontStyle: 'bold'
         }).setOrigin(0.5);
 
         // Floating hearts around cat

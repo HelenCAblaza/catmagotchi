@@ -158,7 +158,7 @@ class BootScene extends Phaser.Scene {
         gfx.fillRect(0, 0, w, h);
 
         // Wall and floor split
-        gfx.fillStyle(0xf2e6d8, 1);
+        gfx.fillStyle(0xecdac8, 1);
         gfx.fillRect(0, 0, w, h * 0.54);
         gfx.fillStyle(0xe0d4c8, 1);
         gfx.fillRect(0, h * 0.54, w, h * 0.46);
@@ -176,6 +176,28 @@ class BootScene extends Phaser.Scene {
         for (let py = floorStart + plankGap * 2; py < h; py += plankGap * 2) {
             gfx.fillRect(0, py - plankGap + 2, w, plankGap - 2);
         }
+
+        // Cute wall detail: tiny floating shelf with a succulent plant
+        const shelfX = 110;
+        const shelfY = 150;
+        gfx.fillStyle(0xccb8a5, 1);
+        gfx.fillRect(shelfX - 2, shelfY + 3, 36, 4);
+        gfx.fillStyle(0xbfa890, 1);
+        gfx.fillRect(shelfX - 2, shelfY, 36, 4);
+        gfx.fillStyle(0xd4b896, 1);
+        gfx.fillRect(shelfX - 2, shelfY - 1, 36, 2);
+        gfx.fillStyle(0xd68a7a, 1);
+        gfx.fillRect(shelfX + 6, shelfY - 8, 14, 9);
+        gfx.fillStyle(0xe8a090, 1);
+        gfx.fillRect(shelfX + 8, shelfY - 10, 10, 3);
+        gfx.fillStyle(0x88cc88, 1);
+        gfx.fillCircle(shelfX + 13, shelfY - 14, 4);
+        gfx.fillCircle(shelfX + 10, shelfY - 11, 3);
+        gfx.fillCircle(shelfX + 16, shelfY - 11, 3);
+        gfx.fillStyle(0xaaddaa, 1);
+        gfx.fillCircle(shelfX + 13, shelfY - 16, 2);
+        gfx.fillCircle(shelfX + 11, shelfY - 13, 2);
+        gfx.fillCircle(shelfX + 15, shelfY - 13, 2);
 
         // Window glow
         const winX = w * 0.65;

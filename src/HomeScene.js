@@ -14,7 +14,7 @@ class HomeScene extends Phaser.Scene {
         // Cozy room overlay: warm walls, wood floor, window, picture, and rug
         const room = this.add.graphics();
         room.setDepth(-1);
-        room.fillStyle(0xf2e6d8, 1);
+        room.fillStyle(0xecdac8, 1);
         room.fillRect(0, 0, W, H * 0.54);
         room.fillStyle(0xe0d4c8, 1);
         room.fillRect(0, H * 0.54, W, H * 0.46);
@@ -33,6 +33,32 @@ class HomeScene extends Phaser.Scene {
         for (let py = floorStart + plankGap * 2; py < H; py += plankGap * 2) {
             room.fillRect(0, py - plankGap + 2, W, plankGap - 2);
         }
+
+        // Cute wall detail: tiny floating shelf with a succulent plant
+        const shelfX = 110;
+        const shelfY = 150;
+        // Shelf shadow
+        room.fillStyle(0xccb8a5, 1);
+        room.fillRect(shelfX - 2, shelfY + 3, 36, 4);
+        // Shelf board
+        room.fillStyle(0xbfa890, 1);
+        room.fillRect(shelfX - 2, shelfY, 36, 4);
+        room.fillStyle(0xd4b896, 1);
+        room.fillRect(shelfX - 2, shelfY - 1, 36, 2);
+        // Tiny pot
+        room.fillStyle(0xd68a7a, 1);
+        room.fillRect(shelfX + 6, shelfY - 8, 14, 9);
+        room.fillStyle(0xe8a090, 1);
+        room.fillRect(shelfX + 8, shelfY - 10, 10, 3);
+        // Plant leaves
+        room.fillStyle(0x88cc88, 1);
+        room.fillCircle(shelfX + 13, shelfY - 14, 4);
+        room.fillCircle(shelfX + 10, shelfY - 11, 3);
+        room.fillCircle(shelfX + 16, shelfY - 11, 3);
+        room.fillStyle(0xaaddaa, 1);
+        room.fillCircle(shelfX + 13, shelfY - 16, 2);
+        room.fillCircle(shelfX + 11, shelfY - 13, 2);
+        room.fillCircle(shelfX + 15, shelfY - 13, 2);
 
         // === 3D Window ===
         const winX = W * 0.66;

@@ -38,7 +38,7 @@ class HomeScene extends Phaser.Scene {
         // Cute wall detail: tiny floating shelf with a succulent plant
         // Placed between the picture frame and the window
         const shelfX = 185;
-        const shelfY = 118;
+        const shelfY = 340;
         // Shelf shadow
         room.fillStyle(0xccb8a5, 1);
         room.fillRect(shelfX - 2, shelfY + 3, 36, 4);
@@ -64,7 +64,7 @@ class HomeScene extends Phaser.Scene {
 
         // === 3D Window ===
         const winX = W * 0.66;
-        const winY = 92;
+        const winY = 240;
         const winW = 126;
         const winH = 150;
         const frameThick = 8;
@@ -113,13 +113,13 @@ class HomeScene extends Phaser.Scene {
 
         // Picture frame on the wall
         room.fillStyle(0xd9b38c, 1);
-        room.fillRoundedRect(54, 86, 92, 70, 10);
+        room.fillRoundedRect(54, 250, 92, 70, 10);
         room.fillStyle(0xffffff, 1);
-        room.fillRoundedRect(60, 92, 80, 58, 8);
+        room.fillRoundedRect(60, 256, 80, 58, 8);
         room.fillStyle(0xffb8cc, 1);
-        room.fillCircle(92, 120, 11);
-        room.fillCircle(108, 114, 6);
-        room.fillCircle(116, 125, 5);
+        room.fillCircle(92, 284, 11);
+        room.fillCircle(108, 278, 6);
+        room.fillCircle(116, 289, 5);
 
         this.clouds = []; // kept for update() compatibility, but no clouds in the room
 

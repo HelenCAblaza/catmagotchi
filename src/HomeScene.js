@@ -484,7 +484,7 @@ class HomeScene extends Phaser.Scene {
         copyText.setDepth(5);
 
         // Cat name above stats - smaller, left aligned, no stars, darker grey
-        const nameText = this.add.text(40, 125, 'Mittens', {
+        const nameText = this.add.text(40, 125, 'Mitten', {
             fontSize: '18px',
             color: '#555555',
             fontFamily: 'Poppins',

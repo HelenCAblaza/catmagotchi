@@ -38,9 +38,9 @@ class UIScene extends Phaser.Scene {
 
         const stats = this.registry.get('stats');
         let warning = '';
-        if (stats.hunger < 20) warning = '⚠️ Mittens is hungry!';
-        else if (stats.energy < 20) warning = '⚠️ Mittens is tired!';
-        else if (stats.happiness < 20) warning = '⚠️ Mittens is sad!';
+        if (stats.hunger < 20) warning = '⚠️ Mitten is hungry!';
+        else if (stats.energy < 20) warning = '⚠️ Mitten is tired!';
+        else if (stats.happiness < 20) warning = '⚠️ Mitten is sad!';
         
         this.warningText.setText(warning);
     }

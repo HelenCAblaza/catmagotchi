@@ -36,8 +36,8 @@ class HomeScene extends Phaser.Scene {
         }
 
         // Cute wall detail: tiny floating shelf with a succulent plant
-        // Placed between the picture frame and the window
-        const shelfX = 185;
+        // Placed close to the picture frame
+        const shelfX = 150;
         const shelfY = 340;
         // Shelf shadow
         room.fillStyle(0xccb8a5, 1);
@@ -165,31 +165,33 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xffccaa, 1);
         room.fillCircle(photoX + photoW * 0.65, photoY + photoH * 0.43, 4);
 
-        // Tiny rolling hills silhouette
+        // Pixel-style rolling hills (stay inside photo bounds)
         room.fillStyle(0x88bb88, 1);
-        room.fillCircle(photoX + photoW * 0.2, photoY + photoH, photoW * 0.4);
-        room.fillCircle(photoX + photoW * 0.7, photoY + photoH, photoW * 0.35);
+        // Left back hill
+        room.fillRoundedRect(photoX, photoY + photoH * 0.72, photoW * 0.5, photoH * 0.28, 3);
+        // Right back hill
+        room.fillRoundedRect(photoX + photoW * 0.5, photoY + photoH * 0.75, photoW * 0.5, photoH * 0.25, 3);
         room.fillStyle(0x66aa66, 1);
-        room.fillCircle(photoX + photoW * 0.5, photoY + photoH, photoW * 0.3);
+        // Front center hill
+        room.fillRoundedRect(photoX + photoW * 0.15, photoY + photoH * 0.78, photoW * 0.7, photoH * 0.22, 3);
 
-        // Tiny tree silhouette on hill
+        // Tiny tree on front hill (stays inside)
         room.fillStyle(0x558855, 1);
         // Trunk
-        room.fillRect(photoX + photoW * 0.35 - 1, photoY + photoH * 0.55, 2, 10);
-        // Canopy (fluffy circles)
-        room.fillCircle(photoX + photoW * 0.35, photoY + photoH * 0.48, 5);
-        room.fillCircle(photoX + photoW * 0.28, photoY + photoH * 0.52, 4);
-        room.fillCircle(photoX + photoW * 0.42, photoY + photoH * 0.52, 4);
+        room.fillRect(photoX + photoW * 0.4 - 1, photoY + photoH * 0.62, 2, 8);
+        // Canopy (pixel blocks)
+        room.fillRect(photoX + photoW * 0.4 - 4, photoY + photoH * 0.55, 8, 4);
+        room.fillRect(photoX + photoW * 0.4 - 3, photoY + photoH * 0.52, 6, 3);
         room.fillStyle(0x77bb77, 1);
-        room.fillCircle(photoX + photoW * 0.35, photoY + photoH * 0.45, 3);
+        room.fillRect(photoX + photoW * 0.4 - 2, photoY + photoH * 0.50, 4, 2);
 
-        // Tiny flowers in foreground
+        // Tiny pixel flowers in foreground
         room.fillStyle(0xff99bb, 1);
-        room.fillCircle(photoX + photoW * 0.15, photoY + photoH * 0.85, 2);
-        room.fillCircle(photoX + photoW * 0.85, photoY + photoH * 0.88, 2);
+        room.fillRect(photoX + photoW * 0.1, photoY + photoH * 0.88, 2, 2);
+        room.fillRect(photoX + photoW * 0.85, photoY + photoH * 0.90, 2, 2);
         room.fillStyle(0xffbbdd, 1);
-        room.fillCircle(photoX + photoW * 0.25, photoY + photoH * 0.90, 2);
-        room.fillCircle(photoX + photoW * 0.75, photoY + photoH * 0.82, 2);
+        room.fillRect(photoX + photoW * 0.2, photoY + photoH * 0.92, 2, 2);
+        room.fillRect(photoX + photoW * 0.75, photoY + photoH * 0.86, 2, 2);
 
         this.clouds = []; // kept for update() compatibility, but no clouds in the room
 

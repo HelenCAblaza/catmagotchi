@@ -22,25 +22,6 @@ class StartScene extends Phaser.Scene {
         canvas.refresh();
         this.add.image(W / 2, H / 2, 'bg_gradient').setDepth(-20);
 
-        // 3D stage floor (cute platform for cat)
-        const stageW = 240;
-        const stageH = 40;
-        const stageX = W / 2 - stageW / 2;
-        const stageY = H * 0.52;
-
-        // Stage shadow (depth)
-        bg.fillStyle(0xcc9999, 0.3);
-        bg.fillRoundedRect(stageX + 8, stageY + 6, stageW, stageH, 12);
-        // Stage top (lit surface)
-        bg.fillStyle(0xffeeee, 1);
-        bg.fillRoundedRect(stageX, stageY, stageW, stageH, 12);
-        // Stage highlight edge
-        bg.fillStyle(0xffffff, 0.6);
-        bg.fillRoundedRect(stageX, stageY, stageW, 6, { tl: 12, tr: 12, bl: 0, br: 0 });
-        // Stage front face (3D thickness)
-        bg.fillStyle(0xffcccc, 1);
-        bg.fillRoundedRect(stageX, stageY + stageH - 8, stageW, 10, { tl: 0, tr: 0, bl: 12, br: 12 });
-
         // Decorative archway frame (cute border around the stage area)
         const archX = W / 2 - 130;
         const archY = H * 0.12;
@@ -151,17 +132,56 @@ class StartScene extends Phaser.Scene {
             callback: () => this.spawnHeart()
         });
 
-        // Cute Start button (pill shape)
+        // === 3D Start Button ===
         const btnW = 200;
-        const btnH = 56;
+        const btnH = 54;
+        const btnDepth = 8;
         const btnY = H * 0.72;
+        const btnX = W / 2;
 
+        const btnShadow = this.add.graphics();
         const btnBg = this.add.graphics();
-        btnBg.fillStyle(0xff88cc, 1);
-        this.drawPill(btnBg, W / 2 - btnW / 2, btnY - btnH / 2, btnW, btnH, btnH / 2);
+        const btnFace = this.add.graphics();
+
+        // Draw full 3D button
+        const draw3DButton = (bg, face, shadow, baseColor, hover) => {
+            shadow.clear();
+            bg.clear();
+            face.clear();
+
+            const r = btnH / 2;
+            const lift = hover ? -3 : 0;
+            const shadowAlpha = hover ? 0.2 : 0.35;
+
+            // Drop shadow (offset down-right)
+            shadow.fillStyle(0x884455, shadowAlpha);
+            shadow.fillRoundedRect(btnX - btnW / 2 + 4, btnY - btnH / 2 + btnDepth + 4 + lift, btnW, btnH, r);
+
+            // Button thickness (side face)
+            const darker = 0xee6699;
+            face.fillStyle(darker, 1);
+            face.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + btnDepth + lift, btnW, btnH, r);
+            // Cut off top half of thickness so only bottom edge shows
+            face.fillStyle(baseColor, 1);
+            face.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + lift, btnW, btnH - 2, r);
+
+            // Main button face
+            bg.fillStyle(baseColor, 1);
+            bg.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + lift, btnW, btnH, r);
+
+            // Top highlight (glossy 3D feel)
+            bg.fillStyle(0xffffff, 0.35);
+            bg.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + lift, btnW, r, { tl: r, tr: r, bl: 0, br: 0 });
+
+            // Bottom shadow edge
+            bg.fillStyle(0x000000, 0.08);
+            bg.fillRoundedRect(btnX - btnW / 2, btnY + btnH / 2 - 6 + lift, btnW, 6, { tl: 0, tr: 0, bl: r, br: r });
+        };
+
+        draw3DButton(btnBg, btnFace, btnShadow, 0xff88bb, false);
 
         // Button text
-        const btnText = this.add.text(W / 2, btnY, '\ud83d\udc3e Start Game!', {
+        const btnText = this.add.text(btnX, btnY, '\ud83d\udc3e Start Game!', {
             fontSize: '22px',
             color: '#ffffff',
             fontFamily: 'Poppins',
@@ -169,25 +189,27 @@ class StartScene extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Invisible interactive hit area over the button
-        const hitArea = this.add.rectangle(W / 2, btnY, btnW + 20, btnH + 20, 0x000000, 0)
+        const hitArea = this.add.rectangle(btnX, btnY, btnW + 20, btnH + btnDepth + 20, 0x000000, 0)
             .setInteractive({ useHandCursor: true });
 
-        // Hover effect
+        // Hover effect - lift up and brighten
         hitArea.on('pointerover', () => {
-            btnBg.clear();
-            btnBg.fillStyle(0xffaadd, 1);
-            this.drawPill(btnBg, W / 2 - btnW / 2, btnY - btnH / 2, btnW, btnH, btnH / 2);
+            draw3DButton(btnBg, btnFace, btnShadow, 0xffaacc, true);
             btnText.setScale(1.05);
+            btnText.y = btnY - 3;
         });
 
         hitArea.on('pointerout', () => {
-            btnBg.clear();
-            btnBg.fillStyle(0xff88cc, 1);
-            this.drawPill(btnBg, W / 2 - btnW / 2, btnY - btnH / 2, btnW, btnH, btnH / 2);
+            draw3DButton(btnBg, btnFace, btnShadow, 0xff88bb, false);
             btnText.setScale(1);
+            btnText.y = btnY;
         });
 
         hitArea.on('pointerdown', () => {
+            // Press down effect
+            draw3DButton(btnBg, btnFace, btnShadow, 0xff6699, false);
+            btnText.setScale(0.95);
+            btnText.y = btnY + 2;
             this.tweens.add({
                 targets: [cat, btnText],
                 scaleX: 0.9,

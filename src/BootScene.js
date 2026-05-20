@@ -370,8 +370,8 @@ class BootScene extends Phaser.Scene {
             hygiene: 100
         });
         this.registry.set('inventory', {
-            fish: 0,
-            toys: 0
+            fish: 2,
+            toys: 2
         });
 
         this.scene.start('StartScene');

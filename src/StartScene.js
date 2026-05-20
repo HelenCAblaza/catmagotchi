@@ -269,88 +269,115 @@ class StartScene extends Phaser.Scene {
             callback: () => this.spawnHeart()
         });
 
-        // === 3D Start Button ===
+        // === 3D Ombre Start Button ===
         const btnW = 200;
         const btnH = 56;
         const btnDepth = 10;
         const btnY = H * 0.78;
         const btnX = W / 2;
+        const btnR = btnH / 2;
 
-        const btnShadow = this.add.graphics();
-        const btnBg = this.add.graphics();
-        const btnFace = this.add.graphics();
-        const btnBevel = this.add.graphics();
-
-        // Draw full 3D button with bevel
-        const draw3DButton = (bg, face, shadow, bevel, baseColor, hover) => {
-            shadow.clear();
-            bg.clear();
-            face.clear();
-            bevel.clear();
-
-            const r = btnH / 2;
-            const lift = hover ? -4 : 0;
-            const shadowAlpha = hover ? 0.15 : 0.4;
-            const depth = btnDepth + (hover ? 2 : 0);
-
-            // Soft drop shadow (light, barely visible)
-            shadow.fillStyle(0xddaaaa, shadowAlpha);
-            shadow.fillRoundedRect(btnX - btnW / 2 + 6, btnY - btnH / 2 + depth + 6 + lift, btnW, btnH, r);
-            shadow.fillStyle(0xddaaaa, shadowAlpha * 0.5);
-            shadow.fillRoundedRect(btnX - btnW / 2 + 10, btnY - btnH / 2 + depth + 10 + lift, btnW, btnH, r);
-
-            // Bottom thickness face (light pink side wall)
-            const darker = 0xff99bb;
-            face.fillStyle(darker, 1);
-            face.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + depth + lift, btnW, btnH, r);
-
-            // Main button face
-            bg.fillStyle(baseColor, 1);
-            bg.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + lift, btnW, btnH, r);
-
-            // Bevel highlight (top-left inner edge)
-            bevel.fillStyle(0xffffff, 0.45);
-            bevel.fillRoundedRect(btnX - btnW / 2 + 2, btnY - btnH / 2 + lift + 2, btnW - 4, r - 2, { tl: r - 2, tr: r - 2, bl: 0, br: 0 });
-
-            // Bottom shadow bevel (right-bottom inner edge)
-            bevel.fillStyle(0x000000, 0.12);
-            bevel.fillRoundedRect(btnX - btnW / 2 + 2, btnY + btnH / 2 - r + 2 + lift, btnW - 4, r - 2, { tl: 0, tr: 0, bl: r - 2, br: r - 2 });
-
-            // Specular spot (glossy shine)
-            bg.fillStyle(0xffffff, 0.25);
-            bg.fillEllipse(btnX - btnW / 2 + 30, btnY - btnH / 2 + lift + 10, 40, 12);
+        // Create ombre gradient textures
+        const createOmbreBtn = (key, topColor, botColor) => {
+            const canvas = this.textures.createCanvas(key, btnW, btnH);
+            const ctx = canvas.context;
+            const grd = ctx.createLinearGradient(0, 0, 0, btnH);
+            grd.addColorStop(0, topColor);
+            grd.addColorStop(1, botColor);
+            ctx.fillStyle = grd;
+            const r = btnR;
+            ctx.beginPath();
+            ctx.moveTo(r, 0);
+            ctx.lineTo(btnW - r, 0);
+            ctx.arcTo(btnW, 0, btnW, r, r);
+            ctx.lineTo(btnW, btnH - r);
+            ctx.arcTo(btnW, btnH, btnW - r, btnH, r);
+            ctx.lineTo(r, btnH);
+            ctx.arcTo(0, btnH, 0, btnH - r, r);
+            ctx.lineTo(0, r);
+            ctx.arcTo(0, 0, r, 0, r);
+            ctx.closePath();
+            ctx.fill();
+            canvas.refresh();
         };
 
-        draw3DButton(btnBg, btnFace, btnShadow, btnBevel, 0xff88bb, false);
+        createOmbreBtn('btn_normal', '#ffccdd', '#ff6699');
+        createOmbreBtn('btn_hover', '#ffddee', '#ff88bb');
+        createOmbreBtn('btn_press', '#ff99bb', '#ff4488');
 
-        // Button text
-        const btnText = this.add.text(btnX, btnY, '\ud83d\udc3e Start Game!', {
+        const btnShadow = this.add.graphics();
+        const btnBevel = this.add.graphics();
+
+        const btnFaceNormal = this.add.image(btnX, btnY, 'btn_normal').setOrigin(0.5);
+        const btnFaceHover = this.add.image(btnX, btnY, 'btn_hover').setOrigin(0.5).setVisible(false);
+        const btnFacePress = this.add.image(btnX, btnY, 'btn_press').setOrigin(0.5).setVisible(false);
+        const btnFaces = [btnFaceNormal, btnFaceHover, btnFacePress];
+
+        const drawButtonEffects = (lift, shadowAlpha, state) => {
+            btnShadow.clear();
+            btnBevel.clear();
+
+            btnFaceNormal.setVisible(state === 'normal');
+            btnFaceHover.setVisible(state === 'hover');
+            btnFacePress.setVisible(state === 'press');
+
+            for (const face of btnFaces) {
+                face.y = btnY + lift;
+            }
+
+            // Soft drop shadow
+            btnShadow.fillStyle(0xddaaaa, shadowAlpha);
+            btnShadow.fillRoundedRect(btnX - btnW / 2 + 6, btnY - btnH / 2 + btnDepth + 6 + lift, btnW, btnH, btnR);
+            btnShadow.fillStyle(0xddaaaa, shadowAlpha * 0.5);
+            btnShadow.fillRoundedRect(btnX - btnW / 2 + 10, btnY - btnH / 2 + btnDepth + 10 + lift, btnW, btnH, btnR);
+
+            // Bottom thickness face
+            btnShadow.fillStyle(0xff99bb, 1);
+            btnShadow.fillRoundedRect(btnX - btnW / 2, btnY - btnH / 2 + btnDepth + lift, btnW, btnH, btnR);
+
+            // Bevel highlight
+            btnBevel.fillStyle(0xffffff, 0.45);
+            btnBevel.fillRoundedRect(btnX - btnW / 2 + 2, btnY - btnH / 2 + lift + 2, btnW - 4, btnR - 2, { tl: btnR - 2, tr: btnR - 2, bl: 0, br: 0 });
+
+            // Bottom shadow bevel
+            btnBevel.fillStyle(0x000000, 0.12);
+            btnBevel.fillRoundedRect(btnX - btnW / 2 + 2, btnY + btnH / 2 - btnR + 2 + lift, btnW - 4, btnR - 2, { tl: 0, tr: 0, bl: btnR - 2, br: btnR - 2 });
+
+            // Specular spot
+            btnBevel.fillStyle(0xffffff, 0.25);
+            btnBevel.fillEllipse(btnX - btnW / 2 + 30, btnY - btnH / 2 + lift + 10, 40, 12);
+        };
+
+        drawButtonEffects(0, 0.4, 'normal');
+
+        // Button text - no paw emoji, clear with stroke
+        const btnText = this.add.text(btnX, btnY, 'Start Game!', {
             fontSize: '22px',
             color: '#ffffff',
             fontFamily: 'Poppins',
-            fontStyle: 'bold'
+            fontStyle: 'bold',
+            stroke: '#cc4466',
+            strokeThickness: 3
         }).setOrigin(0.5);
 
-        // Invisible interactive hit area over the button
+        // Invisible interactive hit area
         const hitArea = this.add.rectangle(btnX, btnY, btnW + 20, btnH + btnDepth + 20, 0x000000, 0)
             .setInteractive({ useHandCursor: true });
 
-        // Hover effect - lift up and brighten
         hitArea.on('pointerover', () => {
-            draw3DButton(btnBg, btnFace, btnShadow, btnBevel, 0xffaacc, true);
+            drawButtonEffects(-4, 0.15, 'hover');
             btnText.setScale(1.05);
             btnText.y = btnY - 4;
         });
 
         hitArea.on('pointerout', () => {
-            draw3DButton(btnBg, btnFace, btnShadow, btnBevel, 0xff88bb, false);
+            drawButtonEffects(0, 0.4, 'normal');
             btnText.setScale(1);
             btnText.y = btnY;
         });
 
         hitArea.on('pointerdown', () => {
-            // Press down effect
-            draw3DButton(btnBg, btnFace, btnShadow, btnBevel, 0xff6699, false);
+            drawButtonEffects(0, 0.4, 'press');
             btnText.setScale(0.95);
             btnText.y = btnY + 3;
             this.tweens.add({
@@ -368,21 +395,31 @@ class StartScene extends Phaser.Scene {
             });
         });
 
-        // === Floating emoji spawns (heart + wink) around button ===
-        this.emojis = this.add.group();
+        // === Floating tiny star pixels around button ===
+        this.starPixels = this.add.group();
         this.time.addEvent({
-            delay: 800,
+            delay: 600,
             loop: true,
             callback: () => {
-                const isHeart = Math.random() > 0.4;
-                const ex = btnX - 80 + Math.random() * 160;
-                const ey = btnY - 30 - Math.random() * 20;
-                const emoji = this.add.text(ex, ey, isHeart ? '❤️' : '😉', {
-                    fontSize: (16 + Math.random() * 12) + 'px'
-                }).setOrigin(0.5).setAlpha(0.8);
-                emoji.speedY = 0.4 + Math.random() * 0.6;
-                emoji.wobble = Math.random() * Math.PI * 2;
-                this.emojis.add(emoji);
+                const sx = btnX - 80 + Math.random() * 160;
+                const sy = btnY - 30 - Math.random() * 20;
+                const size = 1 + Math.random() * 1.5;
+                const alpha = 0.5 + Math.random() * 0.5;
+
+                const star = this.add.graphics();
+                const col = Math.random() > 0.5 ? 0xffffff : 0xffeecc;
+                star.fillStyle(col, 1);
+                // Tiny 4-point star centered at origin
+                star.fillRect(-size, -size, size * 2, size * 2);
+                star.fillRect(-size * 2, -size * 0.5, size * 4, size);
+                star.fillRect(-size * 0.5, -size * 2, size, size * 4);
+
+                star.setPosition(sx, sy);
+                star.setAlpha(alpha);
+                star.speedY = 0.4 + Math.random() * 0.6;
+                star.wobble = Math.random() * Math.PI * 2;
+                star.baseX = sx;
+                this.starPixels.add(star);
             }
         });
 
@@ -411,14 +448,15 @@ class StartScene extends Phaser.Scene {
             }
         });
 
-        // Float emojis (hearts + winks) from button
-        this.emojis.children.each((emoji) => {
-            emoji.y -= emoji.speedY;
-            emoji.x += Math.sin(emoji.wobble) * 0.3;
-            emoji.wobble += 0.05;
-            emoji.alpha -= 0.008;
-            if (emoji.alpha <= 0) {
-                emoji.destroy();
+        // Float tiny star pixels from button
+        this.starPixels.children.each((star) => {
+            star.y -= star.speedY;
+            const offsetX = Math.sin(star.wobble) * 0.5;
+            star.x = star.baseX + offsetX;
+            star.wobble += 0.05;
+            star.alpha -= 0.008;
+            if (star.alpha <= 0) {
+                star.destroy();
             }
         });
     }

@@ -64,109 +64,136 @@ class HomeScene extends Phaser.Scene {
 
         // === 3D Window ===
         const winX = W * 0.66;
-        const winY = 235;
-        const winW = 110;
-        const winH = 135;
-        const frameThick = 7;
+        const winY = 240;
+        const winW = 100;
+        const winH = 120;
+        const frameThick = 6;
 
-        // Deep outer shadow (recessed into wall)
-        room.fillStyle(0xb8a48a, 1);
-        room.fillRoundedRect(winX - 5, winY - 5, winW + 10, winH + 10, 14);
+        // Outer wall shadow (gives depth that the frame protrudes)
+        room.fillStyle(0xdac4a8, 1);
+        room.fillRoundedRect(winX - 6, winY - 6, winW + 12, winH + 12, 14);
 
-        // Outer frame main body (medium warm wood)
-        room.fillStyle(0xd4b896, 1);
+        // Outer frame (medium tan)
+        room.fillStyle(0xc4a882, 1);
         room.fillRoundedRect(winX, winY, winW, winH, 12);
 
-        // Outer frame top edge highlight (3D light catch)
-        room.fillStyle(0xe8d4b0, 1);
-        room.fillRoundedRect(winX, winY, winW, 6, 4);
+        // Inner frame (light tan face)
+        room.fillStyle(0xd4b896, 1);
+        room.fillRoundedRect(winX + 3, winY + 3, winW - 6, winH - 6, 10);
 
-        // Outer frame right edge shadow (3D depth)
-        room.fillStyle(0xc4a882, 1);
-        room.fillRect(winX + winW - 5, winY + 4, 5, winH - 8);
-        room.fillRect(winX + 4, winY + winH - 5, winW - 8, 5);
+        // Glass pane (sky)
+        room.fillStyle(0xb8e8ff, 1);
+        room.fillRoundedRect(winX + frameThick, winY + frameThick, winW - frameThick * 2, winH - frameThick * 2, 6);
 
-        // Inner frame inset rim (lighter, creating depth gap)
-        room.fillStyle(0xe8d4b0, 1);
-        room.fillRoundedRect(winX + 4, winY + 4, winW - 8, winH - 8, 8);
-
-        // Inner frame shadow inside the inset
-        room.fillStyle(0xbc9466, 1);
-        room.fillRoundedRect(winX + 6, winY + 6, winW - 12, winH - 12, 6);
-
-        // === Lovely photo inside window (sunset with tiny heart tree) ===
-        const photoX = winX + frameThick;
-        const photoY = winY + frameThick;
-        const photoW = winW - frameThick * 2;
-        const photoH = winH - frameThick * 2;
-
-        // Warm sunset sky (pink-orange gradient bands)
-        room.fillStyle(0xffb8cc, 1);  // soft pink top
-        room.fillRoundedRect(photoX, photoY, photoW, photoH * 0.35, 4);
-        room.fillStyle(0xffccaa, 1);  // peach
-        room.fillRoundedRect(photoX, photoY + photoH * 0.35, photoW, photoH * 0.25, 0);
-        room.fillStyle(0xffddaa, 1);  // warm yellow
-        room.fillRoundedRect(photoX, photoY + photoH * 0.60, photoW, photoH * 0.25, 0);
-        room.fillStyle(0xffeedd, 1);  // cream bottom
-        room.fillRoundedRect(photoX, photoY + photoH * 0.85, photoW, photoH * 0.15, 0);
-
-        // Setting sun (warm circle)
-        room.fillStyle(0xffaa88, 1);
-        room.fillCircle(photoX + photoW * 0.65, photoY + photoH * 0.45, 9);
-        room.fillStyle(0xffccaa, 1);
-        room.fillCircle(photoX + photoW * 0.65, photoY + photoH * 0.43, 6);
-
-        // Tiny heart-shaped tree on the horizon (two circles + trunk)
-        const treeX = photoX + photoW * 0.3;
-        const treeY = photoY + photoH * 0.68;
-        // Heart leaves (two overlapping circles)
-        room.fillStyle(0xff8899, 1);
-        room.fillCircle(treeX - 4, treeY - 3, 4);
-        room.fillCircle(treeX + 4, treeY - 3, 4);
-        room.fillCircle(treeX, treeY - 8, 4);
-        room.fillStyle(0xff99aa, 1);
-        room.fillCircle(treeX, treeY - 4, 4);
-        // Tiny trunk
-        room.fillStyle(0xbb8866, 1);
-        room.fillRect(treeX - 1, treeY, 2, 8);
-
-        // Tiny ground hill silhouette
-        room.fillStyle(0xeec0a0, 1);
-        room.fillCircle(photoX + photoW * 0.5, photoY + photoH, photoW * 0.6);
+        // Sky gradient hint (top lighter, bottom slightly deeper)
+        room.fillStyle(0xe0f4ff, 0.6);
+        room.fillRoundedRect(winX + frameThick + 4, winY + frameThick + 4, winW - frameThick * 2 - 8, 40, 4);
 
         // Window cross bars (white wood)
         const barColor = 0xf5efe6;
         room.fillStyle(barColor, 1);
         // Horizontal bar
-        room.fillRect(photoX - 1, winY + winH / 2 - 3, photoW + 2, 6);
+        room.fillRect(winX + frameThick, winY + winH / 2 - 3, winW - frameThick * 2, 6);
         // Vertical bar
-        room.fillRect(winX + winW / 2 - 3, photoY - 1, 6, photoH + 2);
+        room.fillRect(winX + winW / 2 - 3, winY + frameThick, 6, winH - frameThick * 2);
 
-        // Window sill (3D protruding ledge with clear depth layers)
-        // Bottom shadow under sill
-        room.fillStyle(0xa89070, 1);
-        room.fillRoundedRect(winX - 8, winY + winH - 4, winW + 16, 12, 4);
-        // Sill body (lighter)
+        // Window sill (lighter 3D protruding ledge at bottom)
+        room.fillStyle(0xbc9466, 1);
+        room.fillRect(winX - 10, winY + winH - 6, winW + 20, 14);
+        room.fillStyle(0xd4b896, 1);
+        room.fillRect(winX - 8, winY + winH - 8, winW + 16, 6);
+        // Sill highlight
+        room.fillStyle(0xe8d4b0, 1);
+        room.fillRect(winX - 6, winY + winH - 8, winW + 12, 2);
+
+        // Glass highlight / reflection streak
+        room.fillStyle(0xffffff, 0.35);
+        room.fillRect(winX + frameThick + 10, winY + frameThick + 12, 18, 3);
+        room.fillRect(winX + frameThick + 14, winY + frameThick + 18, 10, 2);
+
+        // === 3D Picture Frame ===
+        const picX = 60;
+        const picY = 258;
+        const picW = 82;
+        const picH = 62;
+        const picThick = 5;
+
+        // Outer shadow (recessed into wall)
+        room.fillStyle(0xc4b08a, 1);
+        room.fillRoundedRect(picX - 3, picY - 3, picW + 6, picH + 6, 8);
+
+        // Outer frame (light warm wood)
         room.fillStyle(0xe0c8a0, 1);
-        room.fillRoundedRect(winX - 8, winY + winH - 7, winW + 16, 10, 4);
-        // Sill top surface (brightest)
+        room.fillRoundedRect(picX, picY, picW, picH, 6);
+
+        // Outer frame top highlight (3D light catch)
         room.fillStyle(0xf0dcc0, 1);
-        room.fillRoundedRect(winX - 6, winY + winH - 8, winW + 12, 5, 2);
+        room.fillRoundedRect(picX, picY, picW, 5, 3);
 
-        // Glass highlight / reflection streak (subtle)
-        room.fillStyle(0xffffff, 0.20);
-        room.fillRect(photoX + 6, photoY + 6, 14, 3);
-        room.fillRect(photoX + 9, photoY + 11, 8, 2);
+        // Outer frame right/bottom shadow (3D depth)
+        room.fillStyle(0xd0b890, 1);
+        room.fillRect(picX + picW - 4, picY + 3, 4, picH - 6);
+        room.fillRect(picX + 3, picY + picH - 4, picW - 6, 4);
 
-        // Picture frame on the wall
-        room.fillStyle(0xd9b38c, 1);
-        room.fillRoundedRect(54, 250, 92, 70, 10);
+        // Inner frame inset rim
+        room.fillStyle(0xf5efe6, 1);
+        room.fillRoundedRect(picX + 4, picY + 4, picW - 8, picH - 8, 4);
+
+        // Inner frame shadow inside inset
+        room.fillStyle(0xe0d4c8, 1);
+        room.fillRoundedRect(picX + 6, picY + 6, picW - 12, picH - 12, 3);
+
+        // === Lovely photo inside: tiny cat face ===
+        const photoX = picX + picThick;
+        const photoY = picY + picThick;
+        const photoW = picW - picThick * 2;
+        const photoH = picH - picThick * 2;
+
+        // Soft pink photo background
+        room.fillStyle(0xffdde8, 1);
+        room.fillRoundedRect(photoX, photoY, photoW, photoH, 3);
+
+        // Tiny cat ears (triangles)
         room.fillStyle(0xffffff, 1);
-        room.fillRoundedRect(60, 256, 80, 58, 8);
+        room.fillTriangle(photoX + photoW * 0.3, photoY + photoH * 0.25,
+                          photoX + photoW * 0.15, photoY + photoH * 0.05,
+                          photoX + photoW * 0.45, photoY + photoH * 0.08);
+        room.fillTriangle(photoX + photoW * 0.7, photoY + photoH * 0.25,
+                          photoX + photoW * 0.85, photoY + photoH * 0.05,
+                          photoX + photoW * 0.55, photoY + photoH * 0.08);
+
+        // Ear pink inner
         room.fillStyle(0xffb8cc, 1);
-        room.fillCircle(92, 284, 11);
-        room.fillCircle(108, 278, 6);
-        room.fillCircle(116, 289, 5);
+        room.fillTriangle(photoX + photoW * 0.3, photoY + photoH * 0.22,
+                          photoX + photoW * 0.2, photoY + photoH * 0.1,
+                          photoX + photoW * 0.4, photoY + photoH * 0.12);
+        room.fillTriangle(photoX + photoW * 0.7, photoY + photoH * 0.22,
+                          photoX + photoW * 0.8, photoY + photoH * 0.1,
+                          photoX + photoW * 0.6, photoY + photoH * 0.12);
+
+        // Cat head (fluffy circle)
+        room.fillStyle(0xffffff, 1);
+        room.fillCircle(photoX + photoW * 0.5, photoY + photoH * 0.45, photoW * 0.28);
+
+        // Two tiny brown eyes
+        room.fillStyle(0xcc8866, 1);
+        room.fillCircle(photoX + photoW * 0.38, photoY + photoH * 0.42, 2);
+        room.fillCircle(photoX + photoW * 0.62, photoY + photoH * 0.42, 2);
+
+        // Tiny pink nose
+        room.fillStyle(0xff99aa, 1);
+        room.fillCircle(photoX + photoW * 0.5, photoY + photoH * 0.52, 2);
+
+        // Tiny smile
+        room.fillStyle(0xcc8866, 1);
+        room.fillRect(photoX + photoW * 0.45, photoY + photoH * 0.57, 3, 1);
+
+        // Tiny whiskers
+        room.fillStyle(0xdddddd, 1);
+        room.fillRect(photoX + photoW * 0.15, photoY + photoH * 0.48, 5, 1);
+        room.fillRect(photoX + photoW * 0.15, photoY + photoH * 0.53, 5, 1);
+        room.fillRect(photoX + photoW * 0.80, photoY + photoH * 0.48, 5, 1);
+        room.fillRect(photoX + photoW * 0.80, photoY + photoH * 0.53, 5, 1);
 
         this.clouds = []; // kept for update() compatibility, but no clouds in the room
 

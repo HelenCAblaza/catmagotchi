@@ -23,53 +23,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Pages
         uses: actions/configure-pages@v4
-
-      - name: Build with cache-busted asset names
-        run: |
-          BUILD_ID=$(git rev-parse --short HEAD)
-          mkdir -p dist/src dist/assets
-
-          # Copy static root files
-          cp index.html dist/
-          cp LICENSE dist/ 2>/dev/null || true
-          cp README.md dist/ 2>/dev/null || true
-
-          # Copy & rename JS files
-          for f in src/*.js; do
-            [ -f "$f" ] || continue
-            base=$(basename "$f" .js)
-            cp "$f" "dist/src/${base}-${BUILD_ID}.js"
-          done
-
-          # Copy & rename Phaser engine
-          cp phaser.min.js "dist/phaser-${BUILD_ID}.min.js"
-
-          # Copy & rename image/audio assets
-          for f in assets/*; do
-            [ -f "$f" ] || continue
-            ext="${f##*.}"
-            base=$(basename "$f" ".${ext}")
-            cp "$f" "dist/assets/${base}-${BUILD_ID}.${ext}"
-          done
-
-          # Update references in HTML
-          sed -i -E "s|src/([^\"'/]+)\.js(\?[^\"']*)?|src/\1-${BUILD_ID}.js|g" dist/index.html
-          sed -i -E "s|phaser\.min\.js(\?[^\"']*)?|phaser-${BUILD_ID}.min.js|g" dist/index.html
-
-          # Update asset references in all JS files
-          for f in dist/src/*.js; do
-            [ -f "$f" ] || continue
-            sed -i -E "s|assets/([^\"'/]+)\.(png|jpg|jpeg|gif|svg|webp|mp3|wav|ogg)(\?[^\"']*)?|assets/\1-${BUILD_ID}.\2|g" "$f"
-          done
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist'
-
+          path: '.'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

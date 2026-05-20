@@ -434,19 +434,33 @@ class PlatformerScene extends Phaser.Scene {
     }
 
     createButton(x, y, text, callback) {
-        const btn = this.add.rectangle(x, y, 100, 36, 0x5555aa)
+        const btn = this.add.rectangle(x, y, 110, 40, 0x5555aa)
             .setInteractive({ useHandCursor: true })
-            .setScrollFactor(0);
+            .setScrollFactor(0)
+            .setDepth(50);
 
         const lbl = this.add.text(x, y, text, {
             fontSize: '14px',
             color: '#ffffff',
             fontFamily: 'Poppins'
-        }).setOrigin(0.5).setScrollFactor(0);
+        }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
-        btn.on('pointerover', () => btn.setFillStyle(0x7777cc));
-        btn.on('pointerout', () => btn.setFillStyle(0x5555aa));
-        btn.on('pointerdown', callback);
+        const onOver = () => btn.setFillStyle(0x7777cc);
+        const onOut = () => btn.setFillStyle(0x5555aa);
+        const onClick = (pointer) => {
+            pointer.event.stopPropagation();
+            callback();
+        };
+
+        btn.on('pointerover', onOver);
+        btn.on('pointerout', onOut);
+        btn.on('pointerup', onClick);
+
+        // Make text interactive too so clicking the label works
+        lbl.setInteractive({ useHandCursor: true })
+           .on('pointerover', onOver)
+           .on('pointerout', onOut)
+           .on('pointerup', onClick);
     }
 
     showFloatingText(x, y, text) {

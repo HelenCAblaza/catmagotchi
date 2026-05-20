@@ -64,9 +64,9 @@ class HomeScene extends Phaser.Scene {
 
         // === 3D Window ===
         const winX = W * 0.65;
-        const winY = 240;
+        const winY = 250;
         const winW = 130;
-        const winH = 120;
+        const winH = 105;
         const frameThick = 6;
 
         // Outer wall shadow (lighter, gives depth that the frame protrudes)

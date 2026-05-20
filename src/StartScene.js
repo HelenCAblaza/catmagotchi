@@ -10,13 +10,13 @@ class StartScene extends Phaser.Scene {
         // === Rich peach-pink 3D background ===
         const bg = this.add.graphics();
 
-        // Soft gradient: warm peach at top to pink at bottom
+        // Soft gradient: warm peach at top to pink at bottom (ombre, not too bright)
         const canvas = this.textures.createCanvas('bg_gradient', W, H);
         const ctx = canvas.context;
         const grd = ctx.createLinearGradient(0, 0, 0, H);
-        grd.addColorStop(0, '#fff5f0');
-        grd.addColorStop(0.5, '#ffeeea');
-        grd.addColorStop(1, '#ffe8e4');
+        grd.addColorStop(0, '#ffeae4');
+        grd.addColorStop(0.5, '#ffdcd4');
+        grd.addColorStop(1, '#ffcec4');
         ctx.fillStyle = grd;
         ctx.fillRect(0, 0, W, H);
         canvas.refresh();

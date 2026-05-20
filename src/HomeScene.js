@@ -63,22 +63,22 @@ class HomeScene extends Phaser.Scene {
         room.fillCircle(shelfX + 15, shelfY - 13, 2);
 
         // === 3D Window ===
-        const winX = W * 0.66;
+        const winX = W * 0.55;
         const winY = 240;
-        const winW = 100;
+        const winW = 130;
         const winH = 120;
         const frameThick = 6;
 
-        // Outer wall shadow (gives depth that the frame protrudes)
-        room.fillStyle(0xdac4a8, 1);
+        // Outer wall shadow (lighter, gives depth that the frame protrudes)
+        room.fillStyle(0xe0d4c8, 1);
         room.fillRoundedRect(winX - 6, winY - 6, winW + 12, winH + 12, 14);
 
-        // Outer frame (medium tan)
-        room.fillStyle(0xc4a882, 1);
+        // Outer frame (light warm wood)
+        room.fillStyle(0xe0c8a0, 1);
         room.fillRoundedRect(winX, winY, winW, winH, 12);
 
-        // Inner frame (light tan face)
-        room.fillStyle(0xd4b896, 1);
+        // Inner frame (lighter tan face)
+        room.fillStyle(0xf0dcc0, 1);
         room.fillRoundedRect(winX + 3, winY + 3, winW - 6, winH - 6, 10);
 
         // Glass pane (sky)
@@ -97,13 +97,13 @@ class HomeScene extends Phaser.Scene {
         // Vertical bar
         room.fillRect(winX + winW / 2 - 3, winY + frameThick, 6, winH - frameThick * 2);
 
-        // Window sill (lighter 3D protruding ledge at bottom)
-        room.fillStyle(0xbc9466, 1);
+        // Window sill (light 3D protruding ledge at bottom)
+        room.fillStyle(0xe0c8a0, 1);
         room.fillRect(winX - 10, winY + winH - 6, winW + 20, 14);
-        room.fillStyle(0xd4b896, 1);
+        room.fillStyle(0xf0dcc0, 1);
         room.fillRect(winX - 8, winY + winH - 8, winW + 16, 6);
         // Sill highlight
-        room.fillStyle(0xe8d4b0, 1);
+        room.fillStyle(0xfae8cc, 1);
         room.fillRect(winX - 6, winY + winH - 8, winW + 12, 2);
 
         // Glass highlight / reflection streak
@@ -277,7 +277,7 @@ class HomeScene extends Phaser.Scene {
         // Decorative items around cat - separate movable sprites from PNG files
         this.catBed = this.add.image(W * 0.20, H * 0.64, 'cat_bed').setScale(1.35).setDepth(1);
         this.yarnToy = this.add.image(W * 0.80, H * 0.61, 'yarn_toy').setScale(1.15).setDepth(1);
-        this.foodTray = this.add.image(W * 0.50, H * 0.67, 'food_tray').setScale(1.05).setDepth(1);
+        this.foodTray = this.add.image(W * 0.55, H * 0.67, 'food_tray').setScale(1.05).setDepth(1);
 
         // === BUTTONS (bottom area) - circle buttons in a single row ===
         const btnY = H * 0.78;

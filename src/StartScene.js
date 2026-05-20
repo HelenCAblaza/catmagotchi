@@ -193,7 +193,7 @@ class StartScene extends Phaser.Scene {
         // === Place decorations around the scene ===
         // Left side cluster
         drawFlowerPot(bg, 34, H * 0.75, 0xdd8877, 0xff99bb, 1.7);
-        drawTreePot(bg, 72, H * 0.80, 0xbbaadd, 'round', 1.1);
+        drawTreePot(bg, 82, H * 0.82, 0xbbaadd, 'round', 0.9);
         drawTreePot(bg, 22, H * 0.88, 0x88ccaa, 'pine', 0.9);
 
         // Far left small accent

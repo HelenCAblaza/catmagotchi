@@ -15,22 +15,22 @@ class HomeScene extends Phaser.Scene {
         // Cozy room overlay: warm walls, wood floor, window, picture, and rug
         const room = this.add.graphics();
         room.setDepth(-10);
-        room.fillStyle(0xecdac8, 1);
+        room.fillStyle(0xf0ddd0, 1);
         room.fillRect(0, 0, W, H * 0.54);
-        room.fillStyle(0xe0d4c8, 1);
+        room.fillStyle(0xe5d8cc, 1);
         room.fillRect(0, H * 0.54, W, H * 0.46);
-        room.fillStyle(0xc4b8a8, 1);
+        room.fillStyle(0xcec0b0, 1);
         room.fillRect(0, H * 0.535, W, 3);
 
         // Wood floor planks for cozy detail
-        room.fillStyle(0xd9cdc2, 1);
+        room.fillStyle(0xdfd3c8, 1);
         const floorStart = H * 0.54;
         const plankGap = 28;
         for (let py = floorStart + plankGap; py < H; py += plankGap) {
             room.fillRect(0, py, W, 2);
         }
         // Subtle plank shading (alternating every other plank)
-        room.fillStyle(0xd5c9be, 0.35);
+        room.fillStyle(0xdbd0c4, 0.35);
         for (let py = floorStart + plankGap * 2; py < H; py += plankGap * 2) {
             room.fillRect(0, py - plankGap + 2, W, plankGap - 2);
         }
@@ -40,7 +40,7 @@ class HomeScene extends Phaser.Scene {
         const shelfX = 150;
         const shelfY = 340;
         // Shelf shadow
-        room.fillStyle(0xccb8a5, 1);
+        room.fillStyle(0xd4c4b4, 1);
         room.fillRect(shelfX - 2, shelfY + 3, 36, 4);
         // Shelf board
         room.fillStyle(0xbfa890, 1);
@@ -70,11 +70,11 @@ class HomeScene extends Phaser.Scene {
         const frameThick = 6;
 
         // Outer wall shadow (lighter, gives depth that the frame protrudes)
-        room.fillStyle(0xe0d4c8, 1);
+        room.fillStyle(0xe5d8cc, 1);
         room.fillRoundedRect(winX - 6, winY - 6, winW + 12, winH + 12, 14);
 
         // Outer frame (light warm wood)
-        room.fillStyle(0xe0c8a0, 1);
+        room.fillStyle(0xe6d0a8, 1);
         room.fillRoundedRect(winX, winY, winW, winH, 12);
 
         // Inner frame (lighter tan face)
@@ -98,7 +98,7 @@ class HomeScene extends Phaser.Scene {
         room.fillRect(winX + winW / 2 - 3, winY + frameThick, 6, winH - frameThick * 2);
 
         // Window sill (light 3D protruding ledge at bottom)
-        room.fillStyle(0xe0c8a0, 1);
+        room.fillStyle(0xe6d0a8, 1);
         room.fillRect(winX - 10, winY + winH - 6, winW + 20, 14);
         room.fillStyle(0xf0dcc0, 1);
         room.fillRect(winX - 8, winY + winH - 8, winW + 16, 6);
@@ -185,7 +185,7 @@ class HomeScene extends Phaser.Scene {
         const potX = winX + winW - 32;
         const potY = winY + winH - 21;
         // Pot shadow
-        room.fillStyle(0xccb8a5, 1);
+        room.fillStyle(0xd4c4b4, 1);
         room.fillRect(potX - 2, potY + 4, 26, 5);
         // Pot body
         room.fillStyle(0xd68a7a, 1);
@@ -225,11 +225,11 @@ class HomeScene extends Phaser.Scene {
         const picThick = 5;
 
         // Outer shadow (recessed into wall)
-        room.fillStyle(0xc4b08a, 1);
+        room.fillStyle(0xceb8a0, 1);
         room.fillRoundedRect(picX - 3, picY - 3, picW + 6, picH + 6, 8);
 
         // Outer frame (light warm wood)
-        room.fillStyle(0xe0c8a0, 1);
+        room.fillStyle(0xe6d0a8, 1);
         room.fillRoundedRect(picX, picY, picW, picH, 6);
 
         // Outer frame top highlight (3D light catch)
@@ -276,7 +276,7 @@ class HomeScene extends Phaser.Scene {
         room.fillRect(picX + picW - 32, picY + picH - 6, 3, 3);
 
         // Inner frame shadow inside inset
-        room.fillStyle(0xe0d4c8, 1);
+        room.fillStyle(0xe5d8cc, 1);
         room.fillRoundedRect(picX + 6, picY + 6, picW - 12, picH - 12, 3);
 
         // === Lovely photo inside: nature sunset landscape ===
@@ -334,7 +334,7 @@ class HomeScene extends Phaser.Scene {
         const artY = 378;
 
         // Floor shadow under easel
-        room.fillStyle(0xccb8a5, 0.6);
+        room.fillStyle(0xd4c4b4, 0.6);
         room.fillRoundedRect(artX + 5, artY + 60, 43, 9, 4);
 
         // Easel back leg
@@ -415,7 +415,7 @@ class HomeScene extends Phaser.Scene {
         const cabDepth = 6;
 
         // Cabinet shadow (floor)
-        room.fillStyle(0xccb8a5, 1);
+        room.fillStyle(0xd4c4b4, 1);
         room.fillRoundedRect(cabX + 4, cabY + cabH + 2, cabW, 6, 2);
 
         // Cabinet body (white)

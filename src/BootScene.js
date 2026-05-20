@@ -158,21 +158,21 @@ class BootScene extends Phaser.Scene {
         gfx.fillRect(0, 0, w, h);
 
         // Wall and floor split
-        gfx.fillStyle(0xecdac8, 1);
+        gfx.fillStyle(0xf0ddd0, 1);
         gfx.fillRect(0, 0, w, h * 0.54);
-        gfx.fillStyle(0xe0d4c8, 1);
+        gfx.fillStyle(0xe5d8cc, 1);
         gfx.fillRect(0, h * 0.54, w, h * 0.46);
-        gfx.fillStyle(0xc4b8a8, 1);
+        gfx.fillStyle(0xcec0b0, 1);
         gfx.fillRect(0, h * 0.535, w, 3);
 
         // Wood floor planks for cozy detail
-        gfx.fillStyle(0xd9cdc2, 1);
+        gfx.fillStyle(0xdfd3c8, 1);
         const floorStart = h * 0.54;
         const plankGap = 28;
         for (let py = floorStart + plankGap; py < h; py += plankGap) {
             gfx.fillRect(0, py, w, 2);
         }
-        gfx.fillStyle(0xd5c9be, 0.35);
+        gfx.fillStyle(0xdbd0c4, 0.35);
         for (let py = floorStart + plankGap * 2; py < h; py += plankGap * 2) {
             gfx.fillRect(0, py - plankGap + 2, w, plankGap - 2);
         }
@@ -180,7 +180,7 @@ class BootScene extends Phaser.Scene {
         // Cute wall detail: tiny floating shelf with a succulent plant
         const shelfX = 185;
         const shelfY = 118;
-        gfx.fillStyle(0xccb8a5, 1);
+        gfx.fillStyle(0xd4c4b4, 1);
         gfx.fillRect(shelfX - 2, shelfY + 3, 36, 4);
         gfx.fillStyle(0xbfa890, 1);
         gfx.fillRect(shelfX - 2, shelfY, 36, 4);

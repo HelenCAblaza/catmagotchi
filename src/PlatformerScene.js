@@ -24,10 +24,10 @@ class PlatformerScene extends Phaser.Scene {
         // 9 Ponds
         const pondPositions = [150, 350, 550, 750, 950, 1150, 1300, 1450, 1550];
         pondPositions.forEach(px => {
-            this.add.image(px, 575, 'pond')
+            this.add.image(px, 560, 'pond')
                 .setOrigin(0.5, 0)
                 .setScale(0.5)
-                .setDepth(-5)
+                .setDepth(5)
                 .setScrollFactor(1);
         });
 
@@ -37,7 +37,7 @@ class PlatformerScene extends Phaser.Scene {
             this.add.image(tx, 565, 'tree')
                 .setOrigin(0.5, 1)
                 .setScale(0.5)
-                .setDepth(-5)
+                .setDepth(5)
                 .setScrollFactor(1);
         });
 
@@ -49,7 +49,7 @@ class PlatformerScene extends Phaser.Scene {
             this.add.image(fx, fy, 'flower')
                 .setOrigin(0.5, 1)
                 .setScale(0.6 + Math.random() * 0.3)
-                .setDepth(-4)
+                .setDepth(6)
                 .setScrollFactor(1)
                 .setTint(tint);
         });
@@ -60,7 +60,7 @@ class PlatformerScene extends Phaser.Scene {
             this.add.image(bx, 570, 'bush')
                 .setOrigin(0.5, 1)
                 .setScale(0.5)
-                .setDepth(-5)
+                .setDepth(5)
                 .setScrollFactor(1);
         });
 
@@ -70,7 +70,7 @@ class PlatformerScene extends Phaser.Scene {
             this.add.image(rx, 570, 'rock')
                 .setOrigin(0.5, 1)
                 .setScale(0.5)
-                .setDepth(-5)
+                .setDepth(5)
                 .setScrollFactor(1);
         });
 

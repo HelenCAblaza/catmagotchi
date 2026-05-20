@@ -10,8 +10,8 @@ class PlatformerScene extends Phaser.Scene {
 
         // Adventure mode: collect items to add to your home inventory
 
-        // World bounds - horizontal scrolling platformer
-        this.physics.world.setBounds(0, 0, 1600, 600);
+        // World bounds - wider adventure world
+        this.physics.world.setBounds(0, 0, 4000, 600);
 
         // Wide parallax background - 11520x1600 scaled to fit 800px height
         this.bgImage = this.add.image(0, H / 2, 'adventure_bg')
@@ -21,8 +21,8 @@ class PlatformerScene extends Phaser.Scene {
             .setScrollFactor(0.15);  // slow parallax as Mitten walks
 
         // === FOREGROUND ELEMENTS (placed individually, easy to adjust) ===
-        // 9 Ponds
-        const pondPositions = [150, 350, 550, 750, 950, 1150, 1300, 1450, 1550];
+        // 9 Ponds - scattered across the 4000px world
+        const pondPositions = [300, 900, 1500, 2100, 2700, 3200, 3600, 3800, 3950];
         pondPositions.forEach(px => {
             this.add.image(px, 560, 'pond')
                 .setOrigin(0.5, 0)
@@ -31,8 +31,8 @@ class PlatformerScene extends Phaser.Scene {
                 .setScrollFactor(1);
         });
 
-        // Trees
-        const treePositions = [100, 300, 500, 700, 900, 1100, 1300, 1500];
+        // Trees - scattered across the world
+        const treePositions = [150, 600, 1100, 1600, 2200, 2800, 3400, 3900];
         treePositions.forEach(tx => {
             this.add.image(tx, 565, 'tree')
                 .setOrigin(0.5, 1)
@@ -41,8 +41,8 @@ class PlatformerScene extends Phaser.Scene {
                 .setScrollFactor(1);
         });
 
-        // Flowers (clusters)
-        const flowerPositions = [80, 180, 280, 420, 520, 620, 780, 880, 1020, 1120, 1220, 1380, 1480, 1580];
+        // Flowers (clusters) - scattered across the world
+        const flowerPositions = [100, 250, 450, 700, 950, 1200, 1450, 1700, 1950, 2400, 2650, 2900, 3100, 3500, 3750, 3850];
         flowerPositions.forEach(fx => {
             const fy = 565 + Math.random() * 10;
             const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(Math.random() * 4)];
@@ -54,8 +54,8 @@ class PlatformerScene extends Phaser.Scene {
                 .setTint(tint);
         });
 
-        // Bushes
-        const bushPositions = [200, 450, 650, 850, 1050, 1250, 1450];
+        // Bushes - scattered across the world
+        const bushPositions = [200, 800, 1400, 2000, 2600, 3200, 3700];
         bushPositions.forEach(bx => {
             this.add.image(bx, 570, 'bush')
                 .setOrigin(0.5, 1)
@@ -64,8 +64,8 @@ class PlatformerScene extends Phaser.Scene {
                 .setScrollFactor(1);
         });
 
-        // Rocks
-        const rockPositions = [250, 600, 1000, 1400];
+        // Rocks - scattered across the world
+        const rockPositions = [350, 1000, 1800, 2500, 3300, 3850];
         rockPositions.forEach(rx => {
             this.add.image(rx, 570, 'rock')
                 .setOrigin(0.5, 1)
@@ -93,7 +93,7 @@ class PlatformerScene extends Phaser.Scene {
 
         // Camera follow
         this.cameras.main.startFollow(this.player);
-        this.cameras.main.setBounds(0, 0, 1600, 600);
+        this.cameras.main.setBounds(0, 0, 4000, 600);
 
         // Collectibles
         this.fishes = this.physics.add.group();
@@ -284,23 +284,21 @@ class PlatformerScene extends Phaser.Scene {
     }
 
     createLevel() {
-        for (let x = 0; x < 1700; x += 32) {
+        for (let x = 0; x < 4100; x += 32) {
             this.platforms.create(x, 568, 'ground').setScale(1).refreshBody();
         }
-
-
     }
 
     spawnCollectibles() {
         const fishPositions = [
-            [250, 400], [400, 330], [550, 250],
-            [750, 350], [900, 270], [1050, 400],
-            [1250, 300], [1400, 230]
+            [300, 400], [700, 330], [1200, 250],
+            [1700, 350], [2200, 270], [2700, 400],
+            [3200, 300], [3600, 230], [3900, 350]
         ];
 
         const toyPositions = [
-            [320, 420], [620, 450], [820, 370],
-            [1120, 420], [1320, 320]
+            [500, 420], [1500, 450], [2500, 370],
+            [3400, 420], [3800, 320]
         ];
 
         fishPositions.forEach(([x, y]) => {

@@ -232,9 +232,9 @@ class HomeScene extends Phaser.Scene {
         this.clouds = []; // kept for update() compatibility, but no clouds in the room
 
         // === Simple 3D White Cabinet (left side) ===
-        const cabX = 20;
+        const cabX = 10;
         const cabY = 380;
-        const cabW = 50;
+        const cabW = 55;
         const cabH = 65;
         const cabDepth = 6;
 

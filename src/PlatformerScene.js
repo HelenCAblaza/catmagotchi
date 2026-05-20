@@ -83,8 +83,8 @@ class PlatformerScene extends Phaser.Scene {
         }
 
         // === UI ===
-        // Home button - bottom right, round pastel
-        this.createRoundButton(W - 45, H - 45, '\ud83c\udfe0', () => {
+        // Home button - bottom right, round pastel (same size as Adventure button)
+        this.createRoundButton(W - 55, H - 55, () => {
             this.scene.start('HomeScene');
         });
 
@@ -433,39 +433,58 @@ class PlatformerScene extends Phaser.Scene {
         }
     }
 
-    createRoundButton(x, y, text, callback) {
-        // Round pastel button with matching outline
-        const btn = this.add.container(x, y);
-        btn.setScrollFactor(0).setDepth(50);
+    createRoundButton(x, y, callback) {
+        const radius = 45;
+        const size = radius * 2;
+        const color = 0xd4c4e0;           // soft pastel lavender
+        const borderColor = 0xb8a8cc;      // slightly darker lavender outline
+        const border = 2;
 
-        // Background circle - soft pastel lavender
-        const bg = this.add.circle(0, 0, 32, 0xd4c4e0)
-            .setStrokeStyle(3, 0xb8a8cc, 1);  // slightly darker lavender outline
-        btn.add(bg);
+        const btn = this.add.graphics();
+        btn.fillStyle(borderColor, 1);
+        btn.fillCircle(0, 0, radius + border);
+        btn.fillStyle(color, 1);
+        btn.fillCircle(0, 0, radius);
+        btn.setPosition(x, y);
+        // Rectangle hit area that fully contains the circle + border
+        btn.setInteractive(
+            new Phaser.Geom.Rectangle(-radius - border, -radius - border, size + border * 2, size + border * 2),
+            Phaser.Geom.Rectangle.Contains
+        );
+        btn.setScrollFactor(0);
+        btn.setDepth(50);
 
-        // Emoji/text label centered
-        const lbl = this.add.text(0, 1, text, {
+        // Home icon
+        const icon = this.add.text(x, y - 6, '🏠', {
             fontSize: '24px',
             fontFamily: 'Poppins'
-        }).setOrigin(0.5);
-        btn.add(lbl);
+        }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
-        // Make circle interactive
-        bg.setInteractive({ useHandCursor: true, hitArea: new Phaser.Geom.Circle(0, 0, 32), hitAreaCallback: Phaser.Geom.Circle.Contains });
+        // Home label
+        this.add.text(x, y + 14, 'Home', {
+            fontSize: '11px',
+            color: '#8888aa',
+            fontFamily: 'Poppins',
+            fontStyle: 'bold'
+        }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
 
-        const onOver = () => {
-            bg.setFillStyle(0xe0d0ec);
-            bg.setStrokeStyle(3, 0xc4b4d8, 1);
-        };
-        const onOut = () => {
-            bg.setFillStyle(0xd4c4e0);
-            bg.setStrokeStyle(3, 0xb8a8cc, 1);
-        };
-        const onClick = () => callback();
-
-        bg.on('pointerover', onOver);
-        bg.on('pointerout', onOut);
-        bg.on('pointerdown', onClick);
+        // Hover effect - brighten
+        btn.on('pointerover', () => {
+            btn.clear();
+            const lighter = 0xe0d0ec;
+            btn.fillStyle(borderColor, 1);
+            btn.fillCircle(0, 0, radius + border);
+            btn.fillStyle(lighter, 1);
+            btn.fillCircle(0, 0, radius);
+        });
+        btn.on('pointerout', () => {
+            btn.clear();
+            btn.fillStyle(borderColor, 1);
+            btn.fillCircle(0, 0, radius + border);
+            btn.fillStyle(color, 1);
+            btn.fillCircle(0, 0, radius);
+        });
+        btn.on('pointerdown', () => callback());
     }
 
     showFloatingText(x, y, text) {

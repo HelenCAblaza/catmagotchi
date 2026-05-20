@@ -230,14 +230,14 @@ class StartScene extends Phaser.Scene {
 
         // Title with glow
         this.add.text(W / 2, H * 0.22, '\u2728 Catmagotchi \u2728', {
-            fontSize: '42px',
+            fontSize: '48px',
             color: '#ffffff',
             fontFamily: 'Poppins',
             fontStyle: 'bold',
-            stroke: '#ff88aa',
-            strokeThickness: 3,
+            stroke: '#ee5588',
+            strokeThickness: 5,
             padding: { top: 6, bottom: 18, left: 6, right: 6 }
-        }).setOrigin(0.5).setShadow(0, 4, '#ff88aa88', 0, true, true);
+        }).setOrigin(0.5).setShadow(0, 5, '#dd6688aa', 2, true, true);
 
         // Cat sprite (large, centered) - uses real pixel-art PNG!
         const cat = this.add.sprite(W / 2, H * 0.42, 'cat_idle')

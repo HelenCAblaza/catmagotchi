@@ -108,6 +108,7 @@ class HomeScene extends Phaser.Scene {
 
         // White pixel accents on window frame for balance
         room.fillStyle(0xffffff, 0.6);
+        // Top edge scattered pixels
         room.fillRect(winX + 6, winY + 6, 3, 3);
         room.fillRect(winX + 12, winY + 8, 2, 2);
         room.fillRect(winX + 18, winY + 5, 2, 2);
@@ -115,12 +116,44 @@ class HomeScene extends Phaser.Scene {
         room.fillRect(winX + 30, winY + 9, 2, 2);
         room.fillRect(winX + 36, winY + 6, 2, 2);
         room.fillRect(winX + 42, winY + 8, 3, 3);
+        room.fillRect(winX + 48, winY + 5, 2, 2);
+        room.fillRect(winX + 54, winY + 7, 3, 3);
+        room.fillRect(winX + 60, winY + 9, 2, 2);
+        room.fillRect(winX + 66, winY + 6, 2, 2);
+        room.fillRect(winX + 72, winY + 8, 3, 3);
+        room.fillRect(winX + 78, winY + 5, 2, 2);
+        room.fillRect(winX + 84, winY + 7, 2, 2);
+        room.fillRect(winX + 90, winY + 9, 3, 3);
+        room.fillRect(winX + 96, winY + 6, 2, 2);
+        room.fillRect(winX + 102, winY + 8, 2, 2);
+        room.fillRect(winX + 108, winY + 5, 3, 3);
+        room.fillRect(winX + 114, winY + 7, 2, 2);
+        room.fillRect(winX + 120, winY + 9, 2, 2);
+        // Right edge pixels
         room.fillRect(winX + winW - 10, winY + 10, 3, 3);
         room.fillRect(winX + winW - 16, winY + 7, 2, 2);
         room.fillRect(winX + winW - 22, winY + 9, 2, 2);
         room.fillRect(winX + winW - 28, winY + 6, 3, 3);
         room.fillRect(winX + winW - 34, winY + 8, 2, 2);
         room.fillRect(winX + winW - 40, winY + 10, 2, 2);
+        room.fillRect(winX + winW - 10, winY + 20, 2, 2);
+        room.fillRect(winX + winW - 8, winY + 30, 3, 3);
+        room.fillRect(winX + winW - 12, winY + 40, 2, 2);
+        room.fillRect(winX + winW - 10, winY + 50, 3, 3);
+        room.fillRect(winX + winW - 8, winY + 60, 2, 2);
+        room.fillRect(winX + winW - 12, winY + 70, 3, 3);
+        room.fillRect(winX + winW - 10, winY + 80, 2, 2);
+        // Left edge pixels
+        room.fillRect(winX + 6, winY + 15, 3, 3);
+        room.fillRect(winX + 8, winY + 25, 2, 2);
+        room.fillRect(winX + 6, winY + 35, 3, 3);
+        room.fillRect(winX + 8, winY + 45, 2, 2);
+        room.fillRect(winX + 6, winY + 55, 3, 3);
+        room.fillRect(winX + 8, winY + 65, 2, 2);
+        room.fillRect(winX + 6, winY + 75, 3, 3);
+        room.fillRect(winX + 8, winY + 85, 2, 2);
+        room.fillRect(winX + 6, winY + 95, 3, 3);
+        // Bottom edge pixels
         room.fillRect(winX + winW - 10, winY + winH - 20, 3, 3);
         room.fillRect(winX + 8, winY + winH - 14, 2, 2);
         room.fillRect(winX + 14, winY + winH - 18, 3, 3);
@@ -129,6 +162,19 @@ class HomeScene extends Phaser.Scene {
         room.fillRect(winX + 32, winY + winH - 10, 2, 2);
         room.fillRect(winX + 38, winY + winH - 14, 2, 2);
         room.fillRect(winX + 44, winY + winH - 20, 3, 3);
+        room.fillRect(winX + 50, winY + winH - 12, 2, 2);
+        room.fillRect(winX + 56, winY + winH - 18, 3, 3);
+        room.fillRect(winX + 62, winY + winH - 10, 2, 2);
+        room.fillRect(winX + 68, winY + winH - 16, 3, 3);
+        room.fillRect(winX + 74, winY + winH - 12, 2, 2);
+        room.fillRect(winX + 80, winY + winH - 20, 3, 3);
+        room.fillRect(winX + 86, winY + winH - 10, 2, 2);
+        room.fillRect(winX + 92, winY + winH - 16, 3, 3);
+        room.fillRect(winX + 98, winY + winH - 12, 2, 2);
+        room.fillRect(winX + 104, winY + winH - 18, 3, 3);
+        room.fillRect(winX + 110, winY + winH - 10, 2, 2);
+        room.fillRect(winX + 116, winY + winH - 16, 3, 3);
+        room.fillRect(winX + 122, winY + winH - 12, 2, 2);
 
         // Glass highlight / reflection streak
         room.fillStyle(0xffffff, 0.35);

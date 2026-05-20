@@ -32,13 +32,99 @@ class StartScene extends Phaser.Scene {
             bg.fillCircle(sx, sy, size);
         }
 
-        // Small 3D cubes (decorative blocks) in corners
-        // Left cube
-        this.drawCuteCube(bg, 35, H * 0.78, 18, 0xffb8c8);
-        this.drawCuteCube(bg, 60, H * 0.82, 14, 0xffd0b8);
-        // Right cube
-        this.drawCuteCube(bg, W - 50, H * 0.76, 20, 0xffc8d0);
-        this.drawCuteCube(bg, W - 25, H * 0.80, 15, 0xffd8c8);
+        // Cute flower pots and tiny trees in corners
+        // === Left flower pot ===
+        const lpX = 30;
+        const lpY = H * 0.78;
+        // Pot shadow
+        bg.fillStyle(0xcc9999, 0.3);
+        bg.fillEllipse(lpX + 2, lpY + 2, 22, 8);
+        // Pot body (terracotta)
+        bg.fillStyle(0xdd8877, 1);
+        bg.fillRoundedRect(lpX - 10, lpY - 14, 20, 18, 4);
+        bg.fillStyle(0xcc7766, 1);
+        bg.fillRoundedRect(lpX - 10, lpY - 14, 20, 6, { tl: 4, tr: 4, bl: 0, br: 0 });
+        // Soil
+        bg.fillStyle(0x665544, 1);
+        bg.fillRect(lpX - 8, lpY - 16, 16, 4);
+        // Stem
+        bg.fillStyle(0x88bb88, 1);
+        bg.fillRect(lpX - 1, lpY - 28, 2, 14);
+        // Leaves
+        bg.fillCircle(lpX - 4, lpY - 26, 3);
+        bg.fillCircle(lpX + 4, lpY - 24, 3);
+        // Pink flower
+        bg.fillStyle(0xff99bb, 1);
+        bg.fillCircle(lpX, lpY - 32, 4);
+        bg.fillStyle(0xffeeaa, 1);
+        bg.fillCircle(lpX, lpY - 32, 2);
+
+        // === Left tiny tree ===
+        const ltX = 58;
+        const ltY = H * 0.82;
+        // Pot
+        bg.fillStyle(0xcc9999, 0.3);
+        bg.fillEllipse(ltX + 2, ltY + 2, 18, 6);
+        bg.fillStyle(0xbbaadd, 1);
+        bg.fillRoundedRect(ltX - 8, ltY - 10, 16, 14, 3);
+        // Trunk
+        bg.fillStyle(0x997755, 1);
+        bg.fillRect(ltX - 2, ltY - 24, 4, 16);
+        // Tree top (round)
+        bg.fillStyle(0x88cc88, 1);
+        bg.fillCircle(ltX, ltY - 30, 10);
+        bg.fillStyle(0xaaddaa, 1);
+        bg.fillCircle(ltX - 3, ltY - 33, 5);
+        bg.fillCircle(ltX + 4, ltY - 32, 4);
+        // Tiny apple
+        bg.fillStyle(0xff6666, 1);
+        bg.fillCircle(ltX + 5, ltY - 28, 2);
+
+        // === Right flower pot ===
+        const rpX = W - 50;
+        const rpY = H * 0.76;
+        // Shadow
+        bg.fillStyle(0xcc9999, 0.3);
+        bg.fillEllipse(rpX + 2, rpY + 2, 24, 8);
+        // Pot (mint green)
+        bg.fillStyle(0x88ccaa, 1);
+        bg.fillRoundedRect(rpX - 11, rpY - 14, 22, 18, 4);
+        bg.fillStyle(0x77bb99, 1);
+        bg.fillRoundedRect(rpX - 11, rpY - 14, 22, 6, { tl: 4, tr: 4, bl: 0, br: 0 });
+        // Soil
+        bg.fillStyle(0x665544, 1);
+        bg.fillRect(rpX - 9, rpY - 16, 18, 4);
+        // Stems
+        bg.fillStyle(0x88bb88, 1);
+        bg.fillRect(rpX - 3, rpY - 26, 2, 12);
+        bg.fillRect(rpX + 2, rpY - 24, 2, 10);
+        // Leaves
+        bg.fillCircle(rpX - 6, rpY - 22, 3);
+        bg.fillCircle(rpX + 5, rpY - 20, 3);
+        // Lavender flowers
+        bg.fillStyle(0xcc99ff, 1);
+        bg.fillCircle(rpX - 3, rpY - 30, 3);
+        bg.fillCircle(rpX + 2, rpY - 28, 3);
+        bg.fillStyle(0xffeeff, 1);
+        bg.fillCircle(rpX - 3, rpY - 30, 1);
+        bg.fillCircle(rpX + 2, rpY - 28, 1);
+
+        // === Right tiny tree ===
+        const rtX = W - 24;
+        const rtY = H * 0.80;
+        // Pot
+        bg.fillStyle(0xcc9999, 0.3);
+        bg.fillEllipse(rtX + 2, rtY + 2, 16, 6);
+        bg.fillStyle(0xffcc88, 1);
+        bg.fillRoundedRect(rtX - 7, rtY - 10, 14, 14, 3);
+        // Trunk
+        bg.fillStyle(0x997755, 1);
+        bg.fillRect(rtX - 2, rtY - 22, 4, 14);
+        // Tree top (pointy/pine style)
+        bg.fillStyle(0x66aa88, 1);
+        bg.fillTriangle(rtX, rtY - 38, rtX - 10, rtY - 22, rtX + 10, rtY - 22);
+        bg.fillStyle(0x88ccaa, 1);
+        bg.fillTriangle(rtX, rtY - 34, rtX - 7, rtY - 24, rtX + 7, rtY - 24);
 
         // Decorative floating clouds
         for (let i = 0; i < 5; i++) {

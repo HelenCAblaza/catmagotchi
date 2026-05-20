@@ -13,9 +13,9 @@ class PlatformerScene extends Phaser.Scene {
         // World bounds - horizontal scrolling platformer
         this.physics.world.setBounds(0, 0, 1600, 600);
 
-        // Scenery background - tile across the world
+        // Scenery background - seamless tile across the world
         const sceneryW = 480;
-        const sceneryH = 320;
+        const sceneryH = 600;
         for (let x = 0; x < 1600 + sceneryW; x += sceneryW) {
             const bg = this.add.image(x, sceneryH / 2, 'scenery')
                 .setOrigin(0, 0.5)

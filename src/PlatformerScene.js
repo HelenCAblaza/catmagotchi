@@ -4,8 +4,6 @@ class PlatformerScene extends Phaser.Scene {
     }
 
     create() {
-        this.cameras.main.setBackgroundColor('#87CEEB');
-
         const W = this.scale.width;   // 480
         const H = this.scale.height;  // 800
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -14,6 +12,16 @@ class PlatformerScene extends Phaser.Scene {
 
         // World bounds - horizontal scrolling platformer
         this.physics.world.setBounds(0, 0, 1600, 600);
+
+        // Scenery background - tile across the world
+        const sceneryW = 480;
+        const sceneryH = 320;
+        for (let x = 0; x < 1600 + sceneryW; x += sceneryW) {
+            const bg = this.add.image(x, sceneryH / 2, 'scenery')
+                .setOrigin(0, 0.5)
+                .setDisplaySize(sceneryW, sceneryH)
+                .setDepth(-10);
+        }
 
         // Platforms
         this.platforms = this.physics.add.staticGroup();
@@ -49,38 +57,6 @@ class PlatformerScene extends Phaser.Scene {
 
         // Virtual joystick (mobile/touch)
         this.createVirtualJoystick();
-
-        // Decorative clouds in the sky (parallax scrolling)
-        this.clouds = [];
-        for (let i = 0; i < 5; i++) {
-            const cloud = this.add.image(100 + i * 300, 60 + Math.random() * 80, 'cloud')
-                .setScale(0.7 + Math.random() * 0.5)
-                .setAlpha(0.5 + Math.random() * 0.3)
-                .setScrollFactor(0.3)
-                .setDepth(-5);
-            this.clouds.push({
-                sprite: cloud,
-                speed: 0.1 + Math.random() * 0.2
-            });
-        }
-
-        // Floating stars/sparkles
-        this.stars = this.add.group();
-        for (let i = 0; i < 8; i++) {
-            const star = this.add.image(Math.random() * 1600, Math.random() * 400, 'star')
-                .setScale(0.3 + Math.random() * 0.3)
-                .setAlpha(0.4 + Math.random() * 0.4);
-            this.stars.add(star);
-            this.tweens.add({
-                targets: star,
-                y: star.y - 10,
-                alpha: 0.1,
-                duration: 2000 + Math.random() * 2000,
-                yoyo: true,
-                repeat: -1,
-                ease: 'Sine.easeInOut'
-            });
-        }
 
         // === UI ===
         // Home button - bottom right, round pastel (same size as Adventure button)
@@ -314,14 +290,6 @@ class PlatformerScene extends Phaser.Scene {
 
     update() {
         const stats = this.registry.get('stats');
-
-        // Drift clouds
-        for (const cloud of this.clouds) {
-            cloud.sprite.x += cloud.speed;
-            if (cloud.sprite.x > 1700) {
-                cloud.sprite.x = -100;
-            }
-        }
 
         // Update inventory display
         const inv = this.registry.get('inventory');

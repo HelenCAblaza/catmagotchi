@@ -143,57 +143,53 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xe0d4c8, 1);
         room.fillRoundedRect(picX + 6, picY + 6, picW - 12, picH - 12, 3);
 
-        // === Lovely photo inside: tiny cat face ===
+        // === Lovely photo inside: nature sunset landscape ===
         const photoX = picX + picThick;
         const photoY = picY + picThick;
         const photoW = picW - picThick * 2;
         const photoH = picH - picThick * 2;
 
-        // Soft pink photo background
-        room.fillStyle(0xffdde8, 1);
-        room.fillRoundedRect(photoX, photoY, photoW, photoH, 3);
+        // Sunset sky gradient bands (pink → peach → yellow → cream)
+        room.fillStyle(0xffb8cc, 1);  // soft pink top
+        room.fillRoundedRect(photoX, photoY, photoW, photoH * 0.35, 3);
+        room.fillStyle(0xffccaa, 1);  // peach
+        room.fillRoundedRect(photoX, photoY + photoH * 0.35, photoW, photoH * 0.25, 0);
+        room.fillStyle(0xffddaa, 1);  // warm yellow
+        room.fillRoundedRect(photoX, photoY + photoH * 0.60, photoW, photoH * 0.20, 0);
+        room.fillStyle(0xffeedd, 1);  // cream bottom
+        room.fillRoundedRect(photoX, photoY + photoH * 0.80, photoW, photoH * 0.20, 0);
 
-        // Tiny cat ears (triangles)
-        room.fillStyle(0xffffff, 1);
-        room.fillTriangle(photoX + photoW * 0.3, photoY + photoH * 0.25,
-                          photoX + photoW * 0.15, photoY + photoH * 0.05,
-                          photoX + photoW * 0.45, photoY + photoH * 0.08);
-        room.fillTriangle(photoX + photoW * 0.7, photoY + photoH * 0.25,
-                          photoX + photoW * 0.85, photoY + photoH * 0.05,
-                          photoX + photoW * 0.55, photoY + photoH * 0.08);
+        // Setting sun
+        room.fillStyle(0xffaa88, 1);
+        room.fillCircle(photoX + photoW * 0.65, photoY + photoH * 0.45, 7);
+        room.fillStyle(0xffccaa, 1);
+        room.fillCircle(photoX + photoW * 0.65, photoY + photoH * 0.43, 4);
 
-        // Ear pink inner
-        room.fillStyle(0xffb8cc, 1);
-        room.fillTriangle(photoX + photoW * 0.3, photoY + photoH * 0.22,
-                          photoX + photoW * 0.2, photoY + photoH * 0.1,
-                          photoX + photoW * 0.4, photoY + photoH * 0.12);
-        room.fillTriangle(photoX + photoW * 0.7, photoY + photoH * 0.22,
-                          photoX + photoW * 0.8, photoY + photoH * 0.1,
-                          photoX + photoW * 0.6, photoY + photoH * 0.12);
+        // Tiny rolling hills silhouette
+        room.fillStyle(0x88bb88, 1);
+        room.fillCircle(photoX + photoW * 0.2, photoY + photoH, photoW * 0.4);
+        room.fillCircle(photoX + photoW * 0.7, photoY + photoH, photoW * 0.35);
+        room.fillStyle(0x66aa66, 1);
+        room.fillCircle(photoX + photoW * 0.5, photoY + photoH, photoW * 0.3);
 
-        // Cat head (fluffy circle)
-        room.fillStyle(0xffffff, 1);
-        room.fillCircle(photoX + photoW * 0.5, photoY + photoH * 0.45, photoW * 0.28);
+        // Tiny tree silhouette on hill
+        room.fillStyle(0x558855, 1);
+        // Trunk
+        room.fillRect(photoX + photoW * 0.35 - 1, photoY + photoH * 0.55, 2, 10);
+        // Canopy (fluffy circles)
+        room.fillCircle(photoX + photoW * 0.35, photoY + photoH * 0.48, 5);
+        room.fillCircle(photoX + photoW * 0.28, photoY + photoH * 0.52, 4);
+        room.fillCircle(photoX + photoW * 0.42, photoY + photoH * 0.52, 4);
+        room.fillStyle(0x77bb77, 1);
+        room.fillCircle(photoX + photoW * 0.35, photoY + photoH * 0.45, 3);
 
-        // Two tiny brown eyes
-        room.fillStyle(0xcc8866, 1);
-        room.fillCircle(photoX + photoW * 0.38, photoY + photoH * 0.42, 2);
-        room.fillCircle(photoX + photoW * 0.62, photoY + photoH * 0.42, 2);
-
-        // Tiny pink nose
-        room.fillStyle(0xff99aa, 1);
-        room.fillCircle(photoX + photoW * 0.5, photoY + photoH * 0.52, 2);
-
-        // Tiny smile
-        room.fillStyle(0xcc8866, 1);
-        room.fillRect(photoX + photoW * 0.45, photoY + photoH * 0.57, 3, 1);
-
-        // Tiny whiskers
-        room.fillStyle(0xdddddd, 1);
-        room.fillRect(photoX + photoW * 0.15, photoY + photoH * 0.48, 5, 1);
-        room.fillRect(photoX + photoW * 0.15, photoY + photoH * 0.53, 5, 1);
-        room.fillRect(photoX + photoW * 0.80, photoY + photoH * 0.48, 5, 1);
-        room.fillRect(photoX + photoW * 0.80, photoY + photoH * 0.53, 5, 1);
+        // Tiny flowers in foreground
+        room.fillStyle(0xff99bb, 1);
+        room.fillCircle(photoX + photoW * 0.15, photoY + photoH * 0.85, 2);
+        room.fillCircle(photoX + photoW * 0.85, photoY + photoH * 0.88, 2);
+        room.fillStyle(0xffbbdd, 1);
+        room.fillCircle(photoX + photoW * 0.25, photoY + photoH * 0.90, 2);
+        room.fillCircle(photoX + photoW * 0.75, photoY + photoH * 0.82, 2);
 
         this.clouds = []; // kept for update() compatibility, but no clouds in the room
 

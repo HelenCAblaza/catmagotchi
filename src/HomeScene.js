@@ -330,59 +330,59 @@ class HomeScene extends Phaser.Scene {
         room.fillRect(photoX + photoW * 0.75, photoY + photoH * 0.86, 2, 2);
 
         // === Artist Painting Corner (right corner of room) ===
-        const artX = 410;
-        const artY = 370;
+        const artX = 406;
+        const artY = 378;
 
         // Floor shadow under easel
         room.fillStyle(0xccb8a5, 0.6);
-        room.fillRoundedRect(artX + 5, artY + 57, 41, 8, 4);
+        room.fillRoundedRect(artX + 5, artY + 60, 43, 9, 4);
 
         // Easel back leg
         room.fillStyle(0xa08060, 1);
-        room.fillRect(artX + 29, artY + 10, 4, 51);
+        room.fillRect(artX + 30, artY + 10, 4, 54);
         // Easel front left leg
         room.fillStyle(0xbfa080, 1);
-        room.fillRect(artX + 10, artY + 26, 4, 39);
+        room.fillRect(artX + 10, artY + 28, 4, 41);
         // Easel front right leg
-        room.fillRect(artX + 43, artY + 26, 4, 39);
+        room.fillRect(artX + 44, artY + 28, 4, 41);
 
         // Canvas board
         room.fillStyle(0xfaf8f5, 1);
-        room.fillRoundedRect(artX + 12, artY, 33, 39, 2);
+        room.fillRoundedRect(artX + 12, artY, 35, 41, 2);
         // Canvas inner
         room.fillStyle(0xffffff, 1);
-        room.fillRoundedRect(artX + 14, artY + 2, 29, 35, 1);
+        room.fillRoundedRect(artX + 14, artY + 2, 30, 37, 1);
 
         // Tiny painting on canvas - a simple sunset with a tree
         room.fillStyle(0xffb8cc, 1);
-        room.fillRoundedRect(artX + 16, artY + 4, 25, 12, 1);
+        room.fillRoundedRect(artX + 16, artY + 4, 26, 13, 1);
         room.fillStyle(0xffddaa, 1);
-        room.fillRoundedRect(artX + 16, artY + 14, 25, 10, 0);
+        room.fillRoundedRect(artX + 16, artY + 15, 26, 10, 0);
         room.fillStyle(0xffaa88, 1);
-        room.fillCircle(artX + 35, artY + 12, 3);
+        room.fillCircle(artX + 36, artY + 13, 3);
         room.fillStyle(0x88bb88, 1);
-        room.fillRect(artX + 24, artY + 22, 2, 8);
-        room.fillCircle(artX + 25, artY + 20, 4);
-        room.fillCircle(artX + 22, artY + 22, 3);
-        room.fillCircle(artX + 28, artY + 22, 3);
+        room.fillRect(artX + 25, artY + 23, 2, 8);
+        room.fillCircle(artX + 26, artY + 21, 4);
+        room.fillCircle(artX + 23, artY + 23, 3);
+        room.fillCircle(artX + 29, artY + 23, 3);
 
         // Paint splatters on wall (artist mess!)
         room.fillStyle(0xff99bb, 0.5);
-        room.fillCircle(artX + 46, artY - 10, 3);
-        room.fillCircle(artX + 53, artY + 5, 2);
+        room.fillCircle(artX + 47, artY - 10, 3);
+        room.fillCircle(artX + 55, artY + 5, 2);
         room.fillStyle(0x88ccff, 0.5);
-        room.fillCircle(artX + 49, artY + 15, 2);
-        room.fillCircle(artX + 56, artY - 5, 3);
+        room.fillCircle(artX + 50, artY + 16, 2);
+        room.fillCircle(artX + 58, artY - 5, 3);
         room.fillStyle(0xffdd88, 0.5);
-        room.fillCircle(artX + 51, artY + 25, 2);
+        room.fillCircle(artX + 53, artY + 26, 2);
 
         // Paint palette on the floor
         const palX = artX + 5;
-        const palY = artY + 60;
+        const palY = artY + 62;
         room.fillStyle(0xf5e0c8, 1);
-        room.fillRoundedRect(palX, palY, 23, 10, 5);
+        room.fillRoundedRect(palX, palY, 24, 11, 5);
         room.fillStyle(0xe8d0b8, 1);
-        room.fillRoundedRect(palX + 1, palY + 1, 21, 8, 4);
+        room.fillRoundedRect(palX + 1, palY + 1, 22, 9, 4);
         // Thumb hole
         room.fillStyle(0xd9c4a8, 1);
         room.fillCircle(palX + 3, palY + 5, 2);
@@ -390,20 +390,20 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xff7799, 1);
         room.fillCircle(palX + 8, palY + 4, 2);
         room.fillStyle(0x77ccff, 1);
-        room.fillCircle(palX + 13, palY + 6, 2);
+        room.fillCircle(palX + 14, palY + 6, 2);
         room.fillStyle(0xffcc66, 1);
-        room.fillCircle(palX + 17, palY + 4, 2);
+        room.fillCircle(palX + 18, palY + 4, 2);
         room.fillStyle(0x88dd88, 1);
-        room.fillCircle(palX + 15, palY + 7, 2);
+        room.fillCircle(palX + 16, palY + 8, 2);
 
         // Small paintbrush leaning against easel
         room.fillStyle(0xc4a882, 1);
-        room.fillRect(artX + 47, artY + 36, 3, 19);
+        room.fillRect(artX + 48, artY + 38, 3, 20);
         room.fillStyle(0x8a6e4b, 1);
-        room.fillRect(artX + 47, artY + 52, 3, 3);
+        room.fillRect(artX + 48, artY + 55, 3, 3);
         // Brush tip
         room.fillStyle(0xff99bb, 1);
-        room.fillRect(artX + 47, artY + 33, 3, 4);
+        room.fillRect(artX + 48, artY + 35, 3, 4);
 
         this.clouds = []; // kept for update() compatibility, no clouds in room
 

@@ -106,6 +106,15 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xfae8cc, 1);
         room.fillRect(winX - 6, winY + winH - 8, winW + 12, 2);
 
+        // White pixel accents on window frame for balance
+        room.fillStyle(0xffffff, 0.6);
+        room.fillRect(winX + 6, winY + 6, 3, 3);
+        room.fillRect(winX + 12, winY + 8, 2, 2);
+        room.fillRect(winX + winW - 10, winY + 10, 3, 3);
+        room.fillRect(winX + winW - 16, winY + 7, 2, 2);
+        room.fillRect(winX + winW - 10, winY + winH - 20, 3, 3);
+        room.fillRect(winX + 8, winY + winH - 14, 2, 2);
+
         // Glass highlight / reflection streak
         room.fillStyle(0xffffff, 0.35);
         room.fillRect(winX + frameThick + 10, winY + frameThick + 12, 18, 3);
@@ -174,6 +183,15 @@ class HomeScene extends Phaser.Scene {
         // Inner frame inset rim
         room.fillStyle(0xf5efe6, 1);
         room.fillRoundedRect(picX + 4, picY + 4, picW - 8, picH - 8, 4);
+
+        // White pixel accents on picture frame for balance
+        room.fillStyle(0xffffff, 0.6);
+        room.fillRect(picX + 6, picY + 6, 3, 3);
+        room.fillRect(picX + 10, picY + 9, 2, 2);
+        room.fillRect(picX + picW - 10, picY + 5, 3, 3);
+        room.fillRect(picX + picW - 7, picY + 10, 2, 2);
+        room.fillRect(picX + 8, picY + picH - 8, 2, 2);
+        room.fillRect(picX + picW - 12, picY + picH - 10, 3, 3);
 
         // Inner frame shadow inside inset
         room.fillStyle(0xe0d4c8, 1);

@@ -12,11 +12,22 @@ class HomeScene extends Phaser.Scene {
         bg.setDisplaySize(W, H);
         bg.setDepth(-20);
 
-        // Cozy room overlay: warm walls, wood floor, window, picture, and rug
+        // Ombre wall gradient (lighter peach-pink at top → deeper at bottom)
+        const wallH = H * 0.54;
+        const wallCanvas = this.textures.createCanvas('wall_gradient', W, wallH);
+        const wCtx = wallCanvas.context;
+        const wGrd = wCtx.createLinearGradient(0, 0, 0, wallH);
+        wGrd.addColorStop(0, '#fff0ec');
+        wGrd.addColorStop(0.6, '#f8ddd5');
+        wGrd.addColorStop(1, '#f0d0c8');
+        wCtx.fillStyle = wGrd;
+        wCtx.fillRect(0, 0, W, wallH);
+        wallCanvas.refresh();
+        this.add.image(W / 2, wallH / 2, 'wall_gradient').setDepth(-15);
+
+        // Cozy room overlay: wood floor, window, picture, and rug
         const room = this.add.graphics();
         room.setDepth(-10);
-        room.fillStyle(0xf8ddd5, 1);
-        room.fillRect(0, 0, W, H * 0.54);
         room.fillStyle(0xf0d8d0, 1);
         room.fillRect(0, H * 0.54, W, H * 0.46);
         room.fillStyle(0xe0c4b8, 1);

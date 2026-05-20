@@ -405,6 +405,8 @@ class HomeScene extends Phaser.Scene {
         room.fillStyle(0xff99bb, 1);
         room.fillRect(artX + 46, artY + 32, 3, 4);
 
+        this.clouds = []; // kept for update() compatibility, no clouds in room
+
         // === Simple 3D White Cabinet (left side) ===
         const cabX = 12;
         const cabY = 380;

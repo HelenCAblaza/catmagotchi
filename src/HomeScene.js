@@ -470,7 +470,8 @@ class HomeScene extends Phaser.Scene {
             fontFamily: 'Poppins',
             fontStyle: 'bold',
             stroke: '#ff88cc',
-            strokeThickness: 3
+            strokeThickness: 3,
+            padding: { top: 4, bottom: 10 }
         }).setOrigin(0.5).setShadow(0, 4, '#ff88cc88', 0, true, true);
         titleText.setDepth(5);
 

@@ -7,8 +7,87 @@ class StartScene extends Phaser.Scene {
         const W = this.scale.width;
         const H = this.scale.height;
 
-        // Soft pastel background
-        this.cameras.main.setBackgroundColor('#f5e6ff');
+        // === Rich peach-pink 3D background ===
+        const bg = this.add.graphics();
+
+        // Soft gradient: warm peach at top to pink at bottom
+        const canvas = this.textures.createCanvas('bg_gradient', W, H);
+        const ctx = canvas.context;
+        const grd = ctx.createLinearGradient(0, 0, 0, H);
+        grd.addColorStop(0, '#ffe8e0');
+        grd.addColorStop(0.5, '#ffd4cc');
+        grd.addColorStop(1, '#ffc4c4');
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, W, H);
+        canvas.refresh();
+        this.add.image(W / 2, H / 2, 'bg_gradient').setDepth(-20);
+
+        // 3D stage floor (cute platform for cat)
+        const stageW = 240;
+        const stageH = 40;
+        const stageX = W / 2 - stageW / 2;
+        const stageY = H * 0.52;
+
+        // Stage shadow (depth)
+        bg.fillStyle(0xcc9999, 0.3);
+        bg.fillRoundedRect(stageX + 8, stageY + 6, stageW, stageH, 12);
+        // Stage top (lit surface)
+        bg.fillStyle(0xffeeee, 1);
+        bg.fillRoundedRect(stageX, stageY, stageW, stageH, 12);
+        // Stage highlight edge
+        bg.fillStyle(0xffffff, 0.6);
+        bg.fillRoundedRect(stageX, stageY, stageW, 6, { tl: 12, tr: 12, bl: 0, br: 0 });
+        // Stage front face (3D thickness)
+        bg.fillStyle(0xffcccc, 1);
+        bg.fillRoundedRect(stageX, stageY + stageH - 8, stageW, 10, { tl: 0, tr: 0, bl: 12, br: 12 });
+
+        // Decorative archway frame (cute border around the stage area)
+        const archX = W / 2 - 130;
+        const archY = H * 0.12;
+        const archW = 260;
+        const archH = 340;
+        const archThick = 8;
+
+        // Outer arch shadow
+        bg.fillStyle(0xe0b0a8, 0.5);
+        bg.fillRoundedRect(archX + 4, archY + 4, archW, archH, archThick);
+        // Inner arch (peach-white)
+        bg.fillStyle(0xfff5f0, 0.85);
+        bg.fillRoundedRect(archX, archY, archW, archH, archThick);
+        // Arch highlight
+        bg.fillStyle(0xffffff, 0.7);
+        bg.fillRoundedRect(archX, archY, archW, 6, { tl: archThick, tr: archThick, bl: 0, br: 0 });
+
+        // Tiny decorative flowers along the arch bottom
+        const flowerColors = [0xff88aa, 0xffaa88, 0xffccaa, 0xffaacc];
+        for (let i = 0; i < 5; i++) {
+            const fx = archX + 30 + i * 50;
+            const fy = archY + archH - 12;
+            bg.fillStyle(0x88cc88, 1);
+            bg.fillRect(fx - 1, fy - 6, 2, 8);
+            bg.fillStyle(flowerColors[i % flowerColors.length], 1);
+            bg.fillCircle(fx, fy - 8, 4);
+            bg.fillStyle(0xffeeaa, 1);
+            bg.fillCircle(fx, fy - 8, 2);
+        }
+
+        // Floating sparkle dots in background
+        for (let i = 0; i < 20; i++) {
+            const sx = 20 + Math.random() * (W - 40);
+            const sy = 30 + Math.random() * (H * 0.9);
+            const size = 1 + Math.random() * 2;
+            const alpha = 0.3 + Math.random() * 0.4;
+            bg.fillStyle(0xffffff, alpha);
+            bg.fillCircle(sx, sy, size);
+        }
+
+        // Small 3D cubes (decorative blocks) in corners
+        // Left cube
+        this.drawCuteCube(bg, 35, H * 0.78, 18, 0xffb8c8);
+        this.drawCuteCube(bg, 60, H * 0.82, 14, 0xffd0b8);
+        // Right cube
+        this.drawCuteCube(bg, W - 50, H * 0.76, 20, 0xffc8d0);
+        this.drawCuteCube(bg, W - 25, H * 0.80, 15, 0xffd8c8);
 
         // Decorative floating clouds
         for (let i = 0; i < 5; i++) {
@@ -37,9 +116,9 @@ class StartScene extends Phaser.Scene {
             color: '#ffffff',
             fontFamily: 'Poppins',
             fontStyle: 'bold',
-            stroke: '#ff88cc',
+            stroke: '#ff88aa',
             strokeThickness: 3
-        }).setOrigin(0.5).setShadow(0, 4, '#ff88cc88', 0, true, true);
+        }).setOrigin(0.5).setShadow(0, 4, '#ff88aa88', 0, true, true);
 
         // Cat sprite (large, centered) - uses real pixel-art PNG!
         const cat = this.add.sprite(W / 2, H * 0.42, 'cat_idle')
@@ -59,7 +138,7 @@ class StartScene extends Phaser.Scene {
         // Cat name
         this.add.text(W / 2, H * 0.58, '\u2606 Meet Mittens \u2606', {
             fontSize: '20px',
-            color: '#aa77cc',
+            color: '#dd6677',
             fontFamily: 'Poppins',
             fontStyle: 'bold'
         }).setOrigin(0.5);
@@ -127,14 +206,14 @@ class StartScene extends Phaser.Scene {
         // Hint text
         this.add.text(W / 2, H - 40, 'Tap Start to begin your adventure \u2764\ufe0f', {
             fontSize: '13px',
-            color: '#bb99cc',
+            color: '#cc8899',
             fontFamily: 'Poppins'
         }).setOrigin(0.5);
 
         // Copyright
         this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
             fontSize: '10px',
-            color: '#887799',
+            color: '#aa8899',
             fontFamily: 'Poppins'
         }).setOrigin(0.5);
     }
@@ -162,5 +241,38 @@ class StartScene extends Phaser.Scene {
 
     drawPill(gfx, x, y, w, h, r) {
         gfx.fillRoundedRect(x, y, w, h, r);
+    }
+
+    drawCuteCube(gfx, x, y, size, color) {
+        // 3D cube with top highlight and right shadow
+        const topH = size * 0.35;
+        const sideW = size * 0.3;
+
+        // Top face (lightest)
+        gfx.fillStyle(0xffffff, 0.6);
+        gfx.fillRect(x - size / 2 + 2, y - size - topH + 2, size, topH);
+        gfx.fillStyle(color, 1);
+        gfx.fillRect(x - size / 2, y - size - topH, size, topH);
+        // Top highlight
+        gfx.fillStyle(0xffffff, 0.5);
+        gfx.fillRect(x - size / 2, y - size - topH, size, 2);
+
+        // Front face
+        gfx.fillStyle(color, 1);
+        gfx.fillRect(x - size / 2, y - size, size, size);
+        // Front highlight (left edge)
+        gfx.fillStyle(0xffffff, 0.3);
+        gfx.fillRect(x - size / 2, y - size, 3, size);
+        // Front shadow (right edge)
+        const r = (color >> 16) & 0xff;
+        const g = (color >> 8) & 0xff;
+        const b = color & 0xff;
+        const darker = ((r * 0.8) << 16) | ((g * 0.8) << 8) | (b * 0.8);
+        gfx.fillStyle(darker, 1);
+        gfx.fillRect(x + size / 2 - 4, y - size, 4, size);
+
+        // Right face (darker for depth)
+        gfx.fillStyle(darker, 1);
+        gfx.fillRect(x + size / 2, y - size + topH, sideW, size - topH);
     }
 }

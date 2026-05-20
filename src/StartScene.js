@@ -255,11 +255,11 @@ class StartScene extends Phaser.Scene {
         });
 
         // Cat name
-        this.add.text(W / 2, H * 0.71, 'Meet Mitten', {
+        this.add.text(W / 2, H * 0.70, 'Meet Mitten', {
             fontSize: '20px',
             color: '#ee8899',
             fontFamily: 'Poppins',
-            fontStyle: 'bold'
+            fontStyle: 'normal'
         }).setOrigin(0.5);
 
         // Floating hearts around cat

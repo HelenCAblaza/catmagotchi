@@ -7,13 +7,14 @@ class HomeScene extends Phaser.Scene {
         const W = this.scale.width;   // 480
         const H = this.scale.height;  // 800
 
-        // Background
+        // Background (furthest back)
         const bg = this.add.image(W / 2, H / 2, 'bg_home');
         bg.setDisplaySize(W, H);
+        bg.setDepth(-20);
 
         // Cozy room overlay: warm walls, wood floor, window, picture, and rug
         const room = this.add.graphics();
-        room.setDepth(-1);
+        room.setDepth(-10);
         room.fillStyle(0xecdac8, 1);
         room.fillRect(0, 0, W, H * 0.54);
         room.fillStyle(0xe0d4c8, 1);
@@ -131,7 +132,7 @@ class HomeScene extends Phaser.Scene {
         });
 
         // Title - matching StartScene style
-        this.add.text(W / 2, 60, 'Catmagotchi', {
+        const titleText = this.add.text(W / 2, 60, 'Catmagotchi', {
             fontSize: '42px',
             color: '#ffffff',
             fontFamily: 'Poppins',
@@ -139,21 +140,24 @@ class HomeScene extends Phaser.Scene {
             stroke: '#ff88cc',
             strokeThickness: 3
         }).setOrigin(0.5).setShadow(0, 4, '#ff88cc88', 0, true, true);
+        titleText.setDepth(5);
 
         // Copyright watermark
-        this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
+        const copyText = this.add.text(W / 2, H - 14, '\u00a9 2025 Helen C. All Rights Reserved.', {
             fontSize: '10px',
             color: '#887799',
             fontFamily: 'Poppins'
         }).setOrigin(0.5);
+        copyText.setDepth(5);
 
         // Cat name above stats - smaller, left aligned, no stars, darker grey
-        this.add.text(40, 125, 'Mittens', {
+        const nameText = this.add.text(40, 125, 'Mittens', {
             fontSize: '18px',
             color: '#555555',
             fontFamily: 'Poppins',
             fontStyle: 'bold'
         }).setOrigin(0, 0.5);
+        nameText.setDepth(5);
 
         // === STATS AREA ===
         const statY1 = 165;
@@ -179,6 +183,7 @@ class HomeScene extends Phaser.Scene {
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(1, 0.5);
+        this.fishText.setDepth(10);
 
         this.toyText = this.add.text(440, statY2, '\ud83e\uddf6: 0', {
             fontSize: '15px',
@@ -187,6 +192,7 @@ class HomeScene extends Phaser.Scene {
             stroke: '#000000',
             strokeThickness: 3
         }).setOrigin(1, 0.5);
+        this.toyText.setDepth(10);
 
         // === CAT AREA ===
         const catY = H * 0.55;
@@ -287,11 +293,13 @@ class HomeScene extends Phaser.Scene {
         const r = barHeight / 2;
         // Background capsule
         const bg = this.add.graphics();
+        bg.setDepth(10);
         bg.fillStyle(0x333344, 1);
         this.drawCapsule(bg, barX, labelY - barHeight / 2, barWidth, barHeight, r);
 
         // Fill capsule
         const fill = this.add.graphics();
+        fill.setDepth(11);
         fill.fillStyle(color, 1);
         this[`gfx_${key}`] = fill;
         this[`bar_${key}_x`] = barX;
@@ -302,12 +310,13 @@ class HomeScene extends Phaser.Scene {
         this[`bar_${key}_color`] = color;
 
         // Label
-        this.add.text(labelX, labelY, label, {
+        const lbl = this.add.text(labelX, labelY, label, {
             fontSize: '12px',
             color: '#777777',
             fontFamily: 'Poppins',
             fontStyle: 'bold'
         }).setOrigin(0, 0.5);
+        lbl.setDepth(10);
     }
 
     drawCapsule(gfx, x, y, w, h, r) {

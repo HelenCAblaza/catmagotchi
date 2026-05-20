@@ -237,15 +237,7 @@ class PlatformerScene extends Phaser.Scene {
             this.platforms.create(x, 568, 'ground').setScale(1).refreshBody();
         }
 
-        this.platforms.create(200, 450, 'platform');
-        this.platforms.create(350, 380, 'platform');
-        this.platforms.create(500, 300, 'platform');
-        this.platforms.create(700, 400, 'platform');
-        this.platforms.create(850, 320, 'platform');
-        this.platforms.create(1000, 450, 'platform');
-        this.platforms.create(1200, 350, 'platform');
-        this.platforms.create(1350, 280, 'platform');
-        this.platforms.create(1500, 400, 'platform');
+
     }
 
     spawnCollectibles() {

@@ -14,6 +14,10 @@ class HomeScene extends Phaser.Scene {
 
         // Ombre wall gradient (lighter peach-pink at top → deeper at bottom)
         const wallH = H * 0.54;
+        // Remove existing texture if re-entering scene to avoid 'null is not an object' error
+        if (this.textures.exists('wall_gradient')) {
+            this.textures.remove('wall_gradient');
+        }
         const wallCanvas = this.textures.createCanvas('wall_gradient', W, wallH);
         const wCtx = wallCanvas.context;
         const wGrd = wCtx.createLinearGradient(0, 0, 0, wallH);

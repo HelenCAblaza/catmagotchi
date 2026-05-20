@@ -13,15 +13,66 @@ class PlatformerScene extends Phaser.Scene {
         // World bounds - horizontal scrolling platformer
         this.physics.world.setBounds(0, 0, 1600, 600);
 
-        // Scenery background - seamless tile across the world
-        const sceneryW = 480;
-        const sceneryH = 600;
-        for (let x = 0; x < 1600 + sceneryW; x += sceneryW) {
-            const bg = this.add.image(x, sceneryH / 2, 'scenery')
-                .setOrigin(0, 0.5)
-                .setDisplaySize(sceneryW, sceneryH)
-                .setDepth(-10);
-        }
+        // Wide parallax background - 11520x1600 scaled to fit 800px height
+        this.bgImage = this.add.image(0, H / 2, 'adventure_bg')
+            .setOrigin(0, 0.5)
+            .setDisplaySize(5760, 800)
+            .setDepth(-20)
+            .setScrollFactor(0.15);  // slow parallax as Mitten walks
+
+        // === FOREGROUND ELEMENTS (placed individually, easy to adjust) ===
+        // 9 Ponds
+        const pondPositions = [150, 350, 550, 750, 950, 1150, 1300, 1450, 1550];
+        pondPositions.forEach(px => {
+            this.add.image(px, 575, 'pond')
+                .setOrigin(0.5, 0)
+                .setScale(0.5)
+                .setDepth(-5)
+                .setScrollFactor(1);
+        });
+
+        // Trees
+        const treePositions = [100, 300, 500, 700, 900, 1100, 1300, 1500];
+        treePositions.forEach(tx => {
+            this.add.image(tx, 565, 'tree')
+                .setOrigin(0.5, 1)
+                .setScale(0.5)
+                .setDepth(-5)
+                .setScrollFactor(1);
+        });
+
+        // Flowers (clusters)
+        const flowerPositions = [80, 180, 280, 420, 520, 620, 780, 880, 1020, 1120, 1220, 1380, 1480, 1580];
+        flowerPositions.forEach(fx => {
+            const fy = 565 + Math.random() * 10;
+            const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(Math.random() * 4)];
+            this.add.image(fx, fy, 'flower')
+                .setOrigin(0.5, 1)
+                .setScale(0.6 + Math.random() * 0.3)
+                .setDepth(-4)
+                .setScrollFactor(1)
+                .setTint(tint);
+        });
+
+        // Bushes
+        const bushPositions = [200, 450, 650, 850, 1050, 1250, 1450];
+        bushPositions.forEach(bx => {
+            this.add.image(bx, 570, 'bush')
+                .setOrigin(0.5, 1)
+                .setScale(0.5)
+                .setDepth(-5)
+                .setScrollFactor(1);
+        });
+
+        // Rocks
+        const rockPositions = [250, 600, 1000, 1400];
+        rockPositions.forEach(rx => {
+            this.add.image(rx, 570, 'rock')
+                .setOrigin(0.5, 1)
+                .setScale(0.5)
+                .setDepth(-5)
+                .setScrollFactor(1);
+        });
 
         // Platforms
         this.platforms = this.physics.add.staticGroup();

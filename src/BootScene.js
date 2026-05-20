@@ -12,6 +12,12 @@ class BootScene extends Phaser.Scene {
         this.load.image('yarn_toy', 'assets/yarn-toy.png?v=2');
         this.load.image('food_tray', 'assets/food-tray.png?v=7');
         this.load.image('scenery', 'assets/scenery.png?v=2');
+        this.load.image('adventure_bg', 'assets/adventure-bg.png?v=1');
+        this.load.image('pond', 'assets/pond.png?v=1');
+        this.load.image('tree', 'assets/tree.png?v=1');
+        this.load.image('flower', 'assets/flower.png?v=1');
+        this.load.image('bush', 'assets/bush.png?v=1');
+        this.load.image('rock', 'assets/rock.png?v=1');
 
         // Generate other textures programmatically
         this.createTexture('platform', '#8b7355', 32, 32, 'rect');

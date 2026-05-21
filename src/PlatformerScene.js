@@ -56,21 +56,21 @@ class PlatformerScene extends Phaser.Scene {
             this.scene.start('HomeScene');
         });
 
-        this.fishText = this.add.text(W / 2 - 35, 560, '\ud83d\udc1f: 0', {
+        this.fishText = this.add.text(W / 2 - 35, H * 0.82, '\ud83d\udc1f: 0', {
             fontSize: '15px',
             color: '#ffffff',
             fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 3
-        }).setOrigin(0.5).setScrollFactor(0);
+        }).setOrigin(0.5).setScrollFactor(0).setDepth(1000);
 
-        this.toyText = this.add.text(W / 2 + 35, 560, '\ud83e\uddf6: 0', {
+        this.toyText = this.add.text(W / 2 + 35, H * 0.82, '\ud83e\uddf6: 0', {
             fontSize: '15px',
             color: '#ffffff',
             fontFamily: 'Poppins',
             stroke: '#000000',
             strokeThickness: 3
-        }).setOrigin(0.5).setScrollFactor(0);
+        }).setOrigin(0.5).setScrollFactor(0).setDepth(1000);
 
         if (isMobile) {
             this.hintText = this.add.text(W / 2, 70, '\ud83c\udfae Drag round controller to move & jump!', {

@@ -24,6 +24,8 @@ class PlatformerScene extends Phaser.Scene {
 
         // === FOREGROUND: initial chunks ===
         this.platforms = this.physics.add.staticGroup();
+        this.fishes = this.physics.add.group();
+        this.toys = this.physics.add.group();
         this.spawnChunk(0);
         this.spawnChunk(1);
 
@@ -42,8 +44,6 @@ class PlatformerScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 600);
 
         // Collectibles
-        this.fishes = this.physics.add.group();
-        this.toys = this.physics.add.group();
         this.physics.add.overlap(this.player, this.fishes, (p, f) => this.collectFish(p, f));
         this.physics.add.overlap(this.player, this.toys, (p, t) => this.collectToy(p, t));
 

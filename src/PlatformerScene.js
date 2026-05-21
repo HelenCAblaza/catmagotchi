@@ -179,6 +179,46 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
+        // === TREES: close but not overlapping ===
+        const treeKeys = ['tree1', 'tree2', 'tree3'];
+        const treeRadius = 50; // at scale 2.5, ~125px wide, ~50px half-width
+
+        const tryPlaceTree = (tx) => {
+            if (!tryPlaceItem(tx, treeRadius)) return false;
+            const key = treeKeys[Math.floor(rand() * 3)];
+            const tree = this.add.image(tx, 560, key)
+                .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
+            objects.decors.push(tree);
+            return true;
+        };
+
+        // Starter trees for chunk 0 — well-spaced so they actually place (need 100px gap)
+        if (chunkIndex === 0) {
+            const starters = [20, 150, 280, 410, 540, 670, 800, 930];
+            for (const sx of starters) {
+                tryPlaceTree(sx);
+            }
+        }
+
+        // Random trees in slots
+        const treeCount = chunkIndex === 0 ? 10 + Math.floor(rand() * 5) : 14 + Math.floor(rand() * 9);
+        const slotWidth = (this.chunkSize - 60) / treeCount;
+        for (let i = 0; i < treeCount; i++) {
+            const slotStart = startX + 30 + i * slotWidth;
+            let placed = false;
+            for (let attempt = 0; attempt < 5; attempt++) {
+                const tx = slotStart + rand() * (slotWidth - 40);
+                if (tryPlaceTree(tx)) {
+                    placed = true;
+                    break;
+                }
+            }
+            if (!placed) {
+                const tx = slotStart + slotWidth / 2;
+                tryPlaceTree(tx);
+            }
+        }
+
         // === PONDS: 4-6 per chunk, widely spaced, anti-repeat (last 2 types) ===
         const pondTypes = ['pond1', 'pond2', 'pond3', 'pond4'];
         const pondCount = 4 + Math.floor(rand() * 3); // 4-6 ponds per chunk
@@ -203,46 +243,6 @@ class PlatformerScene extends Phaser.Scene {
                     placed = true;
                     break;
                 }
-            }
-        }
-
-        // === TREES: close but not overlapping ===
-        const treeKeys = ['tree1', 'tree2', 'tree3'];
-        const treeRadius = 50; // at scale 2.5, ~125px wide, ~50px half-width
-
-        const tryPlaceTree = (tx) => {
-            if (!tryPlaceItem(tx, treeRadius)) return false;
-            const key = treeKeys[Math.floor(rand() * 3)];
-            const tree = this.add.image(tx, 560, key)
-                .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
-            objects.decors.push(tree);
-            return true;
-        };
-
-        // Starter trees for chunk 0 — dense cluster near Mitten's start
-        if (chunkIndex === 0) {
-            const starters = [60, 100, 140, 180, 220, 280, 340, 400, 460, 520, 580, 640, 700, 760, 820, 880, 940];
-            for (const sx of starters) {
-                tryPlaceTree(sx);
-            }
-        }
-
-        // Random trees in slots
-        const treeCount = chunkIndex === 0 ? 10 + Math.floor(rand() * 5) : 14 + Math.floor(rand() * 9);
-        const slotWidth = (this.chunkSize - 60) / treeCount;
-        for (let i = 0; i < treeCount; i++) {
-            const slotStart = startX + 30 + i * slotWidth;
-            let placed = false;
-            for (let attempt = 0; attempt < 5; attempt++) {
-                const tx = slotStart + rand() * (slotWidth - 40);
-                if (tryPlaceTree(tx)) {
-                    placed = true;
-                    break;
-                }
-            }
-            if (!placed) {
-                const tx = slotStart + slotWidth / 2;
-                tryPlaceTree(tx);
             }
         }
 

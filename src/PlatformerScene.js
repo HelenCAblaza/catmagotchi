@@ -165,58 +165,64 @@ class PlatformerScene extends Phaser.Scene {
             objects.ground.push(tile);
         }
 
-        // Ponds: 3-5 per chunk (random type: pond1, pond2, or animated pond3)
-        const pondTypes = ['pond1', 'pond2', 'pond3'];
+        // Ponds: 3-5 per chunk (pond1 or pond2 only)
+        const pondTypes = ['pond1', 'pond2'];
         const pondCount = 3 + Math.floor(rand() * 3);
         for (let i = 0; i < pondCount; i++) {
             const px = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
             const pondType = pondTypes[Math.floor(rand() * pondTypes.length)];
-            if (pondType === 'pond3') {
-                const pond = this.add.sprite(px, 558, 'pond3a')
-                    .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
-                // Animate waterfall: toggle between frames
-                this.time.addEvent({
-                    delay: 250,
-                    callback: () => {
-                        if (pond.active) {
-                            pond.setTexture(pond.texture.key === 'pond3a' ? 'pond3b' : 'pond3a');
-                        }
-                    },
-                    loop: true
-                });
-                objects.decors.push(pond);
-            } else {
-                const pond = this.add.image(px, 558, pondType)
-                    .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
-                objects.decors.push(pond);
-            }
+            const pond = this.add.image(px, 558, pondType)
+                .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
+            objects.decors.push(pond);
         }
 
-        // Trees: denser forest, can be close together
-        const treeCount = chunkIndex === 0 ? 8 + Math.floor(rand() * 6) : 10 + Math.floor(rand() * 8);
+        // Trees: close together but no overlapping
         const treeKeys = ['tree1', 'tree2', 'tree3'];
-        
-        // Starter trees for chunk 0 (guaranteed visible at spawn)
-        if (chunkIndex === 0) {
-            const starters = [120, 350, 620, 900];
-            for (const sx of starters) {
-                const key = treeKeys[Math.floor(rand() * 3)];
-                const tree = this.add.image(sx, 560, key)
-                    .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
-                objects.decors.push(tree);
+        const treeWidth = 90; // minimum gap between tree centers at scale 2.5
+        const placedTrees = [];
+
+        const tryPlaceTree = (tx) => {
+            // Check against all already-placed trees in this chunk
+            for (const existing of placedTrees) {
+                if (Math.abs(tx - existing) < treeWidth) {
+                    return false;
+                }
             }
-        }
-        
-        // Trees placed in narrow slots — can be close, just not perfectly stacked
-        const randomCount = chunkIndex === 0 ? 6 + Math.floor(rand() * 5) : treeCount;
-        const slotWidth = (this.chunkSize - 60) / randomCount;
-        for (let i = 0; i < randomCount; i++) {
-            const slotStart = startX + 30 + i * slotWidth;
-            const tx = slotStart + rand() * (slotWidth - 40);
+            placedTrees.push(tx);
             const key = treeKeys[Math.floor(rand() * 3)];
             const tree = this.add.image(tx, 560, key)
                 .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
             objects.decors.push(tree);
+            return true;
+        };
+
+        // Starter trees for chunk 0 (guaranteed visible at spawn)
+        if (chunkIndex === 0) {
+            const starters = [120, 350, 620, 900];
+            for (const sx of starters) {
+                tryPlaceTree(sx);
+            }
+        }
+
+        // Random trees placed in slots with minimum gap enforcement
+        const randomCount = chunkIndex === 0 ? 6 + Math.floor(rand() * 5) : 10 + Math.floor(rand() * 8);
+        const slotWidth = (this.chunkSize - 60) / randomCount;
+        for (let i = 0; i < randomCount; i++) {
+            const slotStart = startX + 30 + i * slotWidth;
+            // Try a few positions within the slot until we find a non-overlapping spot
+            let placed = false;
+            for (let attempt = 0; attempt < 5; attempt++) {
+                const tx = slotStart + rand() * (slotWidth - 40);
+                if (tryPlaceTree(tx)) {
+                    placed = true;
+                    break;
+                }
+            }
+            // If no valid spot in slot, try placing at slot center
+            if (!placed) {
+                const tx = slotStart + slotWidth / 2;
+                tryPlaceTree(tx);
+            }
         }
 
         // Flowers: 2-4 per chunk

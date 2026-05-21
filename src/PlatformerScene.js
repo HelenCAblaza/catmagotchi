@@ -11,7 +11,6 @@ class PlatformerScene extends Phaser.Scene {
         // === ENDLESS WORLD SETUP ===
         // No bounds - Mitten can walk forever!
         this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 600);
-        this.player.setCollideWorldBounds(false); // handled manually by ground
 
         this.bgWidth = 5760;           // display width of one bg segment
         this.chunkSize = 2000;         // world chunk width for ground/decors/collectibles

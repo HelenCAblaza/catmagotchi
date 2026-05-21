@@ -62,7 +62,7 @@ python3 -m http.server 8080
 
 ### ✅ Completed
 - [x] Round virtual joystick for mobile
-- [x] Pixel-art cat sprites (Mitten idle, run, jump!)
+- [x] **Better-looking sprites** — Mitten idle, run, and jump animations
 - [x] Endless adventure mode with parallax backgrounds
 - [x] Procedural scenery — trees, ponds, flowers, bushes, rocks
 - [x] Collectibles — fish and yarn balls

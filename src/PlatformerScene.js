@@ -178,9 +178,9 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
-        // === PONDS: 6-10 per chunk, widely spaced ===
+        // === PONDS: 4-6 per chunk, widely spaced ===
         const pondTypes = ['pond1', 'pond2'];
-        const pondCount = 6 + Math.floor(rand() * 5); // 6-10 ponds per chunk
+        const pondCount = 4 + Math.floor(rand() * 3); // 4-6 ponds per chunk
         const pondRadius = 100; // at scale 2.5, ~250px wide, so ~100px half-width
         for (let i = 0; i < pondCount; i++) {
             let placed = false;
@@ -219,7 +219,7 @@ class PlatformerScene extends Phaser.Scene {
         }
 
         // Random trees in slots
-        const treeCount = chunkIndex === 0 ? 6 + Math.floor(rand() * 5) : 10 + Math.floor(rand() * 8);
+        const treeCount = chunkIndex === 0 ? 10 + Math.floor(rand() * 5) : 14 + Math.floor(rand() * 9);
         const slotWidth = (this.chunkSize - 60) / treeCount;
         for (let i = 0; i < treeCount; i++) {
             const slotStart = startX + 30 + i * slotWidth;

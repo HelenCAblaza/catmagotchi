@@ -165,13 +165,31 @@ class PlatformerScene extends Phaser.Scene {
             objects.ground.push(tile);
         }
 
-        // Ponds: 1-2 per chunk
+        // Ponds: 1-2 per chunk (random type: pond1, pond2, or animated pond3)
+        const pondTypes = ['pond1', 'pond2', 'pond3'];
         const pondCount = 1 + Math.floor(rand() * 2);
         for (let i = 0; i < pondCount; i++) {
             const px = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const pond = this.add.image(px, 558, 'pond')
-                .setOrigin(0.5, 0).setScale(0.5).setDepth(15).setScrollFactor(1);
-            objects.decors.push(pond);
+            const pondType = pondTypes[Math.floor(rand() * pondTypes.length)];
+            if (pondType === 'pond3') {
+                const pond = this.add.sprite(px, 558, 'pond3a')
+                    .setOrigin(0.5, 0).setScale(0.5).setDepth(15).setScrollFactor(1);
+                // Animate waterfall: toggle between frames
+                this.time.addEvent({
+                    delay: 250,
+                    callback: () => {
+                        if (pond.active) {
+                            pond.setTexture(pond.texture.key === 'pond3a' ? 'pond3b' : 'pond3a');
+                        }
+                    },
+                    loop: true
+                });
+                objects.decors.push(pond);
+            } else {
+                const pond = this.add.image(px, 558, pondType)
+                    .setOrigin(0.5, 0).setScale(0.5).setDepth(15).setScrollFactor(1);
+                objects.decors.push(pond);
+            }
         }
 
         // Trees: denser forest, can be close together

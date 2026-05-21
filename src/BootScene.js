@@ -17,6 +17,8 @@ class BootScene extends Phaser.Scene {
         this.load.image('pond2', 'assets/pond2.png?v=1');
         this.load.image('pond2b', 'assets/pond2b.png?v=1');
         this.load.image('pond2c', 'assets/pond2c.png?v=1');
+        this.load.image('pond2d', 'assets/pond2d.png?v=1');
+        this.load.image('pond2e', 'assets/pond2e.png?v=1');
         this.load.image('tree1', 'assets/tree1.png?v=1');
         this.load.image('tree2', 'assets/tree2.png?v=1');
         this.load.image('tree3', 'assets/tree3.png?v=1');

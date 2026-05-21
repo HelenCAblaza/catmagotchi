@@ -179,7 +179,7 @@ class PlatformerScene extends Phaser.Scene {
         };
 
         // === PONDS: 4-6 per chunk, widely spaced, no same-type adjacency ===
-        const pondTypes = ['pond1', 'pond2', 'pond2b', 'pond2c'];
+        const pondTypes = ['pond1', 'pond2', 'pond2b', 'pond2c', 'pond2d', 'pond2e'];
         const pondCount = 4 + Math.floor(rand() * 3); // 4-6 ponds per chunk
         const pondRadius = 100; // at scale 2.5, ~250px wide, so ~100px half-width
         let lastPondType = null;

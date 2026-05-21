@@ -187,7 +187,7 @@ class PlatformerScene extends Phaser.Scene {
             let attempts = 0;
             let placed = false;
             while (attempts < 5 && !placed) {
-                const px = chunkLeft + 100 + Math.floor(rand() * (chunkWidth - 200));
+                const px = startX + 100 + Math.floor(rand() * (this.chunkSize - 200));
                 if (tryPlaceItem(px, pondRadius)) {
                     // Anti-repeat: don't use the last 2 pond types
                     const recent = this.lastPondTypes.slice(-2);

@@ -178,16 +178,20 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
-        // === PONDS: 4-6 per chunk, widely spaced ===
-        const pondTypes = ['pond1', 'pond2', 'pond2b'];
+        // === PONDS: 4-6 per chunk, widely spaced, no same-type adjacency ===
+        const pondTypes = ['pond1', 'pond2', 'pond2b', 'pond2c'];
         const pondCount = 4 + Math.floor(rand() * 3); // 4-6 ponds per chunk
         const pondRadius = 100; // at scale 2.5, ~250px wide, so ~100px half-width
+        let lastPondType = null;
         for (let i = 0; i < pondCount; i++) {
             let placed = false;
             for (let attempt = 0; attempt < 20; attempt++) {
                 const px = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
                 if (tryPlaceItem(px, pondRadius)) {
-                    const pondType = pondTypes[Math.floor(rand() * pondTypes.length)];
+                    // Pick a pond type different from the last one
+                    let available = pondTypes.filter(t => t !== lastPondType);
+                    const pondType = available[Math.floor(rand() * available.length)];
+                    lastPondType = pondType;
                     const pond = this.add.image(px, 558, pondType)
                         .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
                     objects.decors.push(pond);

@@ -173,14 +173,14 @@ class PlatformerScene extends Phaser.Scene {
             objects.decors.push(pond);
         }
 
-        // Trees: 4-8 per chunk
-        const treeCount = 4 + Math.floor(rand() * 4);
+        // Trees: spaced out to prevent overlapping
+        const treeCount = chunkIndex === 0 ? 3 : 4 + Math.floor(rand() * 4);
         const treeKeys = ['tree1', 'tree2', 'tree3'];
         
-        // === GUARANTEED STARTER TREES near spawn (chunk 0 only) ===
+        // Starter trees for chunk 0 (guaranteed visible at spawn)
         if (chunkIndex === 0) {
-            const starterPositions = [200, 450, 750];
-            for (const sx of starterPositions) {
+            const starters = [200, 500, 850];
+            for (const sx of starters) {
                 const key = treeKeys[Math.floor(rand() * 3)];
                 const tree = this.add.image(sx, 560, key)
                     .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
@@ -188,8 +188,13 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
         
-        for (let i = 0; i < treeCount; i++) {
-            const tx = startX + 50 + Math.floor(rand() * (this.chunkSize - 100));
+        // Random trees placed in slots to prevent overlap
+        // Divide chunk into equal segments, place one tree per segment
+        const randomCount = chunkIndex === 0 ? 2 + Math.floor(rand() * 3) : treeCount;
+        const slotWidth = (this.chunkSize - 100) / randomCount;
+        for (let i = 0; i < randomCount; i++) {
+            const slotStart = startX + 50 + i * slotWidth;
+            const tx = slotStart + rand() * (slotWidth - 100);
             const key = treeKeys[Math.floor(rand() * 3)];
             const tree = this.add.image(tx, 560, key)
                 .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);

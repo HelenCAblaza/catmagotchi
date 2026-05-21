@@ -16,7 +16,7 @@ class PlatformerScene extends Phaser.Scene {
         this.chunkSize = 2000;         // world chunk width for ground/decors/collectibles
         this.spawnedChunks = new Set();
         this.chunkData = new Map();    // chunkIndex -> {ground:[], decors:[], fish:[], toys:[]}
-        this.bgSegments = [];          // {image, index}
+        this.bgSegments = [];          // {image, index, trees: []}
         this.lastBgIndex = -1;
 
         // Spawn initial background segment (unflipped)
@@ -99,14 +99,38 @@ class PlatformerScene extends Phaser.Scene {
     // === BACKGROUND SEGMENTS (unflipped -> flipped -> unflipped...) ===
     spawnBgSegment(index) {
         const x = index * this.bgWidth;
-        const flipped = (index % 2) !== 0; // 0=unflipped, 1=flipped, 2=unflipped...
+        const flipped = (index % 2) !== 0;
         const bg = this.add.image(x, this.scale.height / 2, 'adventure_bg')
             .setOrigin(0, 0.5)
             .setDisplaySize(this.bgWidth, 800)
             .setDepth(-20)
             .setScrollFactor(1);
         if (flipped) bg.setFlipX(true);
-        this.bgSegments.push({ image: bg, index: index });
+
+        // Background trees: distant forest silhouettes
+        const bgTrees = [];
+        const treeKeys = ['tree1', 'tree2', 'tree3'];
+        let seed = index * 12345 + 42;
+        const rand = () => {
+            seed = (seed * 16807) % 2147483647;
+            return (seed - 1) / 2147483646;
+        };
+        const treeCount = 15 + Math.floor(rand() * 15); // 15-30 per bg segment
+        for (let i = 0; i < treeCount; i++) {
+            const tx = x + rand() * this.bgWidth;
+            const key = treeKeys[Math.floor(rand() * 3)];
+            const scale = 0.3 + rand() * 0.3; // smaller, distant
+            const y = 500 + rand() * 60; // sitting on the hills
+            const tree = this.add.image(tx, y, key)
+                .setOrigin(0.5, 1)
+                .setScale(scale)
+                .setDepth(-10)
+                .setScrollFactor(1)
+                .setTint(0x557755); // dark silhouette
+            bgTrees.push(tree);
+        }
+
+        this.bgSegments.push({ image: bg, index: index, trees: bgTrees });
         this.lastBgIndex = Math.max(this.lastBgIndex, index);
     }
 
@@ -114,6 +138,7 @@ class PlatformerScene extends Phaser.Scene {
         const idx = this.bgSegments.findIndex(s => s.index === index);
         if (idx >= 0) {
             this.bgSegments[idx].image.destroy();
+            this.bgSegments[idx].trees.forEach(t => t.destroy());
             this.bgSegments.splice(idx, 1);
         }
     }
@@ -427,6 +452,7 @@ class PlatformerScene extends Phaser.Scene {
             const segEnd = (seg.index + 1) * this.bgWidth;
             if (px > segEnd + this.bgWidth * 2) {
                 seg.image.destroy();
+                seg.trees.forEach(t => t.destroy());
                 return false;
             }
             return true;

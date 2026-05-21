@@ -194,14 +194,14 @@ class PlatformerScene extends Phaser.Scene {
 
         // Starter trees for chunk 0 — well-spaced so they actually place (need 100px gap)
         if (chunkIndex === 0) {
-            const starters = [20, 150, 280, 410, 540, 670, 800, 930];
+            const starters = [20, 200, 400, 600, 800];
             for (const sx of starters) {
                 tryPlaceTree(sx);
             }
         }
 
-        // Random trees in slots
-        const treeCount = chunkIndex === 0 ? 10 + Math.floor(rand() * 5) : 14 + Math.floor(rand() * 9);
+        // Random trees in slots (fewer so ponds/bushes/flowers have room)
+        const treeCount = chunkIndex === 0 ? 5 + Math.floor(rand() * 4) : 8 + Math.floor(rand() * 5);
         const slotWidth = (this.chunkSize - 60) / treeCount;
         for (let i = 0; i < treeCount; i++) {
             const slotStart = startX + 30 + i * slotWidth;
@@ -219,10 +219,10 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === PONDS: 4-6 per chunk, widely spaced, anti-repeat (last 2 types) ===
+        // === PONDS: fewer per chunk so everything fits ===
         const pondTypes = ['pond1', 'pond2', 'pond3', 'pond4'];
-        const pondCount = 4 + Math.floor(rand() * 3); // 4-6 ponds per chunk
-        const pondRadius = 100; // at scale 2.5, ~250px wide, so ~100px half-width
+        const pondCount = chunkIndex === 0 ? 2 + Math.floor(rand() * 2) : 3 + Math.floor(rand() * 2); // 2-3 chunk0, 3-4 others
+        const pondRadius = 80; // slightly smaller so more fit
         for (let i = 0; i < pondCount; i++) {
             let attempts = 0;
             let placed = false;

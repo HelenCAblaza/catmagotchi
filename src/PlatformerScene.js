@@ -34,6 +34,7 @@ class PlatformerScene extends Phaser.Scene {
 
         // Cat player
         this.player = this.physics.add.sprite(100, 500, 'cat_idle');
+        this.player.setDepth(50); // Mitten always on top of scenery
         this.player.setScale(1);
         this.player.body.setSize(32, 40);
         this.player.body.setOffset(16, 12);

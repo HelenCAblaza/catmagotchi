@@ -135,7 +135,7 @@ class PlatformerScene extends Phaser.Scene {
 
         // Ground tiles
         for (let x = startX; x < startX + this.chunkSize; x += 32) {
-            const tile = this.platforms.create(x, 568, 'ground').setScale(1).refreshBody();
+            const tile = this.platforms.create(x, 592, 'ground').setScale(1).refreshBody();
             objects.ground.push(tile);
         }
 

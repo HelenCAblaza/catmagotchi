@@ -165,30 +165,44 @@ class PlatformerScene extends Phaser.Scene {
             objects.ground.push(tile);
         }
 
-        // Ponds: 3-5 per chunk (pond1 or pond2 only)
-        const pondTypes = ['pond1', 'pond2'];
-        const pondCount = 3 + Math.floor(rand() * 3);
-        for (let i = 0; i < pondCount; i++) {
-            const px = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const pondType = pondTypes[Math.floor(rand() * pondTypes.length)];
-            const pond = this.add.image(px, 558, pondType)
-                .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
-            objects.decors.push(pond);
-        }
-
-        // Trees: close together but no overlapping
-        const treeKeys = ['tree1', 'tree2', 'tree3'];
-        const treeWidth = 90; // minimum gap between tree centers at scale 2.5
-        const placedTrees = [];
-
-        const tryPlaceTree = (tx) => {
-            // Check against all already-placed trees in this chunk
-            for (const existing of placedTrees) {
-                if (Math.abs(tx - existing) < treeWidth) {
+        // === DECORATIVE PLACEMENT TRACKER ===
+        // Track all placed items to prevent overlapping
+        const placedItems = [];
+        const tryPlaceItem = (x, radius) => {
+            for (const existing of placedItems) {
+                if (Math.abs(x - existing.x) < (radius + existing.radius)) {
                     return false;
                 }
             }
-            placedTrees.push(tx);
+            placedItems.push({ x, radius });
+            return true;
+        };
+
+        // === PONDS: 6-10 per chunk, widely spaced ===
+        const pondTypes = ['pond1', 'pond2'];
+        const pondCount = 6 + Math.floor(rand() * 5); // 6-10 ponds per chunk
+        const pondRadius = 100; // at scale 2.5, ~250px wide, so ~100px half-width
+        for (let i = 0; i < pondCount; i++) {
+            let placed = false;
+            for (let attempt = 0; attempt < 20; attempt++) {
+                const px = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
+                if (tryPlaceItem(px, pondRadius)) {
+                    const pondType = pondTypes[Math.floor(rand() * pondTypes.length)];
+                    const pond = this.add.image(px, 558, pondType)
+                        .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
+                    objects.decors.push(pond);
+                    placed = true;
+                    break;
+                }
+            }
+        }
+
+        // === TREES: close but not overlapping ===
+        const treeKeys = ['tree1', 'tree2', 'tree3'];
+        const treeRadius = 50; // at scale 2.5, ~125px wide, ~50px half-width
+
+        const tryPlaceTree = (tx) => {
+            if (!tryPlaceItem(tx, treeRadius)) return false;
             const key = treeKeys[Math.floor(rand() * 3)];
             const tree = this.add.image(tx, 560, key)
                 .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
@@ -196,7 +210,7 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
-        // Starter trees for chunk 0 (guaranteed visible at spawn)
+        // Starter trees for chunk 0
         if (chunkIndex === 0) {
             const starters = [120, 350, 620, 900];
             for (const sx of starters) {
@@ -204,12 +218,11 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // Random trees placed in slots with minimum gap enforcement
-        const randomCount = chunkIndex === 0 ? 6 + Math.floor(rand() * 5) : 10 + Math.floor(rand() * 8);
-        const slotWidth = (this.chunkSize - 60) / randomCount;
-        for (let i = 0; i < randomCount; i++) {
+        // Random trees in slots
+        const treeCount = chunkIndex === 0 ? 6 + Math.floor(rand() * 5) : 10 + Math.floor(rand() * 8);
+        const slotWidth = (this.chunkSize - 60) / treeCount;
+        for (let i = 0; i < treeCount; i++) {
             const slotStart = startX + 30 + i * slotWidth;
-            // Try a few positions within the slot until we find a non-overlapping spot
             let placed = false;
             for (let attempt = 0; attempt < 5; attempt++) {
                 const tx = slotStart + rand() * (slotWidth - 40);
@@ -218,41 +231,61 @@ class PlatformerScene extends Phaser.Scene {
                     break;
                 }
             }
-            // If no valid spot in slot, try placing at slot center
             if (!placed) {
                 const tx = slotStart + slotWidth / 2;
                 tryPlaceTree(tx);
             }
         }
 
-        // Flowers: 2-4 per chunk
-        const flowerCount = 2 + Math.floor(rand() * 3);
+        // === FLOWERS: 4-8 per chunk, not overlapping trees or ponds ===
+        const flowerCount = 4 + Math.floor(rand() * 5); // 4-8 flowers
         for (let i = 0; i < flowerCount; i++) {
-            const fx = startX + 50 + Math.floor(rand() * (this.chunkSize - 100));
-            const fy = 558 + rand() * 10;
-            const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(rand() * 4)];
-            const flower = this.add.image(fx, fy, 'flower')
-                .setOrigin(0.5, 1).setScale(0.6 + rand() * 0.3).setDepth(16)
-                .setScrollFactor(1).setTint(tint);
-            objects.decors.push(flower);
+            let placed = false;
+            for (let attempt = 0; attempt < 10; attempt++) {
+                const fx = startX + 50 + Math.floor(rand() * (this.chunkSize - 100));
+                if (tryPlaceItem(fx, 20)) { // flower radius ~20
+                    const fy = 558 + rand() * 10;
+                    const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(rand() * 4)];
+                    const flower = this.add.image(fx, fy, 'flower')
+                        .setOrigin(0.5, 1).setScale(0.6 + rand() * 0.3).setDepth(16)
+                        .setScrollFactor(1).setTint(tint);
+                    objects.decors.push(flower);
+                    placed = true;
+                    break;
+                }
+            }
         }
 
-        // Bushes: 1-2 per chunk
-        const bushCount = 1 + Math.floor(rand() * 2);
+        // === BUSHES: 3-5 per chunk, not overlapping trees or ponds ===
+        const bushCount = 3 + Math.floor(rand() * 3); // 3-5 bushes
         for (let i = 0; i < bushCount; i++) {
-            const bx = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
-            const bush = this.add.image(bx, 560, 'bush')
-                .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
-            objects.decors.push(bush);
+            let placed = false;
+            for (let attempt = 0; attempt < 10; attempt++) {
+                const bx = startX + 100 + Math.floor(rand() * (this.chunkSize - 200));
+                if (tryPlaceItem(bx, 30)) { // bush radius ~30
+                    const bush = this.add.image(bx, 560, 'bush')
+                        .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
+                    objects.decors.push(bush);
+                    placed = true;
+                    break;
+                }
+            }
         }
 
-        // Rocks: 0-2 per chunk
-        const rockCount = Math.floor(rand() * 3);
+        // === ROCKS: 1-3 per chunk, not overlapping anything ===
+        const rockCount = 1 + Math.floor(rand() * 3);
         for (let i = 0; i < rockCount; i++) {
-            const rx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const rock = this.add.image(rx, 560, 'rock')
-                .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
-            objects.decors.push(rock);
+            let placed = false;
+            for (let attempt = 0; attempt < 10; attempt++) {
+                const rx = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
+                if (tryPlaceItem(rx, 25)) { // rock radius ~25
+                    const rock = this.add.image(rx, 560, 'rock')
+                        .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
+                    objects.decors.push(rock);
+                    placed = true;
+                    break;
+                }
+            }
         }
 
         // Fish: 1-2 per chunk

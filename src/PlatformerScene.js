@@ -193,9 +193,9 @@ class PlatformerScene extends Phaser.Scene {
         };
 
         const tryPlacePond = (px) => {
-            // Ponds must not overlap other ponds
+            // Ponds must not be too close to other ponds
             for (const p of placedPonds) {
-                if (Math.abs(px - p.x) < 120) return false;
+                if (Math.abs(px - p.x) < 250) return false;
             }
             // Pond center cannot be on top of a tree center
             for (const tx of placedTrees) {

@@ -26,6 +26,7 @@ class PlatformerScene extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.fishes = this.physics.add.group();
         this.toys = this.physics.add.group();
+        this.spawnChunk(-1); // trees to the left of spawn
         this.spawnChunk(0);
         this.spawnChunk(1);
 
@@ -115,7 +116,7 @@ class PlatformerScene extends Phaser.Scene {
             seed = (seed * 16807) % 2147483647;
             return (seed - 1) / 2147483646;
         };
-        const treeCount = 5 + Math.floor(rand() * 6); // 5-10 per bg segment
+        const treeCount = 12 + Math.floor(rand() * 10); // 12-22 per bg segment
         for (let i = 0; i < treeCount; i++) {
             const tx = x + rand() * this.bgWidth;
             const key = treeKeys[Math.floor(rand() * 3)];
@@ -173,13 +174,13 @@ class PlatformerScene extends Phaser.Scene {
             objects.decors.push(pond);
         }
 
-        // Trees: spaced out to prevent overlapping
-        const treeCount = chunkIndex === 0 ? 3 : 4 + Math.floor(rand() * 4);
+        // Trees: denser forest, can be close together
+        const treeCount = chunkIndex === 0 ? 8 + Math.floor(rand() * 6) : 10 + Math.floor(rand() * 8);
         const treeKeys = ['tree1', 'tree2', 'tree3'];
         
         // Starter trees for chunk 0 (guaranteed visible at spawn)
         if (chunkIndex === 0) {
-            const starters = [200, 500, 850];
+            const starters = [120, 350, 620, 900];
             for (const sx of starters) {
                 const key = treeKeys[Math.floor(rand() * 3)];
                 const tree = this.add.image(sx, 560, key)
@@ -188,13 +189,12 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
         
-        // Random trees placed in slots to prevent overlap
-        // Divide chunk into equal segments, place one tree per segment
-        const randomCount = chunkIndex === 0 ? 2 + Math.floor(rand() * 3) : treeCount;
-        const slotWidth = (this.chunkSize - 100) / randomCount;
+        // Trees placed in narrow slots — can be close, just not perfectly stacked
+        const randomCount = chunkIndex === 0 ? 6 + Math.floor(rand() * 5) : treeCount;
+        const slotWidth = (this.chunkSize - 60) / randomCount;
         for (let i = 0; i < randomCount; i++) {
-            const slotStart = startX + 50 + i * slotWidth;
-            const tx = slotStart + rand() * (slotWidth - 100);
+            const slotStart = startX + 30 + i * slotWidth;
+            const tx = slotStart + rand() * (slotWidth - 40);
             const key = treeKeys[Math.floor(rand() * 3)];
             const tree = this.add.image(tx, 560, key)
                 .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
@@ -475,13 +475,13 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         });
 
-        // World chunks: spawn ahead
+        // World chunks: spawn ahead (including negative for left-of-spawn trees)
         const currentChunk = Math.floor(px / this.chunkSize);
-        for (let i = currentChunk; i <= currentChunk + 2; i++) {
-            if (i >= 0) this.spawnChunk(i);
+        for (let i = currentChunk - 1; i <= currentChunk + 3; i++) {
+            this.spawnChunk(i);
         }
         // Remove chunks far behind
-        for (let i = currentChunk - 4; i >= 0; i--) {
+        for (let i = currentChunk - 6; i < currentChunk - 3; i++) {
             this.removeChunk(i);
         }
     }

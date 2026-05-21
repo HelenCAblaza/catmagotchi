@@ -152,7 +152,7 @@ class PlatformerScene extends Phaser.Scene {
         const objects = { ground: [], decors: [], fish: [], toys: [] };
 
         // Seeded random for deterministic decoration
-        let seed = chunkIndex * 16807;
+        let seed = chunkIndex * 16807 + 12345;
         const rand = () => {
             seed = (seed * 16807) % 2147483647;
             return (seed - 1) / 2147483646;
@@ -173,9 +173,21 @@ class PlatformerScene extends Phaser.Scene {
             objects.decors.push(pond);
         }
 
-        // Trees: 8-16 per chunk (dense forest!)
-        const treeCount = 8 + Math.floor(rand() * 8);
+        // Trees: 10-20 per chunk (dense forest!)
+        const treeCount = 10 + Math.floor(rand() * 10);
         const treeKeys = ['tree1', 'tree2', 'tree3'];
+        
+        // === GUARANTEED STARTER TREES near spawn (chunk 0 only) ===
+        if (chunkIndex === 0) {
+            const starterPositions = [150, 280, 420, 580, 750, 920];
+            for (const sx of starterPositions) {
+                const key = treeKeys[Math.floor(rand() * 3)];
+                const tree = this.add.image(sx, 560, key)
+                    .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
+                objects.decors.push(tree);
+            }
+        }
+        
         for (let i = 0; i < treeCount; i++) {
             const tx = startX + 50 + Math.floor(rand() * (this.chunkSize - 100));
             const key = treeKeys[Math.floor(rand() * 3)];

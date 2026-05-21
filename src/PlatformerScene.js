@@ -166,25 +166,25 @@ class PlatformerScene extends Phaser.Scene {
             objects.ground.push(tile);
         }
 
-        // === DECORATIVE PLACEMENT TRACKER ===
-        // Track all placed items to prevent overlapping
-        const placedItems = [];
-        const tryPlaceItem = (x, radius) => {
-            for (const existing of placedItems) {
-                if (Math.abs(x - existing.x) < (radius + existing.radius)) {
-                    return false;
-                }
-            }
-            placedItems.push({ x, radius });
-            return true;
-        };
+        // === DECORATIVE PLACEMENT TRACKERS ===
+        // Trees and ponds can be close/overlap, but tree can't be at pond center
+        const placedTrees = [];
+        const placedPonds = [];
+        const placedDecors = []; // for flowers, bushes, rocks to avoid everything
 
-        // === TREES: close but not overlapping ===
         const treeKeys = ['tree1', 'tree2', 'tree3'];
-        const treeRadius = 50; // at scale 2.5, ~125px wide, ~50px half-width
 
         const tryPlaceTree = (tx) => {
-            if (!tryPlaceItem(tx, treeRadius)) return false;
+            // Trees must not overlap other trees
+            for (const x of placedTrees) {
+                if (Math.abs(tx - x) < 70) return false;
+            }
+            // Tree cannot be at the exact center of a pond
+            for (const p of placedPonds) {
+                if (Math.abs(tx - p.x) < 25) return false;
+            }
+            placedTrees.push(tx);
+            placedDecors.push({ x: tx, radius: 40 });
             const key = treeKeys[Math.floor(rand() * 3)];
             const tree = this.add.image(tx, 560, key)
                 .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
@@ -192,16 +192,38 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
-        // Starter trees for chunk 0 — fewer trees, more room for ponds
+        const tryPlacePond = (px) => {
+            // Ponds must not overlap other ponds
+            for (const p of placedPonds) {
+                if (Math.abs(px - p.x) < 120) return false;
+            }
+            // Pond center cannot be on top of a tree center
+            for (const tx of placedTrees) {
+                if (Math.abs(px - tx) < 25) return false;
+            }
+            placedPonds.push({ x: px });
+            placedDecors.push({ x: px, radius: 50 });
+            return true;
+        };
+
+        const tryPlaceDecor = (x, radius) => {
+            for (const d of placedDecors) {
+                if (Math.abs(x - d.x) < (radius + d.radius)) return false;
+            }
+            placedDecors.push({ x, radius });
+            return true;
+        };
+
+        // Starter trees for chunk 0 — more trees since they can coexist with ponds
         if (chunkIndex === 0) {
-            const starters = [20, 400, 800];
+            const starters = [20, 200, 400, 600, 800];
             for (const sx of starters) {
                 tryPlaceTree(sx);
             }
         }
 
-        // Random trees in slots (fewer so ponds/bushes/flowers have room)
-        const treeCount = chunkIndex === 0 ? 3 + Math.floor(rand() * 3) : 5 + Math.floor(rand() * 3);
+        // Random trees in slots (more trees + ponds now!)
+        const treeCount = chunkIndex === 0 ? 7 + Math.floor(rand() * 4) : 10 + Math.floor(rand() * 5);
         const slotWidth = (this.chunkSize - 60) / treeCount;
         for (let i = 0; i < treeCount; i++) {
             const slotStart = startX + 30 + i * slotWidth;
@@ -219,16 +241,15 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === PONDS: more ponds for variety, fewer trees to make room ===
+        // === PONDS: more ponds — they can coexist with trees now ===
         const pondTypes = ['pond1', 'pond2', 'pond3', 'pond4'];
-        const pondCount = chunkIndex === 0 ? 3 + Math.floor(rand() * 2) : 4 + Math.floor(rand() * 2); // 3-4 chunk0, 4-5 others
-        const pondRadius = 80;
+        const pondCount = chunkIndex === 0 ? 5 + Math.floor(rand() * 3) : 7 + Math.floor(rand() * 3); // 5-7 chunk0, 7-9 others
         for (let i = 0; i < pondCount; i++) {
             let attempts = 0;
             let placed = false;
             while (attempts < 5 && !placed) {
                 const px = startX + 100 + Math.floor(rand() * (this.chunkSize - 200));
-                if (tryPlaceItem(px, pondRadius)) {
+                if (tryPlacePond(px)) {
                     // Anti-repeat: don't use the last 2 pond types
                     const recent = this.lastPondTypes.slice(-2);
                     let available = pondTypes.filter(t => !recent.includes(t));
@@ -247,13 +268,13 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === FLOWERS: 4-8 per chunk, not overlapping trees or ponds ===
+        // === FLOWERS: 4-8 per chunk ===
         const flowerCount = 4 + Math.floor(rand() * 5); // 4-8 flowers
         for (let i = 0; i < flowerCount; i++) {
             let placed = false;
             for (let attempt = 0; attempt < 10; attempt++) {
                 const fx = startX + 50 + Math.floor(rand() * (this.chunkSize - 100));
-                if (tryPlaceItem(fx, 20)) { // flower radius ~20
+                if (tryPlaceDecor(fx, 20)) { // flower radius ~20
                     const fy = 558 + rand() * 10;
                     const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(rand() * 4)];
                     const flower = this.add.image(fx, fy, 'flower')
@@ -266,13 +287,13 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === BUSHES: 3-5 per chunk, not overlapping trees or ponds ===
+        // === BUSHES: 3-5 per chunk ===
         const bushCount = 3 + Math.floor(rand() * 3); // 3-5 bushes
         for (let i = 0; i < bushCount; i++) {
             let placed = false;
             for (let attempt = 0; attempt < 10; attempt++) {
                 const bx = startX + 100 + Math.floor(rand() * (this.chunkSize - 200));
-                if (tryPlaceItem(bx, 30)) { // bush radius ~30
+                if (tryPlaceDecor(bx, 30)) { // bush radius ~30
                     const bush = this.add.image(bx, 560, 'bush')
                         .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
                     objects.decors.push(bush);
@@ -282,13 +303,13 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === ROCKS: 1-3 per chunk, not overlapping anything ===
+        // === ROCKS: 1-3 per chunk ===
         const rockCount = 1 + Math.floor(rand() * 3);
         for (let i = 0; i < rockCount; i++) {
             let placed = false;
             for (let attempt = 0; attempt < 10; attempt++) {
                 const rx = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
-                if (tryPlaceItem(rx, 25)) { // rock radius ~25
+                if (tryPlaceDecor(rx, 25)) { // rock radius ~25
                     const rock = this.add.image(rx, 560, 'rock')
                         .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
                     objects.decors.push(rock);

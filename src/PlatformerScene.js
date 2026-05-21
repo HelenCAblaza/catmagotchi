@@ -19,6 +19,7 @@ class PlatformerScene extends Phaser.Scene {
         this.bgSegments = [];          // {image, index, trees: []}
         this.lastBgIndex = -1;
         this.lastPondTypes = [];      // Track last 2 pond types globally for anti-repeat
+        this.pondPositions = [];      // Track ALL pond X positions globally to prevent cross-chunk overlap
 
         // Spawn initial background segment (unflipped)
         this.spawnBgSegment(0);
@@ -192,20 +193,6 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
-        const tryPlacePond = (px) => {
-            // Ponds must not be too close to other ponds
-            for (const p of placedPonds) {
-                if (Math.abs(px - p.x) < 250) return false;
-            }
-            // Pond center cannot be on top of a tree center
-            for (const tx of placedTrees) {
-                if (Math.abs(px - tx) < 25) return false;
-            }
-            placedPonds.push({ x: px });
-            placedDecors.push({ x: px, radius: 50 });
-            return true;
-        };
-
         const tryPlaceDecor = (x, radius) => {
             for (const d of placedDecors) {
                 if (Math.abs(x - d.x) < (radius + d.radius)) return false;
@@ -241,30 +228,52 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === PONDS: more ponds — they can coexist with trees now ===
+        // === PONDS: evenly spaced with slot-based placement + global tracker ===
         const pondTypes = ['pond1', 'pond2', 'pond3', 'pond4'];
-        const pondCount = chunkIndex === 0 ? 5 + Math.floor(rand() * 3) : 7 + Math.floor(rand() * 3); // 5-7 chunk0, 7-9 others
+        const pondCount = chunkIndex === 0 ? 4 + Math.floor(rand() * 2) : 5 + Math.floor(rand() * 2); // 4-5 chunk0, 5-6 others
+        const pondMinSpacing = 220; // minimum pixels between pond centers
+        const pondSlotWidth = (this.chunkSize - 200) / pondCount;
+
         for (let i = 0; i < pondCount; i++) {
-            let attempts = 0;
+            const slotStart = startX + 100 + i * pondSlotWidth;
             let placed = false;
-            while (attempts < 5 && !placed) {
-                const px = startX + 100 + Math.floor(rand() * (this.chunkSize - 200));
-                if (tryPlacePond(px)) {
-                    // Anti-repeat: don't use the last 2 pond types
-                    const recent = this.lastPondTypes.slice(-2);
-                    let available = pondTypes.filter(t => !recent.includes(t));
-                    if (available.length === 0) {
-                        available = pondTypes;
-                    }
-                    const pondType = available[Math.floor(rand() * available.length)];
-                    this.lastPondTypes.push(pondType);
-                    const pond = this.add.image(px, 558, pondType)
-                        .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
-                    objects.decors.push(pond);
-                    placed = true;
-                    break;
+            for (let attempt = 0; attempt < 8; attempt++) {
+                const px = slotStart + rand() * pondSlotWidth;
+                // Check against ALL ponds in this chunk
+                let tooClose = false;
+                for (const p of placedPonds) {
+                    if (Math.abs(px - p.x) < pondMinSpacing) { tooClose = true; break; }
                 }
-                attempts++;
+                if (tooClose) continue;
+                // Check against ponds in OTHER chunks (scene-level tracker)
+                for (const globalX of this.pondPositions) {
+                    if (Math.abs(px - globalX) < pondMinSpacing) { tooClose = true; break; }
+                }
+                if (tooClose) continue;
+                // Check not too close to tree centers
+                let onTree = false;
+                for (const tx of placedTrees) {
+                    if (Math.abs(px - tx) < 30) { onTree = true; break; }
+                }
+                if (onTree) continue;
+
+                // Success! Place the pond
+                placedPonds.push({ x: px });
+                placedDecors.push({ x: px, radius: 50 });
+                this.pondPositions.push(px);
+
+                // Anti-repeat: don't use the last 2 pond types
+                const recent = this.lastPondTypes.slice(-2);
+                let available = pondTypes.filter(t => !recent.includes(t));
+                if (available.length === 0) available = pondTypes;
+                const pondType = available[Math.floor(rand() * available.length)];
+                this.lastPondTypes.push(pondType);
+
+                const pond = this.add.image(px, 558, pondType)
+                    .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
+                objects.decors.push(pond);
+                placed = true;
+                break;
             }
         }
 

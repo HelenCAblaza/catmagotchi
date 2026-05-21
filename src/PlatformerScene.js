@@ -18,7 +18,7 @@ class PlatformerScene extends Phaser.Scene {
         this.chunkData = new Map();    // chunkIndex -> {ground:[], decors:[], fish:[], toys:[]}
         this.bgSegments = [];          // {image, index, trees: []}
         this.lastBgIndex = -1;
-        this.lastPondType = null;      // Track last pond type across ALL chunks for anti-repeat
+        this.lastPondTypes = [];      // Track last 3 pond types globally for strong anti-repeat
 
         // Spawn initial background segment (unflipped)
         this.spawnBgSegment(0);
@@ -179,8 +179,8 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
-        // === PONDS: 4-6 per chunk, widely spaced, no same-type adjacency ===
-        const pondTypes = ['pond1', 'pond2', 'pond2b', 'pond2c', 'pond2d', 'pond2e'];
+        // === PONDS: 4-6 per chunk, widely spaced, strong anti-repeat (last 3 types) ===
+        const pondTypes = ['pond1', 'pond2', 'pond2b', 'pond2c', 'pond2d', 'pond2e', 'pond3', 'pond4'];
         const pondCount = 4 + Math.floor(rand() * 3); // 4-6 ponds per chunk
         const pondRadius = 100; // at scale 2.5, ~250px wide, so ~100px half-width
         for (let i = 0; i < pondCount; i++) {
@@ -188,10 +188,15 @@ class PlatformerScene extends Phaser.Scene {
             for (let attempt = 0; attempt < 20; attempt++) {
                 const px = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
                 if (tryPlaceItem(px, pondRadius)) {
-                    // Pick a pond type different from the last one (tracked across ALL chunks)
-                    let available = pondTypes.filter(t => t !== this.lastPondType);
+                    // Pick from types NOT in the last 3 used
+                    const recent = this.lastPondTypes.slice(-3);
+                    let available = pondTypes.filter(t => !recent.includes(t));
+                    // Fallback: if all filtered out (shouldn't happen with 8 types), use all except last
+                    if (available.length === 0) {
+                        available = pondTypes.filter(t => t !== this.lastPondTypes[this.lastPondTypes.length - 1]);
+                    }
                     const pondType = available[Math.floor(rand() * available.length)];
-                    this.lastPondType = pondType;
+                    this.lastPondTypes.push(pondType);
                     const pond = this.add.image(px, 558, pondType)
                         .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
                     objects.decors.push(pond);

@@ -18,6 +18,7 @@ class PlatformerScene extends Phaser.Scene {
         this.chunkData = new Map();    // chunkIndex -> {ground:[], decors:[], fish:[], toys:[]}
         this.bgSegments = [];          // {image, index, trees: []}
         this.lastBgIndex = -1;
+        this.lastPondType = null;      // Track last pond type across ALL chunks for anti-repeat
 
         // Spawn initial background segment (unflipped)
         this.spawnBgSegment(0);
@@ -182,16 +183,15 @@ class PlatformerScene extends Phaser.Scene {
         const pondTypes = ['pond1', 'pond2', 'pond2b', 'pond2c', 'pond2d', 'pond2e'];
         const pondCount = 4 + Math.floor(rand() * 3); // 4-6 ponds per chunk
         const pondRadius = 100; // at scale 2.5, ~250px wide, so ~100px half-width
-        let lastPondType = null;
         for (let i = 0; i < pondCount; i++) {
             let placed = false;
             for (let attempt = 0; attempt < 20; attempt++) {
                 const px = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
                 if (tryPlaceItem(px, pondRadius)) {
-                    // Pick a pond type different from the last one
-                    let available = pondTypes.filter(t => t !== lastPondType);
+                    // Pick a pond type different from the last one (tracked across ALL chunks)
+                    let available = pondTypes.filter(t => t !== this.lastPondType);
                     const pondType = available[Math.floor(rand() * available.length)];
-                    lastPondType = pondType;
+                    this.lastPondType = pondType;
                     const pond = this.add.image(px, 558, pondType)
                         .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
                     objects.decors.push(pond);

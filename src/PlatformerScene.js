@@ -135,7 +135,7 @@ class PlatformerScene extends Phaser.Scene {
 
         // Ground tiles
         for (let x = startX; x < startX + this.chunkSize; x += 32) {
-            const tile = this.platforms.create(x, 592, 'ground').setScale(1).refreshBody();
+            const tile = this.platforms.create(x, 592, 'ground').setScale(1).setDepth(1).refreshBody();
             objects.ground.push(tile);
         }
 
@@ -143,8 +143,8 @@ class PlatformerScene extends Phaser.Scene {
         const pondCount = 1 + Math.floor(rand() * 2);
         for (let i = 0; i < pondCount; i++) {
             const px = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const pond = this.add.image(px, 560, 'pond')
-                .setOrigin(0.5, 0).setScale(0.5).setDepth(5).setScrollFactor(1);
+            const pond = this.add.image(px, 558, 'pond')
+                .setOrigin(0.5, 0).setScale(0.5).setDepth(15).setScrollFactor(1);
             objects.decors.push(pond);
         }
 
@@ -152,8 +152,8 @@ class PlatformerScene extends Phaser.Scene {
         const treeCount = 1 + Math.floor(rand() * 3);
         for (let i = 0; i < treeCount; i++) {
             const tx = startX + 100 + Math.floor(rand() * (this.chunkSize - 200));
-            const tree = this.add.image(tx, 565, 'tree')
-                .setOrigin(0.5, 1).setScale(0.5).setDepth(5).setScrollFactor(1);
+            const tree = this.add.image(tx, 558, 'tree')
+                .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
             objects.decors.push(tree);
         }
 
@@ -161,10 +161,10 @@ class PlatformerScene extends Phaser.Scene {
         const flowerCount = 2 + Math.floor(rand() * 3);
         for (let i = 0; i < flowerCount; i++) {
             const fx = startX + 50 + Math.floor(rand() * (this.chunkSize - 100));
-            const fy = 565 + rand() * 10;
+            const fy = 558 + rand() * 10;
             const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(rand() * 4)];
             const flower = this.add.image(fx, fy, 'flower')
-                .setOrigin(0.5, 1).setScale(0.6 + rand() * 0.3).setDepth(6)
+                .setOrigin(0.5, 1).setScale(0.6 + rand() * 0.3).setDepth(16)
                 .setScrollFactor(1).setTint(tint);
             objects.decors.push(flower);
         }
@@ -173,8 +173,8 @@ class PlatformerScene extends Phaser.Scene {
         const bushCount = 1 + Math.floor(rand() * 2);
         for (let i = 0; i < bushCount; i++) {
             const bx = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
-            const bush = this.add.image(bx, 570, 'bush')
-                .setOrigin(0.5, 1).setScale(0.5).setDepth(5).setScrollFactor(1);
+            const bush = this.add.image(bx, 560, 'bush')
+                .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
             objects.decors.push(bush);
         }
 
@@ -182,8 +182,8 @@ class PlatformerScene extends Phaser.Scene {
         const rockCount = Math.floor(rand() * 3);
         for (let i = 0; i < rockCount; i++) {
             const rx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const rock = this.add.image(rx, 570, 'rock')
-                .setOrigin(0.5, 1).setScale(0.5).setDepth(5).setScrollFactor(1);
+            const rock = this.add.image(rx, 560, 'rock')
+                .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
             objects.decors.push(rock);
         }
 

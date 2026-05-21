@@ -26,7 +26,7 @@ class BootScene extends Phaser.Scene {
         this.createTexture('box', '#c4956a', 80, 60, 'rect');
         this.createHomeBgTexture('bg_home');
         this.createPlatformerBgTexture('bg_platformer');
-        this.load.image('ground', 'assets/ground.png?v=5');
+        this.load.image('ground', 'assets/ground.png?v=6');
         this.createCloudTexture('cloud');
         this.createHeartTexture('heart');
         this.createStarTexture('star');

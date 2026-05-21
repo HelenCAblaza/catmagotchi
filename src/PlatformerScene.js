@@ -148,14 +148,14 @@ class PlatformerScene extends Phaser.Scene {
             objects.decors.push(pond);
         }
 
-        // Trees: 3-6 per chunk (always visible!)
-        const treeCount = 3 + Math.floor(rand() * 4);
+        // Trees: 8-16 per chunk (dense forest!)
+        const treeCount = 8 + Math.floor(rand() * 8);
         const treeKeys = ['tree1', 'tree2', 'tree3'];
         for (let i = 0; i < treeCount; i++) {
             const tx = startX + 50 + Math.floor(rand() * (this.chunkSize - 100));
             const key = treeKeys[Math.floor(rand() * 3)];
             const tree = this.add.image(tx, 560, key)
-                .setOrigin(0.5, 1).setScale(0.5).setDepth(15).setScrollFactor(1);
+                .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
             objects.decors.push(tree);
         }
 

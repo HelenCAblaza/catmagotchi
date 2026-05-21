@@ -18,7 +18,7 @@ class PlatformerScene extends Phaser.Scene {
         this.chunkData = new Map();    // chunkIndex -> {ground:[], decors:[], fish:[], toys:[]}
         this.bgSegments = [];          // {image, index, trees: []}
         this.lastBgIndex = -1;
-        this.lastPondTypes = [];      // Track last 3 pond types globally for strong anti-repeat
+        this.lastPondTypes = [];      // Track last 2 pond types globally for anti-repeat
 
         // Spawn initial background segment (unflipped)
         this.spawnBgSegment(0);
@@ -179,21 +179,21 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
-        // === PONDS: 4-6 per chunk, widely spaced, strong anti-repeat (last 3 types) ===
-        const pondTypes = ['pond1', 'pond2', 'pond2b', 'pond2c', 'pond2d', 'pond2e', 'pond3', 'pond4'];
+        // === PONDS: 4-6 per chunk, widely spaced, anti-repeat (last 2 types) ===
+        const pondTypes = ['pond1', 'pond2', 'pond3', 'pond4'];
         const pondCount = 4 + Math.floor(rand() * 3); // 4-6 ponds per chunk
         const pondRadius = 100; // at scale 2.5, ~250px wide, so ~100px half-width
         for (let i = 0; i < pondCount; i++) {
+            let attempts = 0;
             let placed = false;
-            for (let attempt = 0; attempt < 20; attempt++) {
-                const px = startX + 150 + Math.floor(rand() * (this.chunkSize - 300));
+            while (attempts < 5 && !placed) {
+                const px = chunkLeft + 100 + Math.floor(rand() * (chunkWidth - 200));
                 if (tryPlaceItem(px, pondRadius)) {
-                    // Pick from types NOT in the last 3 used
-                    const recent = this.lastPondTypes.slice(-3);
+                    // Anti-repeat: don't use the last 2 pond types
+                    const recent = this.lastPondTypes.slice(-2);
                     let available = pondTypes.filter(t => !recent.includes(t));
-                    // Fallback: if all filtered out (shouldn't happen with 8 types), use all except last
                     if (available.length === 0) {
-                        available = pondTypes.filter(t => t !== this.lastPondTypes[this.lastPondTypes.length - 1]);
+                        available = pondTypes;
                     }
                     const pondType = available[Math.floor(rand() * available.length)];
                     this.lastPondTypes.push(pondType);

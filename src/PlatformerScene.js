@@ -219,9 +219,9 @@ class PlatformerScene extends Phaser.Scene {
             return true;
         };
 
-        // Starter trees for chunk 0
+        // Starter trees for chunk 0 — dense cluster near Mitten's start
         if (chunkIndex === 0) {
-            const starters = [120, 350, 620, 900];
+            const starters = [60, 100, 140, 180, 220, 280, 340, 400, 460, 520, 580, 640, 700, 760, 820, 880, 940];
             for (const sx of starters) {
                 tryPlaceTree(sx);
             }

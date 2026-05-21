@@ -243,6 +243,7 @@ class PlatformerScene extends Phaser.Scene {
                     placed = true;
                     break;
                 }
+                attempts++;
             }
         }
 

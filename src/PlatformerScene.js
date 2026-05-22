@@ -47,9 +47,9 @@ class PlatformerScene extends Phaser.Scene {
         // === FLOATING CLOUDS ===
         this.clouds = [];
         this.cloudKeys = ['cloud1', 'cloud2', 'cloud3'];
-        this.targetCloudCount = 45;
+        this.targetCloudCount = 90;
         for (let i = 0; i < this.targetCloudCount; i++) {
-            this.spawnCloud(this.player.x + (Math.random() - 0.5) * 12000, 60 + Math.random() * 280);
+            this.spawnCloud(this.player.x + (Math.random() - 0.5) * 24000, 60 + Math.random() * 280);
         }
 
         // Camera follow — wide horizontal bounds for left/right, full height to prevent black space
@@ -584,34 +584,56 @@ class PlatformerScene extends Phaser.Scene {
         for (let i = this.clouds.length - 1; i >= 0; i--) {
             const c = this.clouds[i];
             c.sprite.x += c.speed * dt;
-            if (Math.abs(c.sprite.x - px) > 6000) {
+            if (Math.abs(c.sprite.x - px) > 12000) {
                 c.sprite.destroy();
                 this.clouds.splice(i, 1);
             }
         }
 
-        // Proactively ensure clouds exist ahead AND behind the player
-        let minCloudX = Infinity, maxCloudX = -Infinity;
-        for (const c of this.clouds) {
-            if (c.sprite.x < minCloudX) minCloudX = c.sprite.x;
-            if (c.sprite.x > maxCloudX) maxCloudX = c.sprite.x;
-        }
-        // Spawn big clusters ahead / behind when approaching empty areas
-        if (px + 2500 > maxCloudX) {
-            for (let k = 0; k < 6; k++) {
-                this.spawnCloud(px + 2500 + Math.random() * 2000, 60 + Math.random() * 280);
-            }
-        }
-        if (px - 2500 < minCloudX) {
-            for (let k = 0; k < 6; k++) {
-                this.spawnCloud(px - 2500 - Math.random() * 2000, 60 + Math.random() * 280);
-            }
-        }
-        // Maintain minimum total count, preferring the side with fewer clouds
+        // Evenly-spawn logic: fill the largest gap instead of clustering
         while (this.clouds.length < this.targetCloudCount) {
-            const side = (px - minCloudX > maxCloudX - px) ? -1 : 1;
-            const x = px + side * (2000 + Math.random() * 2500);
-            this.spawnCloud(x, 60 + Math.random() * 280);
+            let minCloudX = Infinity, maxCloudX = -Infinity;
+            for (const c of this.clouds) {
+                if (c.sprite.x < minCloudX) minCloudX = c.sprite.x;
+                if (c.sprite.x > maxCloudX) maxCloudX = c.sprite.x;
+            }
+
+            if (this.clouds.length === 0) {
+                // No clouds at all — spawn around player
+                this.spawnCloud(px + (Math.random() - 0.5) * 2000, 60 + Math.random() * 280);
+                continue;
+            }
+
+            // Sort by x to find gaps
+            const sorted = [...this.clouds].sort((a, b) => a.sprite.x - b.sprite.x);
+
+            // Find the biggest gap between consecutive clouds
+            let biggestGap = 0;
+            let gapCenter = px;
+            for (let i = 0; i < sorted.length - 1; i++) {
+                const gap = sorted[i + 1].sprite.x - sorted[i].sprite.x;
+                if (gap > biggestGap) {
+                    biggestGap = gap;
+                    gapCenter = sorted[i].sprite.x + gap / 2;
+                }
+            }
+
+            // Also consider gaps beyond the extremes (extend outward)
+            const leftGap = minCloudX - (px - 12000);
+            const rightGap = (px + 12000) - maxCloudX;
+            if (leftGap > biggestGap) {
+                biggestGap = leftGap;
+                gapCenter = minCloudX - leftGap / 2;
+            }
+            if (rightGap > biggestGap) {
+                biggestGap = rightGap;
+                gapCenter = maxCloudX + rightGap / 2;
+            }
+
+            // Spawn a single cloud in the middle of the biggest gap (±jitter for organic feel)
+            const x = gapCenter + (Math.random() - 0.5) * 200;
+            const y = 60 + Math.random() * 280;
+            this.spawnCloud(x, y);
         }
 
         // === ENDLESS SPAWNING / CLEANUP ===

@@ -47,9 +47,9 @@ class PlatformerScene extends Phaser.Scene {
         // === FLOATING CLOUDS ===
         this.clouds = [];
         this.cloudKeys = ['cloud1', 'cloud2', 'cloud3'];
-        this.targetCloudCount = 28;
+        this.targetCloudCount = 45;
         for (let i = 0; i < this.targetCloudCount; i++) {
-            this.spawnCloud(this.player.x + (Math.random() - 0.5) * 6000, 60 + Math.random() * 280);
+            this.spawnCloud(this.player.x + (Math.random() - 0.5) * 12000, 60 + Math.random() * 280);
         }
 
         // Camera follow — wide horizontal bounds for left/right, full height to prevent black space
@@ -584,7 +584,7 @@ class PlatformerScene extends Phaser.Scene {
         for (let i = this.clouds.length - 1; i >= 0; i--) {
             const c = this.clouds[i];
             c.sprite.x += c.speed * dt;
-            if (Math.abs(c.sprite.x - px) > 3000) {
+            if (Math.abs(c.sprite.x - px) > 6000) {
                 c.sprite.destroy();
                 this.clouds.splice(i, 1);
             }
@@ -596,21 +596,21 @@ class PlatformerScene extends Phaser.Scene {
             if (c.sprite.x < minCloudX) minCloudX = c.sprite.x;
             if (c.sprite.x > maxCloudX) maxCloudX = c.sprite.x;
         }
-        // Spawn clusters ahead / behind when approaching empty areas
-        if (px + 1500 > maxCloudX) {
-            for (let k = 0; k < 3; k++) {
-                this.spawnCloud(px + 1600 + Math.random() * 1200, 60 + Math.random() * 280);
+        // Spawn big clusters ahead / behind when approaching empty areas
+        if (px + 2500 > maxCloudX) {
+            for (let k = 0; k < 6; k++) {
+                this.spawnCloud(px + 2500 + Math.random() * 2000, 60 + Math.random() * 280);
             }
         }
-        if (px - 1500 < minCloudX) {
-            for (let k = 0; k < 3; k++) {
-                this.spawnCloud(px - 1600 - Math.random() * 1200, 60 + Math.random() * 280);
+        if (px - 2500 < minCloudX) {
+            for (let k = 0; k < 6; k++) {
+                this.spawnCloud(px - 2500 - Math.random() * 2000, 60 + Math.random() * 280);
             }
         }
         // Maintain minimum total count, preferring the side with fewer clouds
         while (this.clouds.length < this.targetCloudCount) {
             const side = (px - minCloudX > maxCloudX - px) ? -1 : 1;
-            const x = px + side * (1200 + Math.random() * 1500);
+            const x = px + side * (2000 + Math.random() * 2500);
             this.spawnCloud(x, 60 + Math.random() * 280);
         }
 

@@ -44,9 +44,9 @@ class PlatformerScene extends Phaser.Scene {
 
         this.playerRunTexture = false;
 
-        // Camera follow — no bounds so it tracks Mitten freely in both directions
+        // Camera follow — wide horizontal bounds for left/right, full height to prevent black space
         this.cameras.main.startFollow(this.player);
-        this.player.setCollideWorldBounds(true);
+        this.cameras.main.setBounds(-1000000, 0, 2000000, 800);
 
         // Collectibles
         this.physics.add.overlap(this.player, this.fishes, (p, f) => this.collectFish(p, f));

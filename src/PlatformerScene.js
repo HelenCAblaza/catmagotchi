@@ -103,6 +103,7 @@ class PlatformerScene extends Phaser.Scene {
 
     // === BACKGROUND SEGMENTS (unflipped -> flipped -> unflipped...) ===
     spawnBgSegment(index) {
+        if (this.bgSegments.some(s => s.index === index)) return;
         const x = index * this.bgWidth;
         const flipped = (index % 2) !== 0;
         const bg = this.add.image(x, this.scale.height / 2, 'adventure_bg')
@@ -157,8 +158,8 @@ class PlatformerScene extends Phaser.Scene {
         const startX = chunkIndex * this.chunkSize;
         const objects = { ground: [], decors: [], fish: [], toys: [] };
 
-        // Seeded random for deterministic decoration
-        let seed = chunkIndex * 16807 + 12345;
+        // Seeded random for deterministic decoration — offset negative chunks so seed stays positive
+        let seed = chunkIndex * 16807 + 12345 + (chunkIndex < 0 ? 2147483647 : 0);
         const rand = () => {
             seed = (seed * 16807) % 2147483647;
             return (seed - 1) / 2147483646;
@@ -585,15 +586,22 @@ class PlatformerScene extends Phaser.Scene {
             }
             return true;
         });
+        // Update tracking indices after cleanup
+        if (this.bgSegments.length > 0) {
+            this.firstBgIndex = Math.min(...this.bgSegments.map(s => s.index));
+            this.lastBgIndex = Math.max(...this.bgSegments.map(s => s.index));
+        }
 
-        // World chunks: spawn ahead (including negative for left-of-spawn trees)
+        // World chunks: spawn around player (bidirectional)
         const currentChunk = Math.floor(px / this.chunkSize);
-        for (let i = currentChunk - 1; i <= currentChunk + 3; i++) {
+        for (let i = currentChunk - 2; i <= currentChunk + 3; i++) {
             this.spawnChunk(i);
         }
-        // Remove chunks far behind
-        for (let i = currentChunk - 6; i < currentChunk - 3; i++) {
-            this.removeChunk(i);
+        // Remove chunks too far in either direction
+        for (const idx of Array.from(this.spawnedChunks)) {
+            if (idx < currentChunk - 5 || idx > currentChunk + 5) {
+                this.removeChunk(idx);
+            }
         }
     }
 

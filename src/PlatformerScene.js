@@ -47,9 +47,9 @@ class PlatformerScene extends Phaser.Scene {
         // === FLOATING CLOUDS ===
         this.clouds = [];
         this.cloudKeys = ['cloud1', 'cloud2', 'cloud3'];
-        this.targetCloudCount = 35;
+        this.targetCloudCount = 55;
         for (let i = 0; i < this.targetCloudCount; i++) {
-            this.spawnCloud(this.player.x + (Math.random() - 0.5) * 8000, 60 + Math.random() * 280);
+            this.spawnCloud(this.player.x + (Math.random() - 0.5) * 5000, 60 + Math.random() * 280);
         }
 
         // Camera follow — wide horizontal bounds for left/right, full height to prevent black space
@@ -581,7 +581,7 @@ class PlatformerScene extends Phaser.Scene {
         // === FLOATING CLOUDS ===
         const px = this.player.x;
         const dt = this.game.loop.delta / 1000;
-        const CLOUD_RANGE = 4000;
+        const CLOUD_RANGE = 2500;
         const BAND_MIN = px - CLOUD_RANGE;
         const BAND_MAX = px + CLOUD_RANGE;
 

@@ -581,26 +581,82 @@ class PlatformerScene extends Phaser.Scene {
         // === FLOATING CLOUDS ===
         const px = this.player.x;
         const dt = this.game.loop.delta / 1000;
-        const CLOUD_RANGE = 4000; // keep clouds within ±4000 px of player
-        for (let i = this.clouds.length - 1; i >= 0; i--) {
-            const c = this.clouds[i];
+        const CLOUD_RANGE = 4000;
+        const BAND_MIN = px - CLOUD_RANGE;
+        const BAND_MAX = px + CLOUD_RANGE;
+
+        // Move all clouds
+        for (const c of this.clouds) {
             c.sprite.x += c.speed * dt;
-            // If cloud drifts too far from player, recycle it to the opposite side
-            if (c.sprite.x > px + CLOUD_RANGE) {
-                c.sprite.x = px - CLOUD_RANGE + Math.random() * 800;
-                c.sprite.y = 60 + Math.random() * 280;
-                c.speed = -(8 + Math.random() * 18);
-            } else if (c.sprite.x < px - CLOUD_RANGE) {
-                c.sprite.x = px + CLOUD_RANGE - Math.random() * 800;
-                c.sprite.y = 60 + Math.random() * 280;
-                c.speed = (8 + Math.random() * 18);
+        }
+
+        // Separate clouds into inside/outside the active band
+        const inside = [];
+        const outside = [];
+        for (const c of this.clouds) {
+            if (c.sprite.x >= BAND_MIN && c.sprite.x <= BAND_MAX) {
+                inside.push(c);
+            } else {
+                outside.push(c);
             }
         }
-        // Fill up to target count with clouds around the player
+
+        // Redistribute "outside" clouds into the biggest gaps for even spacing
+        if (outside.length > 0) {
+            inside.sort((a, b) => a.sprite.x - b.sprite.x);
+
+            const gaps = [];
+            // Gap from left edge to first inside cloud
+            if (inside.length > 0) {
+                gaps.push({ start: BAND_MIN, end: inside[0].sprite.x });
+            } else {
+                gaps.push({ start: BAND_MIN, end: BAND_MAX });
+            }
+            // Gaps between consecutive inside clouds
+            for (let i = 0; i < inside.length - 1; i++) {
+                gaps.push({ start: inside[i].sprite.x, end: inside[i + 1].sprite.x });
+            }
+            // Gap from last inside cloud to right edge
+            if (inside.length > 0) {
+                gaps.push({ start: inside[inside.length - 1].sprite.x, end: BAND_MAX });
+            }
+
+            // Sort by biggest gap first
+            gaps.sort((a, b) => (b.end - b.start) - (a.end - a.start));
+
+            // Place each outside cloud into the center of a big gap
+            for (let i = 0; i < outside.length && i < gaps.length; i++) {
+                const c = outside[i];
+                const g = gaps[i];
+                c.sprite.x = (g.start + g.end) / 2 + (Math.random() - 0.5) * 150;
+                c.sprite.y = 60 + Math.random() * 280;
+                c.speed = (Math.random() > 0.5 ? 1 : -1) * (8 + Math.random() * 18);
+            }
+        }
+
+        // Top up to target count, spawning in the biggest remaining gap
         while (this.clouds.length < this.targetCloudCount) {
-            const side = Math.random() > 0.5 ? 1 : -1;
-            const x = px + side * (200 + Math.random() * (CLOUD_RANGE - 200));
-            this.spawnCloud(x, 60 + Math.random() * 280);
+            const sorted = [...this.clouds].sort((a, b) => a.sprite.x - b.sprite.x);
+            let bestX = BAND_MIN + Math.random() * (BAND_MAX - BAND_MIN);
+            let bestGap = 0;
+
+            // Check left edge gap
+            if (sorted.length > 0) {
+                const leftGap = sorted[0].sprite.x - BAND_MIN;
+                if (leftGap > bestGap) { bestGap = leftGap; bestX = BAND_MIN + leftGap / 2; }
+            }
+            // Check between-cloud gaps
+            for (let i = 0; i < sorted.length - 1; i++) {
+                const gap = sorted[i + 1].sprite.x - sorted[i].sprite.x;
+                if (gap > bestGap) { bestGap = gap; bestX = sorted[i].sprite.x + gap / 2; }
+            }
+            // Check right edge gap
+            if (sorted.length > 0) {
+                const rightGap = BAND_MAX - sorted[sorted.length - 1].sprite.x;
+                if (rightGap > bestGap) { bestGap = rightGap; bestX = sorted[sorted.length - 1].sprite.x + rightGap / 2; }
+            }
+
+            this.spawnCloud(bestX + (Math.random() - 0.5) * 100, 60 + Math.random() * 280);
         }
 
         // === ENDLESS SPAWNING / CLEANUP ===

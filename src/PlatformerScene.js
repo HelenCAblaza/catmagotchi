@@ -405,8 +405,8 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === BELOW-FOREGROUND BUSHES: 50-65 per chunk ===
-        const bgBushCount = 50 + Math.floor(rand() * 16);
+        // === BELOW-FOREGROUND BUSHES: 58-75 per chunk, size -20-30% ===
+        const bgBushCount = 58 + Math.floor(rand() * 18);
         const bgBushSlotW = (this.chunkSize - 40) / bgBushCount;
         for (let i = 0; i < bgBushCount; i++) {
             const slotStart = startX + 20 + i * bgBushSlotW;
@@ -415,7 +415,7 @@ class PlatformerScene extends Phaser.Scene {
                 const bx = slotStart + rand() * bgBushSlotW;
                 if (tryPlaceDecor(bx, 8)) {
                     const bush = this.add.image(bx, 564 + rand() * 18, 'bush')
-                        .setOrigin(0.5, 1).setScale(0.85 + rand() * 0.45).setDepth(5).setScrollFactor(1).setAlpha(1.0);
+                        .setOrigin(0.5, 1).setScale(0.6 + rand() * 0.3).setDepth(5).setScrollFactor(1).setAlpha(1.0);
                     objects.decors.push(bush);
                     placed = true;
                     break;
@@ -423,8 +423,8 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === BELOW-FOREGROUND ROCKS: 50-65 per chunk, BIG ===
-        const bgRockCount = 50 + Math.floor(rand() * 16);
+        // === BELOW-FOREGROUND ROCKS: 58-75 per chunk, BIG ===
+        const bgRockCount = 58 + Math.floor(rand() * 18);
         const bgRockSlotW = (this.chunkSize - 40) / bgRockCount;
         for (let i = 0; i < bgRockCount; i++) {
             const slotStart = startX + 20 + i * bgRockSlotW;
@@ -433,7 +433,7 @@ class PlatformerScene extends Phaser.Scene {
                 const rx = slotStart + rand() * bgRockSlotW;
                 if (tryPlaceDecor(rx, 8)) {
                     const rock = this.add.image(rx, 566 + rand() * 18, 'rock')
-                        .setOrigin(0.5, 1).setScale(0.95 + rand() * 0.55).setDepth(5).setScrollFactor(1).setAlpha(1.0);
+                        .setOrigin(0.5, 1).setScale(0.7 + rand() * 0.35).setDepth(5).setScrollFactor(1).setAlpha(1.0);
                     objects.decors.push(rock);
                     placed = true;
                     break;

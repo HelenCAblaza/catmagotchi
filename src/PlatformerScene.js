@@ -44,6 +44,14 @@ class PlatformerScene extends Phaser.Scene {
 
         this.playerRunTexture = false;
 
+        // === FLOATING CLOUDS ===
+        this.clouds = [];
+        this.cloudKeys = ['cloud1', 'cloud2', 'cloud3'];
+        this.targetCloudCount = 14;
+        for (let i = 0; i < this.targetCloudCount; i++) {
+            this.spawnCloud(this.player.x + (Math.random() - 0.5) * 3000, 60 + Math.random() * 280);
+        }
+
         // Camera follow — wide horizontal bounds for left/right, full height to prevent black space
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(-1000000, 0, 2000000, 800);
@@ -373,6 +381,19 @@ class PlatformerScene extends Phaser.Scene {
         this.spawnedChunks.delete(chunkIndex);
     }
 
+    spawnCloud(x, y) {
+        const key = this.cloudKeys[Math.floor(Math.random() * this.cloudKeys.length)];
+        const scale = 0.5 + Math.random() * 0.9;
+        const speed = (8 + Math.random() * 18) * (Math.random() > 0.5 ? 1 : -1);
+        const sprite = this.add.image(x, y, key)
+            .setOrigin(0.5, 0.5)
+            .setScale(scale)
+            .setDepth(-15)
+            .setScrollFactor(1)
+            .setAlpha(0.8 + Math.random() * 0.2);
+        this.clouds.push({ sprite, speed });
+    }
+
     createVirtualJoystick() {
         const W = this.scale.width;
         const H = this.scale.height;
@@ -557,8 +578,26 @@ class PlatformerScene extends Phaser.Scene {
             this.registry.set('stats', stats);
         }
 
-        // === ENDLESS SPAWNING / CLEANUP ===
+        // === FLOATING CLOUDS ===
         const px = this.player.x;
+        const dt = this.game.loop.delta / 1000;
+        for (let i = this.clouds.length - 1; i >= 0; i--) {
+            const c = this.clouds[i];
+            c.sprite.x += c.speed * dt;
+            if (Math.abs(c.sprite.x - px) > 2500) {
+                c.sprite.destroy();
+                this.clouds.splice(i, 1);
+            }
+        }
+        while (this.clouds.length < this.targetCloudCount) {
+            const side = Math.random() > 0.5 ? 1 : -1;
+            const x = px + side * (1200 + Math.random() * 1000);
+            const y = 60 + Math.random() * 280;
+            this.spawnCloud(x, y);
+        }
+
+        // === ENDLESS SPAWNING / CLEANUP ===
+        // px already declared above in cloud section
 
         // Background segments: spawn to the right
         const lastBgEnd = (this.lastBgIndex + 1) * this.bgWidth;

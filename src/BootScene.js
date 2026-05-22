@@ -32,7 +32,9 @@ class BootScene extends Phaser.Scene {
         this.createHomeBgTexture('bg_home');
         this.createPlatformerBgTexture('bg_platformer');
         this.load.image('ground', 'assets/ground.png?v=9');
-        this.createCloudTexture('cloud');
+        this.createCloudTexture('cloud1');
+        this.createCloudTexture('cloud2');
+        this.createCloudTexture('cloud3');
         this.createHeartTexture('heart');
         this.createStarTexture('star');
 
@@ -305,14 +307,45 @@ class BootScene extends Phaser.Scene {
     }
 
     createCloudTexture(key) {
-        const w = 64, h = 32;
+        let w, h;
+        if (key === 'cloud1') { w = 64; h = 32; }
+        else if (key === 'cloud2') { w = 80; h = 40; }
+        else { w = 48; h = 24; }
         const gfx = this.make.graphics({ x: 0, y: 0, add: false });
 
-        gfx.fillStyle(0xffffff, 0.8);
-        gfx.fillCircle(w * 0.25, h * 0.55, h * 0.45);
-        gfx.fillCircle(w * 0.50, h * 0.45, h * 0.55);
-        gfx.fillCircle(w * 0.75, h * 0.55, h * 0.45);
-        gfx.fillRect(w * 0.25, h * 0.35, w * 0.5, h * 0.4);
+        // White fluffy body with overlapping circles for pixel-art cloud feel
+        gfx.fillStyle(0xffffff, 1);
+        if (key === 'cloud1') {
+            gfx.fillCircle(w * 0.20, h * 0.55, h * 0.45);
+            gfx.fillCircle(w * 0.45, h * 0.42, h * 0.58);
+            gfx.fillCircle(w * 0.70, h * 0.50, h * 0.50);
+            gfx.fillCircle(w * 0.88, h * 0.58, h * 0.38);
+            gfx.fillRect(w * 0.20, h * 0.35, w * 0.60, h * 0.40);
+            // Tiny highlight puff
+            gfx.fillStyle(0xf0f8ff, 0.6);
+            gfx.fillCircle(w * 0.35, h * 0.35, h * 0.18);
+        } else if (key === 'cloud2') {
+            gfx.fillCircle(w * 0.15, h * 0.55, h * 0.42);
+            gfx.fillCircle(w * 0.35, h * 0.40, h * 0.55);
+            gfx.fillCircle(w * 0.55, h * 0.45, h * 0.52);
+            gfx.fillCircle(w * 0.75, h * 0.50, h * 0.48);
+            gfx.fillCircle(w * 0.90, h * 0.58, h * 0.35);
+            gfx.fillRect(w * 0.15, h * 0.32, w * 0.70, h * 0.45);
+            // Soft shadow underneath
+            gfx.fillStyle(0xe8f0ff, 0.45);
+            gfx.fillCircle(w * 0.40, h * 0.68, h * 0.25);
+            gfx.fillCircle(w * 0.65, h * 0.68, h * 0.22);
+            // Highlight
+            gfx.fillStyle(0xffffff, 0.7);
+            gfx.fillCircle(w * 0.30, h * 0.32, h * 0.15);
+        } else {
+            gfx.fillCircle(w * 0.25, h * 0.55, h * 0.48);
+            gfx.fillCircle(w * 0.55, h * 0.45, h * 0.55);
+            gfx.fillCircle(w * 0.78, h * 0.55, h * 0.42);
+            gfx.fillRect(w * 0.22, h * 0.35, w * 0.52, h * 0.42);
+            gfx.fillStyle(0xf5faff, 0.5);
+            gfx.fillCircle(w * 0.30, h * 0.38, h * 0.15);
+        }
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();

@@ -209,10 +209,11 @@ class StartScene extends Phaser.Scene {
 
         // Decorative floating clouds
         for (let i = 0; i < 5; i++) {
+            const key = ['cloud1', 'cloud2', 'cloud3'][Math.floor(Math.random() * 3)];
             const cloud = this.add.image(
                 60 + Math.random() * (W - 120),
                 40 + Math.random() * (H * 0.3),
-                'cloud'
+                key
             )
                 .setScale(0.5 + Math.random() * 0.6)
                 .setAlpha(0.3 + Math.random() * 0.3)

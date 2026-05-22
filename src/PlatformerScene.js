@@ -390,7 +390,7 @@ class PlatformerScene extends Phaser.Scene {
             .setScale(scale)
             .setDepth(-15)
             .setScrollFactor(1)
-            .setAlpha(0.8 + Math.random() * 0.2);
+            .setAlpha(0.25 + Math.random() * 0.35);
         this.clouds.push({ sprite, speed });
     }
 

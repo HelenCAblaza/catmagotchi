@@ -9,17 +9,18 @@ class PlatformerScene extends Phaser.Scene {
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
         // === ENDLESS WORLD SETUP ===
-        // No bounds - Mitten can walk forever!
-        this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 600);
+        // Allow walking far in both directions
+        this.physics.world.setBounds(-1000000, 0, 2000000, 600);
 
-        this.bgWidth = 5760;           // display width of one bg segment
-        this.chunkSize = 2000;         // world chunk width for ground/decors/collectibles
+        this.bgWidth = 5760;
+        this.chunkSize = 2000;
         this.spawnedChunks = new Set();
-        this.chunkData = new Map();    // chunkIndex -> {ground:[], decors:[], fish:[], toys:[]}
-        this.bgSegments = [];          // {image, index, trees: []}
+        this.chunkData = new Map();
+        this.bgSegments = [];
         this.lastBgIndex = -1;
-        this.lastPondTypes = [];      // Track last 2 pond types globally for anti-repeat
-        this.pondPositions = [];      // Track ALL pond X positions globally to prevent cross-chunk overlap
+        this.firstBgIndex = 0;   // track lowest bg index for leftward spawning
+        this.lastPondTypes = [];
+        this.pondPositions = [];
 
         // Spawn initial background segment (unflipped)
         this.spawnBgSegment(0);
@@ -43,9 +44,9 @@ class PlatformerScene extends Phaser.Scene {
 
         this.playerRunTexture = false;
 
-        // Camera follow - no bounds!
+        // Camera follow — no bounds so it tracks Mitten freely in both directions
         this.cameras.main.startFollow(this.player);
-        this.cameras.main.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 600);
+        this.player.setCollideWorldBounds(true);
 
         // Collectibles
         this.physics.add.overlap(this.player, this.fishes, (p, f) => this.collectFish(p, f));
@@ -136,6 +137,7 @@ class PlatformerScene extends Phaser.Scene {
 
         this.bgSegments.push({ image: bg, index: index, trees: bgTrees });
         this.lastBgIndex = Math.max(this.lastBgIndex, index);
+        this.firstBgIndex = Math.min(this.firstBgIndex, index);
     }
 
     removeBgSegment(index) {
@@ -557,15 +559,26 @@ class PlatformerScene extends Phaser.Scene {
         // === ENDLESS SPAWNING / CLEANUP ===
         const px = this.player.x;
 
-        // Background segments: spawn when within 1 segment distance of last
+        // Background segments: spawn to the right
         const lastBgEnd = (this.lastBgIndex + 1) * this.bgWidth;
         if (px > lastBgEnd - this.bgWidth) {
             this.spawnBgSegment(this.lastBgIndex + 1);
         }
-        // Remove bg segments far behind (keep 2 behind)
+        // Background segments: spawn to the left
+        const firstBgStart = this.firstBgIndex * this.bgWidth;
+        if (px < firstBgStart + this.bgWidth) {
+            this.spawnBgSegment(this.firstBgIndex - 1);
+        }
+        // Remove bg segments far behind (left) or far ahead (right)
         this.bgSegments = this.bgSegments.filter(seg => {
+            const segStart = seg.index * this.bgWidth;
             const segEnd = (seg.index + 1) * this.bgWidth;
             if (px > segEnd + this.bgWidth * 2) {
+                seg.image.destroy();
+                seg.trees.forEach(t => t.destroy());
+                return false;
+            }
+            if (px < segStart - this.bgWidth * 2) {
                 seg.image.destroy();
                 seg.trees.forEach(t => t.destroy());
                 return false;

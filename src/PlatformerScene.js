@@ -289,19 +289,20 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === FLOWERS: 12-16 per chunk, evenly distributed in slots ===
-        const flowerCount = 12 + Math.floor(rand() * 5);
+        // === FLOWERS: foreground + below-foreground layers ===
+        // Foreground flowers: 18-24 per chunk
+        const flowerCount = 18 + Math.floor(rand() * 7);
         const flowerSlotW = (this.chunkSize - 40) / flowerCount;
         for (let i = 0; i < flowerCount; i++) {
             const slotStart = startX + 20 + i * flowerSlotW;
             let placed = false;
             for (let attempt = 0; attempt < 6; attempt++) {
                 const fx = slotStart + rand() * flowerSlotW;
-                if (tryPlaceDecor(fx, 18)) {
-                    const fy = 558 + rand() * 10;
+                if (tryPlaceDecor(fx, 16)) {
+                    const fy = 555 + rand() * 12;
                     const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(rand() * 4)];
                     const flower = this.add.image(fx, fy, 'flower')
-                        .setOrigin(0.5, 1).setScale(0.5 + rand() * 0.35).setDepth(16)
+                        .setOrigin(0.5, 1).setScale(0.45 + rand() * 0.3).setDepth(16)
                         .setScrollFactor(1).setTint(tint);
                     objects.decors.push(flower);
                     placed = true;
@@ -309,18 +310,56 @@ class PlatformerScene extends Phaser.Scene {
                 }
             }
         }
+        // Below-foreground flowers: 10-14 per chunk, lower down
+        const bgFlowerCount = 10 + Math.floor(rand() * 5);
+        const bgFlowerSlotW = (this.chunkSize - 40) / bgFlowerCount;
+        for (let i = 0; i < bgFlowerCount; i++) {
+            const slotStart = startX + 20 + i * bgFlowerSlotW;
+            let placed = false;
+            for (let attempt = 0; attempt < 6; attempt++) {
+                const fx = slotStart + rand() * bgFlowerSlotW;
+                if (tryPlaceDecor(fx, 14)) {
+                    const fy = 585 + rand() * 20; // lower, near/below ground edge
+                    const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa][Math.floor(rand() * 4)];
+                    const flower = this.add.image(fx, fy, 'flower')
+                        .setOrigin(0.5, 1).setScale(0.35 + rand() * 0.25).setDepth(2)
+                        .setScrollFactor(1).setTint(tint).setAlpha(0.85);
+                    objects.decors.push(flower);
+                    placed = true;
+                    break;
+                }
+            }
+        }
 
-        // === BUSHES: 8-11 per chunk, evenly distributed in slots ===
-        const bushCount = 8 + Math.floor(rand() * 4);
+        // === BUSHES: foreground + below-foreground layers ===
+        // Foreground bushes: 12-16 per chunk
+        const bushCount = 12 + Math.floor(rand() * 5);
         const bushSlotW = (this.chunkSize - 40) / bushCount;
         for (let i = 0; i < bushCount; i++) {
             const slotStart = startX + 20 + i * bushSlotW;
             let placed = false;
             for (let attempt = 0; attempt < 6; attempt++) {
                 const bx = slotStart + rand() * bushSlotW;
-                if (tryPlaceDecor(bx, 28)) {
-                    const bush = this.add.image(bx, 560, 'bush')
-                        .setOrigin(0.5, 1).setScale(0.45 + rand() * 0.25).setDepth(15).setScrollFactor(1);
+                if (tryPlaceDecor(bx, 26)) {
+                    const bush = this.add.image(bx, 558, 'bush')
+                        .setOrigin(0.5, 1).setScale(0.4 + rand() * 0.25).setDepth(15).setScrollFactor(1);
+                    objects.decors.push(bush);
+                    placed = true;
+                    break;
+                }
+            }
+        }
+        // Below-foreground bushes: 8-11 per chunk
+        const bgBushCount = 8 + Math.floor(rand() * 4);
+        const bgBushSlotW = (this.chunkSize - 40) / bgBushCount;
+        for (let i = 0; i < bgBushCount; i++) {
+            const slotStart = startX + 20 + i * bgBushSlotW;
+            let placed = false;
+            for (let attempt = 0; attempt < 6; attempt++) {
+                const bx = slotStart + rand() * bgBushSlotW;
+                if (tryPlaceDecor(bx, 24)) {
+                    const bush = this.add.image(bx, 588 + rand() * 15, 'bush')
+                        .setOrigin(0.5, 1).setScale(0.3 + rand() * 0.2).setDepth(2).setScrollFactor(1).setAlpha(0.85);
                     objects.decors.push(bush);
                     placed = true;
                     break;
@@ -328,17 +367,35 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === ROCKS: 5-7 per chunk, evenly distributed in slots ===
-        const rockCount = 5 + Math.floor(rand() * 3);
+        // === ROCKS: foreground + below-foreground layers ===
+        // Foreground rocks: 8-11 per chunk
+        const rockCount = 8 + Math.floor(rand() * 4);
         const rockSlotW = (this.chunkSize - 40) / rockCount;
         for (let i = 0; i < rockCount; i++) {
             const slotStart = startX + 20 + i * rockSlotW;
             let placed = false;
             for (let attempt = 0; attempt < 6; attempt++) {
                 const rx = slotStart + rand() * rockSlotW;
-                if (tryPlaceDecor(rx, 22)) {
+                if (tryPlaceDecor(rx, 20)) {
                     const rock = this.add.image(rx, 560, 'rock')
-                        .setOrigin(0.5, 1).setScale(0.45 + rand() * 0.2).setDepth(15).setScrollFactor(1);
+                        .setOrigin(0.5, 1).setScale(0.4 + rand() * 0.2).setDepth(15).setScrollFactor(1);
+                    objects.decors.push(rock);
+                    placed = true;
+                    break;
+                }
+            }
+        }
+        // Below-foreground rocks: 5-7 per chunk
+        const bgRockCount = 5 + Math.floor(rand() * 3);
+        const bgRockSlotW = (this.chunkSize - 40) / bgRockCount;
+        for (let i = 0; i < bgRockCount; i++) {
+            const slotStart = startX + 20 + i * bgRockSlotW;
+            let placed = false;
+            for (let attempt = 0; attempt < 6; attempt++) {
+                const rx = slotStart + rand() * bgRockSlotW;
+                if (tryPlaceDecor(rx, 18)) {
+                    const rock = this.add.image(rx, 590 + rand() * 15, 'rock')
+                        .setOrigin(0.5, 1).setScale(0.3 + rand() * 0.15).setDepth(2).setScrollFactor(1).setAlpha(0.85);
                     objects.decors.push(rock);
                     placed = true;
                     break;
@@ -346,11 +403,11 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // Fish: 1-2 per chunk
-        const fishCount = 1 + Math.floor(rand() * 2);
+        // Fish: 2-4 per chunk
+        const fishCount = 2 + Math.floor(rand() * 3);
         for (let i = 0; i < fishCount; i++) {
-            const fx = startX + 300 + Math.floor(rand() * (this.chunkSize - 600));
-            const fy = 250 + Math.floor(rand() * 200);
+            const fx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
+            const fy = 200 + Math.floor(rand() * 250);
             const fish = this.fishes.create(fx, fy, 'fish');
             this.tweens.add({
                 targets: fish, y: fy - 5,
@@ -360,10 +417,11 @@ class PlatformerScene extends Phaser.Scene {
             objects.fish.push(fish);
         }
 
-        // Toys: ~70% chance per chunk
-        if (rand() > 0.3) {
-            const tx = startX + 300 + Math.floor(rand() * (this.chunkSize - 600));
-            const ty = 300 + Math.floor(rand() * 150);
+        // Toys: 1-2 per chunk
+        const toyCount = 1 + Math.floor(rand() * 2);
+        for (let i = 0; i < toyCount; i++) {
+            const tx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
+            const ty = 250 + Math.floor(rand() * 180);
             const toy = this.toys.create(tx, ty, 'yarn');
             this.tweens.add({
                 targets: toy, y: ty - 6, angle: 10,

@@ -244,7 +244,7 @@ class PlatformerScene extends Phaser.Scene {
             placedTrees.push(treeData);
             this.treePlacements.push(treeData);
             placedDecors.push({ x: tx, radius: 10 }); // trunk only, let flowers sit at tree base
-            const tree = this.add.image(tx, 565, key)
+            const tree = this.add.image(tx, 562, key)
                 .setOrigin(0.5, 1).setScale(randomTreeScale()).setDepth(15).setScrollFactor(1);
             objects.decors.push(tree);
             return true;
@@ -402,8 +402,8 @@ class PlatformerScene extends Phaser.Scene {
             const fx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
             const fish = this.fishes.create(fx, collectibleFloorY, 'fish');
             fish.setOrigin(0.5, 1).setDepth(17);
-            fish.setAllowGravity(false);
-            fish.body.setImmovable(true);
+            fish.body.allowGravity = false;
+            fish.body.immovable = true;
             this.tweens.add({
                 targets: fish, angle: 5,
                 duration: 800 + rand() * 400,
@@ -418,8 +418,8 @@ class PlatformerScene extends Phaser.Scene {
             const tx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
             const toy = this.toys.create(tx, collectibleFloorY, 'yarn');
             toy.setOrigin(0.5, 1).setDepth(17);
-            toy.setAllowGravity(false);
-            toy.body.setImmovable(true);
+            toy.body.allowGravity = false;
+            toy.body.immovable = true;
             this.tweens.add({
                 targets: toy, angle: 10,
                 duration: 1000 + rand() * 500,

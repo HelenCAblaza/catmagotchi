@@ -395,30 +395,33 @@ class PlatformerScene extends Phaser.Scene {
         }
 
         // === COLLECTIBLES: place before below-foreground decorations so they get avoided ===
-        // Fish: 2-4 per chunk
+        // Fish: 2-4 per chunk — collectibles sit on the floor, not falling from the sky
+        const collectibleFloorY = 555;
         const fishCount = 2 + Math.floor(rand() * 3);
         for (let i = 0; i < fishCount; i++) {
             const fx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const fy = 200 + Math.floor(rand() * 250);
-            const fish = this.fishes.create(fx, fy, 'fish');
-            fish.setDepth(5);
+            const fish = this.fishes.create(fx, collectibleFloorY, 'fish');
+            fish.setOrigin(0.5, 1).setDepth(17);
+            fish.setAllowGravity(false);
+            fish.body.setImmovable(true);
             this.tweens.add({
-                targets: fish, y: fy - 5,
+                targets: fish, angle: 5,
                 duration: 800 + rand() * 400,
                 yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
             });
             objects.fish.push(fish);
         }
 
-        // Toys: 1-2 per chunk
+        // Toys: 1-2 per chunk — yarn also stays on the floor
         const toyCount = 1 + Math.floor(rand() * 2);
         for (let i = 0; i < toyCount; i++) {
             const tx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const ty = 250 + Math.floor(rand() * 180);
-            const toy = this.toys.create(tx, ty, 'yarn');
-            toy.setDepth(5);
+            const toy = this.toys.create(tx, collectibleFloorY, 'yarn');
+            toy.setOrigin(0.5, 1).setDepth(17);
+            toy.setAllowGravity(false);
+            toy.body.setImmovable(true);
             this.tweens.add({
-                targets: toy, y: ty - 6, angle: 10,
+                targets: toy, angle: 10,
                 duration: 1000 + rand() * 500,
                 yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
             });

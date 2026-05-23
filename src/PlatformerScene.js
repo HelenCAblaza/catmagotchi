@@ -474,7 +474,7 @@ class PlatformerScene extends Phaser.Scene {
 
     spawnBird(x, y) {
         const speed = (35 + Math.random() * 55) * (Math.random() > 0.5 ? 1 : -1);
-        const baseScale = 0.55 + Math.random() * 0.45;
+        const baseScale = 0.45 + Math.random() * 0.25;
         const sprite = this.add.image(x, y, 'bird')
             .setOrigin(0.5, 0.5)
             .setScale(baseScale)
@@ -774,7 +774,7 @@ class PlatformerScene extends Phaser.Scene {
                 b.baseY = 70 + Math.random() * 250;
                 b.sprite.y = b.baseY;
                 b.speed = (35 + Math.random() * 55) * (Math.random() > 0.5 ? 1 : -1);
-                b.baseScale = 0.55 + Math.random() * 0.45;
+                b.baseScale = 0.45 + Math.random() * 0.25;
                 b.flapSpeed = 5 + Math.random() * 3;
                 b.sprite.setFlipX(b.speed < 0);
                 b.sprite.setAlpha(0.82 + Math.random() * 0.16);

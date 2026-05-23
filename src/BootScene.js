@@ -353,27 +353,48 @@ class BootScene extends Phaser.Scene {
     }
 
     createBirdTexture(key) {
-        const w = 28, h = 18;
+        const w = 36, h = 22;
         const gfx = this.make.graphics({ x: 0, y: 0, add: false });
 
-        // Tiny soft bird: rounded body, two wings, little beak.
-        gfx.fillStyle(0x6f7fb8, 1);
-        gfx.fillEllipse(w * 0.52, h * 0.56, w * 0.34, h * 0.42);
+        // Thin, light, simple cute sky bird.
+        gfx.fillStyle(0xffffff, 1);
+        gfx.fillEllipse(17, 13.5, 14, 7);
+        gfx.fillEllipse(25.5, 10.5, 9, 7);
 
-        // Wings are wide and readable in the sky.
-        gfx.fillStyle(0x8798d8, 1);
-        gfx.fillTriangle(w * 0.44, h * 0.52, w * 0.05, h * 0.18, w * 0.24, h * 0.66);
-        gfx.fillTriangle(w * 0.58, h * 0.52, w * 0.95, h * 0.20, w * 0.78, h * 0.68);
+        // Very soft belly shading.
+        gfx.fillStyle(0xf8f8f9, 1);
+        gfx.fillEllipse(18, 15.5, 8, 3);
 
-        // Belly + cute face detail.
-        gfx.fillStyle(0xcad6ff, 1);
-        gfx.fillEllipse(w * 0.54, h * 0.62, w * 0.18, h * 0.18);
-        gfx.fillStyle(0xffcc66, 1);
-        gfx.fillTriangle(w * 0.70, h * 0.52, w * 0.86, h * 0.46, w * 0.70, h * 0.60);
-        gfx.fillStyle(0x3f4566, 1);
-        gfx.fillCircle(w * 0.62, h * 0.46, 1.3);
-        gfx.fillStyle(0xffffff, 0.9);
-        gfx.fillCircle(w * 0.64, h * 0.44, 0.5);
+        // Pale grey tail feathers — light enough to stay cute.
+        gfx.fillStyle(0xacacb2, 1);
+        gfx.fillTriangle(11, 12, 4, 10, 8, 13);
+        gfx.fillStyle(0xcdcdd3, 1);
+        gfx.fillTriangle(11, 15, 4, 17, 8, 14);
+
+        // Slim pale wings, not bat-like.
+        gfx.fillStyle(0xacacb2, 1);
+        gfx.fillTriangle(16, 11, 12, 4, 15, 5);
+        gfx.fillTriangle(16, 11, 15, 5, 19, 11);
+        gfx.fillStyle(0xcdcdd3, 1);
+        gfx.fillTriangle(21, 11, 26, 4, 28, 7);
+        gfx.fillTriangle(21, 11, 28, 7, 23, 12);
+        gfx.fillStyle(0xf8f8f9, 1);
+        gfx.fillEllipse(16, 8, 4, 6);
+        gfx.fillStyle(0xffffff, 1);
+        gfx.fillEllipse(26, 8, 4, 6);
+
+        // Tiny face, beak, blush, and feet.
+        gfx.fillStyle(0xf7ca60, 1);
+        gfx.fillTriangle(29, 10, 35, 12, 29, 14);
+        gfx.fillStyle(0x74747a, 1);
+        gfx.fillEllipse(26, 10, 2.3, 2.3);
+        gfx.fillStyle(0xffffff, 1);
+        gfx.fillCircle(26.5, 9.5, 0.5);
+        gfx.fillStyle(0xffc6d0, 1);
+        gfx.fillCircle(23, 13, 0.8);
+        gfx.fillStyle(0xf7ca60, 1);
+        gfx.fillCircle(16, 18, 0.6);
+        gfx.fillCircle(20, 18, 0.6);
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();

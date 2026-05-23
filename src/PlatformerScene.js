@@ -13,6 +13,8 @@ class PlatformerScene extends Phaser.Scene {
         this.physics.world.setBounds(-1000000, 0, 2000000, 600);
 
         this.bgWidth = 5760;
+        this.bgTileWidth = 1920;
+        this.bgTileKeys = ['adventure_bg_0', 'adventure_bg_1', 'adventure_bg_2'];
         this.chunkSize = 2000;
         this.spawnedChunks = new Set();
         this.chunkData = new Map();
@@ -123,12 +125,16 @@ class PlatformerScene extends Phaser.Scene {
         if (this.bgSegments.some(s => s.index === index)) return;
         const x = index * this.bgWidth;
         const flipped = (index % 2) !== 0;
-        const bg = this.add.image(x, this.scale.height / 2, 'adventure_bg')
-            .setOrigin(0, 0.5)
-            .setDisplaySize(this.bgWidth, 800)
-            .setDepth(-20)
-            .setScrollFactor(1);
-        if (flipped) bg.setFlipX(true);
+        const bgImages = this.bgTileKeys.map((key, tileIndex) => {
+            const displaySlot = flipped ? this.bgTileKeys.length - 1 - tileIndex : tileIndex;
+            const bg = this.add.image(x + displaySlot * this.bgTileWidth, this.scale.height / 2, key)
+                .setOrigin(0, 0.5)
+                .setDisplaySize(this.bgTileWidth, 800)
+                .setDepth(-20)
+                .setScrollFactor(1);
+            if (flipped) bg.setFlipX(true);
+            return bg;
+        });
 
         // Background trees: distant forest silhouettes
         const bgTrees = [];
@@ -153,7 +159,7 @@ class PlatformerScene extends Phaser.Scene {
             bgTrees.push(tree);
         }
 
-        this.bgSegments.push({ image: bg, index: index, trees: bgTrees });
+        this.bgSegments.push({ images: bgImages, index: index, trees: bgTrees });
         this.lastBgIndex = Math.max(this.lastBgIndex, index);
         this.firstBgIndex = Math.min(this.firstBgIndex, index);
     }
@@ -161,7 +167,9 @@ class PlatformerScene extends Phaser.Scene {
     removeBgSegment(index) {
         const idx = this.bgSegments.findIndex(s => s.index === index);
         if (idx >= 0) {
-            this.bgSegments[idx].image.destroy();
+            const segment = this.bgSegments[idx];
+            const images = segment.images || (segment.image ? [segment.image] : []);
+            images.forEach(bg => bg.destroy());
             this.bgSegments[idx].trees.forEach(t => t.destroy());
             this.bgSegments.splice(idx, 1);
         }
@@ -244,7 +252,7 @@ class PlatformerScene extends Phaser.Scene {
             placedTrees.push(treeData);
             this.treePlacements.push(treeData);
             placedDecors.push({ x: tx, radius: 10 }); // trunk only, let flowers sit at tree base
-            const treeY = key === 'tree3' ? 559 : 562; // orange/3rd tree sits a tiny bit higher
+            const treeY = key === 'tree3' ? 556 : 562; // orange/3rd tree sits a tiny bit higher
             const tree = this.add.image(tx, treeY, key)
                 .setOrigin(0.5, 1).setScale(randomTreeScale()).setDepth(15).setScrollFactor(1);
             objects.decors.push(tree);

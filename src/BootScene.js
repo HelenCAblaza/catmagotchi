@@ -12,7 +12,10 @@ class BootScene extends Phaser.Scene {
         this.load.image('yarn_toy', 'assets/yarn-toy.png?v=2');
         this.load.image('food_tray', 'assets/food-tray.png?v=7');
         this.load.image('scenery', 'assets/scenery.png?v=2');
-        this.load.image('adventure_bg', 'assets/adventure-bg.png?v=1');
+        // Mobile-safe background slices: keep each texture under common iOS/Android max texture sizes.
+        this.load.image('adventure_bg_0', 'assets/adventure-bg-0.png?v=1');
+        this.load.image('adventure_bg_1', 'assets/adventure-bg-1.png?v=1');
+        this.load.image('adventure_bg_2', 'assets/adventure-bg-2.png?v=1');
         this.load.image('pond1', 'assets/pond1.png?v=1');
         this.load.image('pond2', 'assets/pond2.png?v=1');
         this.load.image('pond3', 'assets/pond3.png?v=2');

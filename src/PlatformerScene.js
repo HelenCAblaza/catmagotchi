@@ -252,7 +252,7 @@ class PlatformerScene extends Phaser.Scene {
             placedTrees.push(treeData);
             this.treePlacements.push(treeData);
             placedDecors.push({ x: tx, radius: 10 }); // trunk only, let flowers sit at tree base
-            const treeY = key === 'tree3' ? 556 : 562; // orange/3rd tree sits a tiny bit higher
+            const treeY = key === 'tree3' ? 560 : (key === 'tree2' ? 559 : 562); // tree3 lower to touch ground, tree2 a bit higher
             const tree = this.add.image(tx, treeY, key)
                 .setOrigin(0.5, 1).setScale(randomTreeScale()).setDepth(15).setScrollFactor(1);
             objects.decors.push(tree);

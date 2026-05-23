@@ -861,16 +861,15 @@ class PlatformerScene extends Phaser.Scene {
         this.bgSegments = this.bgSegments.filter(seg => {
             const segStart = seg.index * this.bgWidth;
             const segEnd = (seg.index + 1) * this.bgWidth;
-            if (px > segEnd + this.bgWidth * 2) {
-                seg.image.destroy();
+            const shouldRemove = px > segEnd + this.bgWidth * 2 || px < segStart - this.bgWidth * 2;
+
+            if (shouldRemove) {
+                const images = seg.images || (seg.image ? [seg.image] : []);
+                images.forEach(bg => bg.destroy());
                 seg.trees.forEach(t => t.destroy());
                 return false;
             }
-            if (px < segStart - this.bgWidth * 2) {
-                seg.image.destroy();
-                seg.trees.forEach(t => t.destroy());
-                return false;
-            }
+
             return true;
         });
         // Update tracking indices after cleanup

@@ -437,7 +437,7 @@ class PlatformerScene extends Phaser.Scene {
                     const fy = 562 + rand() * 18; // tight band just below foreground
                     const tint = [0xffffff, 0xffaabb, 0xffdd88, 0xff88aa, 0xaaddff, 0xffccdd, 0xddffaa, 0xffaaaa][Math.floor(rand() * 8)];
                     const flower = this.add.image(fx, fy, 'flower')
-                        .setOrigin(0.5, 1).setScale(0.9 + rand() * 0.5).setDepth(5)
+                        .setOrigin(0.5, 1).setScale(0.9 + rand() * 0.5).setDepth(16)
                         .setScrollFactor(1).setTint(tint).setAlpha(1.0);
                     objects.decors.push(flower);
                     placed = true;

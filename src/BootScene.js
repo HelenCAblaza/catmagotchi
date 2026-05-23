@@ -308,45 +308,41 @@ class BootScene extends Phaser.Scene {
     }
 
     createCloudTexture(key) {
-        let w, h;
-        if (key === 'cloud1') { w = 64; h = 32; }
-        else if (key === 'cloud2') { w = 80; h = 40; }
-        else { w = 48; h = 24; }
+        let w, h, puffs;
+        if (key === 'cloud1') {
+            w = 86; h = 44;
+            puffs = [[16, 25, 14], [31, 18, 19], [50, 18, 20], [69, 25, 14], [27, 29, 15], [53, 30, 17]];
+        } else if (key === 'cloud2') {
+            w = 104; h = 52;
+            puffs = [[17, 30, 15], [32, 22, 20], [51, 18, 23], [72, 23, 20], [88, 31, 14], [37, 34, 17], [65, 35, 18]];
+        } else {
+            w = 70; h = 36;
+            puffs = [[14, 22, 12], [27, 16, 16], [43, 17, 17], [57, 23, 11], [31, 25, 13], [47, 26, 12]];
+        }
         const gfx = this.make.graphics({ x: 0, y: 0, add: false });
 
-        // White fluffy body with overlapping circles for pixel-art cloud feel
-        gfx.fillStyle(0xffffff, 1);
-        if (key === 'cloud1') {
-            gfx.fillCircle(w * 0.20, h * 0.55, h * 0.45);
-            gfx.fillCircle(w * 0.45, h * 0.42, h * 0.58);
-            gfx.fillCircle(w * 0.70, h * 0.50, h * 0.50);
-            gfx.fillCircle(w * 0.88, h * 0.58, h * 0.38);
-            gfx.fillRect(w * 0.20, h * 0.35, w * 0.60, h * 0.40);
-            // Tiny highlight puff
-            gfx.fillStyle(0xf0f8ff, 0.6);
-            gfx.fillCircle(w * 0.35, h * 0.35, h * 0.18);
-        } else if (key === 'cloud2') {
-            gfx.fillCircle(w * 0.15, h * 0.55, h * 0.42);
-            gfx.fillCircle(w * 0.35, h * 0.40, h * 0.55);
-            gfx.fillCircle(w * 0.55, h * 0.45, h * 0.52);
-            gfx.fillCircle(w * 0.75, h * 0.50, h * 0.48);
-            gfx.fillCircle(w * 0.90, h * 0.58, h * 0.35);
-            gfx.fillRect(w * 0.15, h * 0.32, w * 0.70, h * 0.45);
-            // Soft shadow underneath
-            gfx.fillStyle(0xe8f0ff, 0.45);
-            gfx.fillCircle(w * 0.40, h * 0.68, h * 0.25);
-            gfx.fillCircle(w * 0.65, h * 0.68, h * 0.22);
-            // Highlight
-            gfx.fillStyle(0xffffff, 0.7);
-            gfx.fillCircle(w * 0.30, h * 0.32, h * 0.15);
-        } else {
-            gfx.fillCircle(w * 0.25, h * 0.55, h * 0.48);
-            gfx.fillCircle(w * 0.55, h * 0.45, h * 0.55);
-            gfx.fillCircle(w * 0.78, h * 0.55, h * 0.42);
-            gfx.fillRect(w * 0.22, h * 0.35, w * 0.52, h * 0.42);
-            gfx.fillStyle(0xf5faff, 0.5);
-            gfx.fillCircle(w * 0.30, h * 0.38, h * 0.15);
+        // Round, fluffy cloud made only from overlapping puffs — no flat rectangle body.
+        gfx.fillStyle(0xe2eeff, 0.7);
+        for (const [x, y, r] of puffs) {
+            gfx.fillCircle(x, y + 3, r);
         }
+
+        puffs.forEach(([x, y, r], i) => {
+            gfx.fillStyle(i % 2 === 0 ? 0xf8fcff : 0xffffff, 0.94);
+            gfx.fillCircle(x, y, r);
+        });
+
+        // Small bright top puffs make the clouds feel softer and more kawaii.
+        const highlights = puffs.slice(1, 4);
+        gfx.fillStyle(0xffffff, 1);
+        for (const [x, y, r] of highlights) {
+            gfx.fillCircle(x - 2, y - 3, Math.max(3, r * 0.32));
+        }
+
+        gfx.fillStyle(0xffffff, 0.85);
+        gfx.fillCircle(w * 0.28, h * 0.30, 2);
+        gfx.fillCircle(w * 0.48, h * 0.22, 2);
+        gfx.fillCircle(w * 0.66, h * 0.34, 2);
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();

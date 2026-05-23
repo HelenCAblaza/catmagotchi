@@ -403,37 +403,42 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
-        // === COLLECTIBLES: place before below-foreground decorations so they get avoided ===
-        // Fish: 2-4 per chunk — collectibles sit on the floor, not falling from the sky
+        // === COLLECTIBLES: fish stay near/on ponds; yarn stays on floor away from ponds ===
         const collectibleFloorY = 555;
-        const fishCount = 2 + Math.floor(rand() * 3);
-        for (let i = 0; i < fishCount; i++) {
-            const fx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const fish = this.fishes.create(fx, collectibleFloorY, 'fish');
-            fish.setOrigin(0.5, 1).setDepth(17);
-            fish.body.allowGravity = false;
-            fish.body.immovable = true;
+        const placeCollectible = (group, x, y, key, angle, durationBase, durationVariance) => {
+            const item = group.create(x, y, key);
+            item.setOrigin(0.5, 1).setDepth(17);
+            item.body.allowGravity = false;
+            item.body.immovable = true;
             this.tweens.add({
-                targets: fish, angle: 5,
-                duration: 800 + rand() * 400,
+                targets: item, angle,
+                duration: durationBase + rand() * durationVariance,
                 yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
             });
-            objects.fish.push(fish);
-        }
+            return item;
+        };
 
-        // Toys: 1-2 per chunk — yarn also stays on the floor
-        const toyCount = 1 + Math.floor(rand() * 2);
+        // Fish: 1-2 per pond, clustered on/near water instead of random floor spots.
+        placedPonds.forEach((pond, pondIndex) => {
+            const fishPerPond = 1 + Math.floor(rand() * 2);
+            for (let i = 0; i < fishPerPond; i++) {
+                const fx = pond.x + (rand() - 0.5) * 70;
+                const fy = collectibleFloorY - (pondIndex % 2) * 4;
+                const fish = placeCollectible(this.fishes, fx, fy, 'fish', 5, 800, 400);
+                objects.fish.push(fish);
+            }
+        });
+
+        // Yarn: 4-6 per chunk on the floor, never on top of ponds.
+        const toyCount = 4 + Math.floor(rand() * 3);
         for (let i = 0; i < toyCount; i++) {
-            const tx = startX + 200 + Math.floor(rand() * (this.chunkSize - 400));
-            const toy = this.toys.create(tx, collectibleFloorY, 'yarn');
-            toy.setOrigin(0.5, 1).setDepth(17);
-            toy.body.allowGravity = false;
-            toy.body.immovable = true;
-            this.tweens.add({
-                targets: toy, angle: 10,
-                duration: 1000 + rand() * 500,
-                yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
-            });
+            let tx = startX + 120 + Math.floor(rand() * (this.chunkSize - 240));
+            for (let attempt = 0; attempt < 12; attempt++) {
+                const overlapsPond = placedPonds.some(p => Math.abs(tx - p.x) < 90);
+                if (!overlapsPond) break;
+                tx = startX + 120 + Math.floor(rand() * (this.chunkSize - 240));
+            }
+            const toy = placeCollectible(this.toys, tx, collectibleFloorY, 'yarn', 10, 1000, 500);
             objects.toys.push(toy);
         }
 

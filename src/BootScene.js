@@ -48,65 +48,96 @@ class BootScene extends Phaser.Scene {
     }
 
     createCuteFishTexture(key) {
-        const w = 20, h = 14;
+        const w = 24, h = 16;
         const gfx = this.make.graphics({ x: 0, y: 0, add: false });
 
-        // Fish body (cuter ellipse)
-        gfx.fillStyle(0xff7799, 1);
-        gfx.fillEllipse(w * 0.45, h * 0.5, w * 0.65, h * 0.55);
+        // Pond-blue kawaii fish with a connected heart tail.
+        gfx.fillStyle(0x43aed6, 1);
+        gfx.fillTriangle(16, 8, 23, 2, 21, 8);
+        gfx.fillStyle(0x3d9aca, 1);
+        gfx.fillTriangle(16, 8, 23, 14, 21, 8);
+        gfx.fillStyle(0x80e2ec, 1);
+        gfx.fillTriangle(16, 8, 21, 5, 21, 11);
 
-        // Tail (heart-shaped-ish)
-        gfx.fillStyle(0xff5577, 1);
-        gfx.fillTriangle(w * 0.82, h * 0.5, w * 0.65, h * 0.2, w * 0.65, h * 0.8);
+        // Rounded body + white belly highlight.
+        gfx.fillStyle(0x5acde2, 1);
+        gfx.fillEllipse(10, 8, 18, 11);
+        gfx.fillStyle(0xc8f7f8, 1);
+        gfx.fillEllipse(9, 10, 12, 5);
+        gfx.fillStyle(0x9bebf2, 1);
+        gfx.fillEllipse(8, 6, 9, 3);
 
-        // Dorsal fin
-        gfx.fillStyle(0xff5577, 0.8);
-        gfx.fillTriangle(w * 0.35, h * 0.15, w * 0.50, h * 0.35, w * 0.25, h * 0.35);
+        // Fins.
+        gfx.fillStyle(0x3e96c8, 1);
+        gfx.fillTriangle(11, 4, 14, 1, 15, 5);
+        gfx.fillStyle(0x3e96c8, 0.85);
+        gfx.fillTriangle(12, 11, 15, 14, 15, 10);
 
-        // Big eye
+        // Cheek + big readable eye.
+        gfx.fillStyle(0xffaabe, 1);
+        gfx.fillCircle(5, 9, 1.2);
         gfx.fillStyle(0xffffff, 1);
-        gfx.fillCircle(w * 0.30, h * 0.40, 3);
-        gfx.fillStyle(0x000000, 1);
-        gfx.fillCircle(w * 0.31, h * 0.42, 1.5);
+        gfx.fillCircle(6, 6, 2);
+        gfx.fillStyle(0x68422a, 1);
+        gfx.fillCircle(6, 6, 1);
         gfx.fillStyle(0xffffff, 1);
-        gfx.fillCircle(w * 0.32, h * 0.38, 0.8);
+        gfx.fillCircle(6, 5, 0.6);
 
-        // Sparkle
-        gfx.fillStyle(0xffffff, 0.8);
-        gfx.fillCircle(w * 0.15, h * 0.20, 1);
-        gfx.fillCircle(w * 0.70, h * 0.25, 0.8);
+        // Tiny mouth + sparkle scales.
+        gfx.fillStyle(0xff6991, 1);
+        gfx.fillCircle(2, 8, 0.7);
+        gfx.fillCircle(3, 9, 0.7);
+        gfx.fillStyle(0xffffff, 0.9);
+        gfx.fillCircle(10, 6, 0.7);
+        gfx.fillCircle(13, 7, 0.7);
+        gfx.fillCircle(15, 8, 0.7);
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();
     }
 
     createCuteYarnTexture(key) {
-        const w = 20, h = 20;
+        const w = 24, h = 24;
         const gfx = this.make.graphics({ x: 0, y: 0, add: false });
 
-        // Yarn ball (swirly)
-        gfx.fillStyle(0xff99cc, 1);
-        gfx.fillCircle(w * 0.5, h * 0.5, w * 0.4);
-
-        // Swirl lines
-        gfx.lineStyle(1.5, 0xff66aa, 0.7);
+        // Bigger pink yarn ball with a trailing loose string.
+        gfx.lineStyle(1, 0xda5e9b, 1);
         gfx.beginPath();
-        gfx.arc(w * 0.5, h * 0.5, w * 0.25, 0, Math.PI * 1.5);
-        gfx.strokePath();
-        gfx.beginPath();
-        gfx.arc(w * 0.5, h * 0.5, w * 0.15, 0.5, Math.PI * 1.8);
+        gfx.moveTo(15, 16);
+        gfx.lineTo(21, 20);
+        gfx.lineTo(23, 18);
         gfx.strokePath();
 
-        // Loose string
-        gfx.lineStyle(1, 0xff66aa, 0.6);
-        gfx.beginPath();
-        gfx.moveTo(w * 0.65, h * 0.55);
-        gfx.lineTo(w * 0.85, h * 0.75);
-        gfx.strokePath();
+        gfx.fillStyle(0xff9bcd, 1);
+        gfx.fillCircle(11, 12, 9);
+        gfx.fillStyle(0xffbee0, 1);
+        gfx.fillEllipse(9, 9, 12, 8);
+        gfx.fillStyle(0xe169aa, 1);
+        gfx.fillEllipse(14, 16, 10, 6);
 
-        // Shine dot
-        gfx.fillStyle(0xffffff, 0.7);
-        gfx.fillCircle(w * 0.35, h * 0.35, 1.5);
+        // Yarn bands.
+        gfx.lineStyle(1, 0xda5296, 1);
+        const drawLine = (x1, y1, x2, y2) => {
+            gfx.beginPath();
+            gfx.moveTo(x1, y1);
+            gfx.lineTo(x2, y2);
+            gfx.strokePath();
+        };
+        drawLine(4, 12, 18, 6);
+        drawLine(4, 15, 19, 10);
+        drawLine(6, 6, 17, 18);
+        drawLine(11, 3, 8, 21);
+        gfx.lineStyle(1, 0xffd2e8, 1);
+        drawLine(3, 10, 20, 15);
+
+        // Center swirl + shine.
+        gfx.fillStyle(0xffb2da, 1);
+        gfx.fillCircle(11, 12, 3);
+        gfx.lineStyle(1, 0xc6468c, 1);
+        drawLine(9, 12, 12, 10);
+        drawLine(12, 10, 14, 12);
+        gfx.fillStyle(0xfff5fa, 0.9);
+        gfx.fillCircle(8, 7, 1.2);
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();

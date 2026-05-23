@@ -80,7 +80,9 @@ class PlatformerScene extends Phaser.Scene {
             this.scene.start('HomeScene');
         });
 
-        this.fishText = this.add.text(W / 2 - 35, H * 0.82, '\ud83d\udc1f: 0', {
+        this.fishIcon = this.add.image(W / 2 - 63, H * 0.82, 'fish')
+            .setOrigin(0.5).setScale(1.15).setScrollFactor(0).setDepth(1000);
+        this.fishText = this.add.text(W / 2 - 45, H * 0.82, '0', {
             fontSize: '15px',
             color: '#ffffff',
             fontFamily: 'Poppins',
@@ -88,7 +90,9 @@ class PlatformerScene extends Phaser.Scene {
             strokeThickness: 3
         }).setOrigin(0.5).setScrollFactor(0).setDepth(1000);
 
-        this.toyText = this.add.text(W / 2 + 35, H * 0.82, '\ud83e\uddf6: 0', {
+        this.toyIcon = this.add.image(W / 2 + 25, H * 0.82, 'yarn')
+            .setOrigin(0.5).setScale(1.05).setScrollFactor(0).setDepth(1000);
+        this.toyText = this.add.text(W / 2 + 45, H * 0.82, '0', {
             fontSize: '15px',
             color: '#ffffff',
             fontFamily: 'Poppins',
@@ -418,9 +422,9 @@ class PlatformerScene extends Phaser.Scene {
             return item;
         };
 
-        // Fish: 1-2 per pond, clustered on/near water instead of random floor spots.
+        // Fish: 1-3 per pond, clustered on/near water instead of random floor spots.
         placedPonds.forEach((pond, pondIndex) => {
-            const fishPerPond = 1 + Math.floor(rand() * 2);
+            const fishPerPond = 1 + Math.floor(rand() * 3);
             for (let i = 0; i < fishPerPond; i++) {
                 const fx = pond.x + (rand() - 0.5) * 70;
                 const fy = collectibleFloorY - (pondIndex % 2) * 4;
@@ -429,8 +433,8 @@ class PlatformerScene extends Phaser.Scene {
             }
         });
 
-        // Yarn: 4-6 per chunk on the floor, never on top of ponds.
-        const toyCount = 4 + Math.floor(rand() * 3);
+        // Yarn: 5-7 per chunk on the floor, never on top of ponds.
+        const toyCount = 5 + Math.floor(rand() * 3);
         for (let i = 0; i < toyCount; i++) {
             let tx = startX + 120 + Math.floor(rand() * (this.chunkSize - 240));
             for (let attempt = 0; attempt < 12; attempt++) {
@@ -671,8 +675,8 @@ class PlatformerScene extends Phaser.Scene {
 
         // Update inventory display
         const inv = this.registry.get('inventory');
-        this.fishText.setText(`\ud83d\udc1f: ${inv.fish}`);
-        this.toyText.setText(`\ud83e\uddf6: ${inv.toys}`);
+        this.fishText.setText(`${inv.fish}`);
+        this.toyText.setText(`${inv.toys}`);
 
         // Movement
         let left = this.cursors.left.isDown;

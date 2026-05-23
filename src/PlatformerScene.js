@@ -197,7 +197,7 @@ class PlatformerScene extends Phaser.Scene {
                 if (Math.abs(tx - p.x) < 25) return false;
             }
             placedTrees.push(tx);
-            placedDecors.push({ x: tx, radius: 40 });
+            placedDecors.push({ x: tx, radius: 10 }); // trunk only, let flowers sit at tree base
             const key = treeKeys[Math.floor(rand() * 3)];
             const tree = this.add.image(tx, 560, key)
                 .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
@@ -271,7 +271,7 @@ class PlatformerScene extends Phaser.Scene {
 
                 // Success! Place the pond
                 placedPonds.push({ x: px });
-                placedDecors.push({ x: px, radius: 50 });
+                placedDecors.push({ x: px, radius: 25 }); // water edge only
                 this.pondPositions.push(px);
 
                 // Anti-repeat: don't use the last 2 pond types
@@ -363,8 +363,6 @@ class PlatformerScene extends Phaser.Scene {
                 yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
             });
             objects.fish.push(fish);
-            // Mark fish X position so below-foreground decors avoid it
-            placedDecors.push({ x: fx, radius: 35 });
         }
 
         // Toys: 1-2 per chunk
@@ -380,8 +378,6 @@ class PlatformerScene extends Phaser.Scene {
                 yoyo: true, repeat: -1, ease: 'Sine.easeInOut'
             });
             objects.toys.push(toy);
-            // Mark toy X position so below-foreground decors avoid it
-            placedDecors.push({ x: tx, radius: 35 });
         }
 
         // === BELOW-FOREGROUND FLOWERS: 70-90 per chunk, 15-50% below fg zone ===

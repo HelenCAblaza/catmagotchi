@@ -21,6 +21,7 @@ class PlatformerScene extends Phaser.Scene {
         this.firstBgIndex = 0;   // track lowest bg index for leftward spawning
         this.lastPondTypes = [];
         this.pondPositions = [];
+        this.treePlacements = [];
 
         // Spawn initial background segment (unflipped)
         this.spawnBgSegment(0);
@@ -194,21 +195,57 @@ class PlatformerScene extends Phaser.Scene {
         const placedDecors = []; // for flowers, bushes, rocks to avoid everything
 
         const treeKeys = ['tree1', 'tree2', 'tree3'];
+        const sameTreeTypeMinSpacing = 300;
+
+        const chooseTreeKey = (tx) => {
+            const nearbyTrees = [...placedTrees, ...this.treePlacements]
+                .filter(t => Math.abs(tx - t.x) < sameTreeTypeMinSpacing);
+            let available = treeKeys.filter(key => !nearbyTrees.some(t => t.key === key));
+            if (available.length > 0) return available[Math.floor(rand() * available.length)];
+
+            // Fallback for crowded slots: choose the type with the farthest nearest match.
+            let bestKey = treeKeys[0];
+            let bestDistance = -1;
+            for (const key of treeKeys) {
+                const sameTypeDistances = [...placedTrees, ...this.treePlacements]
+                    .filter(t => t.key === key)
+                    .map(t => Math.abs(tx - t.x));
+                const nearest = sameTypeDistances.length > 0 ? Math.min(...sameTypeDistances) : Infinity;
+                if (nearest > bestDistance) {
+                    bestDistance = nearest;
+                    bestKey = key;
+                }
+            }
+            return bestKey;
+        };
+
+        const randomTreeScale = () => {
+            const variance = 0.05 + rand() * 0.05; // 5-10% different from the base size
+            const direction = rand() < 0.5 ? -1 : 1;
+            return 2.5 * (1 + direction * variance);
+        };
 
         const tryPlaceTree = (tx) => {
             // Trees must not overlap other trees
-            for (const x of placedTrees) {
-                if (Math.abs(tx - x) < 70) return false;
+            for (const t of placedTrees) {
+                if (Math.abs(tx - t.x) < 70) return false;
+            }
+            // Also avoid overlap with active trees from neighboring chunks.
+            for (const t of this.treePlacements) {
+                if (Math.abs(tx - t.x) < 70) return false;
             }
             // Tree cannot be at the exact center of a pond
             for (const p of placedPonds) {
                 if (Math.abs(tx - p.x) < 25) return false;
             }
-            placedTrees.push(tx);
+
+            const key = chooseTreeKey(tx);
+            const treeData = { x: tx, key, chunkIndex };
+            placedTrees.push(treeData);
+            this.treePlacements.push(treeData);
             placedDecors.push({ x: tx, radius: 10 }); // trunk only, let flowers sit at tree base
-            const key = treeKeys[Math.floor(rand() * 3)];
             const tree = this.add.image(tx, 560, key)
-                .setOrigin(0.5, 1).setScale(2.5).setDepth(15).setScrollFactor(1);
+                .setOrigin(0.5, 1).setScale(randomTreeScale()).setDepth(15).setScrollFactor(1);
             objects.decors.push(tree);
             return true;
         };
@@ -272,8 +309,8 @@ class PlatformerScene extends Phaser.Scene {
                 if (tooClose) continue;
                 // Check not too close to tree centers
                 let onTree = false;
-                for (const tx of placedTrees) {
-                    if (Math.abs(px - tx) < 30) { onTree = true; break; }
+                for (const t of placedTrees) {
+                    if (Math.abs(px - t.x) < 30) { onTree = true; break; }
                 }
                 if (onTree) continue;
 
@@ -455,6 +492,7 @@ class PlatformerScene extends Phaser.Scene {
         objects.decors.forEach(d => d.destroy());
         objects.fish.forEach(f => f.destroy());
         objects.toys.forEach(t => t.destroy());
+        this.treePlacements = this.treePlacements.filter(t => t.chunkIndex !== chunkIndex);
         this.chunkData.delete(chunkIndex);
         this.spawnedChunks.delete(chunkIndex);
     }

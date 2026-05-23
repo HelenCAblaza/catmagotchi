@@ -52,6 +52,14 @@ class PlatformerScene extends Phaser.Scene {
             this.spawnCloud(this.player.x + (Math.random() - 0.5) * 5000, 60 + Math.random() * 280);
         }
 
+        // === FLYING BIRDS ===
+        // Birds live in the same sky band as clouds and may overlap them.
+        this.birds = [];
+        this.targetBirdCount = 32;
+        for (let i = 0; i < this.targetBirdCount; i++) {
+            this.spawnBird(this.player.x + (Math.random() - 0.5) * 5200, 70 + Math.random() * 250);
+        }
+
         // Camera follow — wide horizontal bounds for left/right, full height to prevent black space
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setBounds(-1000000, 0, 2000000, 800);
@@ -464,6 +472,26 @@ class PlatformerScene extends Phaser.Scene {
         this.clouds.push({ sprite, speed });
     }
 
+    spawnBird(x, y) {
+        const speed = (35 + Math.random() * 55) * (Math.random() > 0.5 ? 1 : -1);
+        const baseScale = 0.55 + Math.random() * 0.45;
+        const sprite = this.add.image(x, y, 'bird')
+            .setOrigin(0.5, 0.5)
+            .setScale(baseScale)
+            .setDepth(-14)
+            .setScrollFactor(1)
+            .setAlpha(0.82 + Math.random() * 0.16);
+        sprite.setFlipX(speed < 0);
+        this.birds.push({
+            sprite,
+            speed,
+            baseY: y,
+            baseScale,
+            phase: Math.random() * Math.PI * 2,
+            flapSpeed: 5 + Math.random() * 3
+        });
+    }
+
     createVirtualJoystick() {
         const W = this.scale.width;
         const H = this.scale.height;
@@ -727,6 +755,34 @@ class PlatformerScene extends Phaser.Scene {
             }
 
             this.spawnCloud(bestX + (Math.random() - 0.5) * 100, 60 + Math.random() * 280);
+        }
+
+        // === FLYING BIRDS ===
+        // Birds recycle around Mitten in both directions, and intentionally do not avoid clouds.
+        const BIRD_RANGE = 2600;
+        const BIRD_MIN = px - BIRD_RANGE;
+        const BIRD_MAX = px + BIRD_RANGE;
+        for (const b of this.birds) {
+            b.sprite.x += b.speed * dt;
+            b.phase += b.flapSpeed * dt;
+            b.sprite.y = b.baseY + Math.sin(b.phase) * 6;
+            b.sprite.setScale(b.baseScale, b.baseScale * (0.86 + Math.sin(b.phase * 2) * 0.14));
+
+            if (b.sprite.x < BIRD_MIN - 120 || b.sprite.x > BIRD_MAX + 120) {
+                const enteringFromLeft = b.speed > 0;
+                b.sprite.x = enteringFromLeft ? BIRD_MIN + Math.random() * 220 : BIRD_MAX - Math.random() * 220;
+                b.baseY = 70 + Math.random() * 250;
+                b.sprite.y = b.baseY;
+                b.speed = (35 + Math.random() * 55) * (Math.random() > 0.5 ? 1 : -1);
+                b.baseScale = 0.55 + Math.random() * 0.45;
+                b.flapSpeed = 5 + Math.random() * 3;
+                b.sprite.setFlipX(b.speed < 0);
+                b.sprite.setAlpha(0.82 + Math.random() * 0.16);
+            }
+        }
+
+        while (this.birds.length < this.targetBirdCount) {
+            this.spawnBird(BIRD_MIN + Math.random() * (BIRD_MAX - BIRD_MIN), 70 + Math.random() * 250);
         }
 
         // === ENDLESS SPAWNING / CLEANUP ===

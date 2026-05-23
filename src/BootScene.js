@@ -35,6 +35,7 @@ class BootScene extends Phaser.Scene {
         this.createCloudTexture('cloud1');
         this.createCloudTexture('cloud2');
         this.createCloudTexture('cloud3');
+        this.createBirdTexture('bird');
         this.createHeartTexture('heart');
         this.createStarTexture('star');
 
@@ -346,6 +347,33 @@ class BootScene extends Phaser.Scene {
             gfx.fillStyle(0xf5faff, 0.5);
             gfx.fillCircle(w * 0.30, h * 0.38, h * 0.15);
         }
+
+        gfx.generateTexture(key, w, h);
+        gfx.destroy();
+    }
+
+    createBirdTexture(key) {
+        const w = 28, h = 18;
+        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
+
+        // Tiny soft bird: rounded body, two wings, little beak.
+        gfx.fillStyle(0x6f7fb8, 1);
+        gfx.fillEllipse(w * 0.52, h * 0.56, w * 0.34, h * 0.42);
+
+        // Wings are wide and readable in the sky.
+        gfx.fillStyle(0x8798d8, 1);
+        gfx.fillTriangle(w * 0.44, h * 0.52, w * 0.05, h * 0.18, w * 0.24, h * 0.66);
+        gfx.fillTriangle(w * 0.58, h * 0.52, w * 0.95, h * 0.20, w * 0.78, h * 0.68);
+
+        // Belly + cute face detail.
+        gfx.fillStyle(0xcad6ff, 1);
+        gfx.fillEllipse(w * 0.54, h * 0.62, w * 0.18, h * 0.18);
+        gfx.fillStyle(0xffcc66, 1);
+        gfx.fillTriangle(w * 0.70, h * 0.52, w * 0.86, h * 0.46, w * 0.70, h * 0.60);
+        gfx.fillStyle(0x3f4566, 1);
+        gfx.fillCircle(w * 0.62, h * 0.46, 1.3);
+        gfx.fillStyle(0xffffff, 0.9);
+        gfx.fillCircle(w * 0.64, h * 0.44, 0.5);
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();

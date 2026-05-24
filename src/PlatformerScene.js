@@ -185,7 +185,7 @@ class PlatformerScene extends Phaser.Scene {
         this.spawnedChunks.add(chunkIndex);
 
         const startX = chunkIndex * this.chunkSize;
-        const objects = { ground: [], decors: [], fish: [], toys: [] };
+        const objects = { ground: [], decors: [], fish: [], toys: [], jumpFish: [], timers: [] };
 
         // Seeded random for deterministic decoration — offset negative chunks so seed stays positive
         let seed = chunkIndex * 16807 + 12345 + (chunkIndex < 0 ? 2147483647 : 0);
@@ -355,11 +355,6 @@ class PlatformerScene extends Phaser.Scene {
                 }
                 if (onTree) continue;
 
-                // Success! Place the pond
-                placedPonds.push({ x: px });
-                placedDecors.push({ x: px, radius: 25 }); // water edge only
-                this.pondPositions.push(px);
-
                 // Anti-repeat: don't use the last 2 pond types
                 const recent = this.lastPondTypes.slice(-2);
                 let available = pondTypes.filter(t => !recent.includes(t));
@@ -367,9 +362,15 @@ class PlatformerScene extends Phaser.Scene {
                 const pondType = available[Math.floor(rand() * available.length)];
                 this.lastPondTypes.push(pondType);
 
+                // Success! Place the pond
+                placedPonds.push({ x: px, type: pondType });
+                placedDecors.push({ x: px, radius: 25 }); // water edge only
+                this.pondPositions.push(px);
+
                 const pond = this.add.image(px, 558, pondType)
                     .setOrigin(0.5, 0).setScale(2.5).setDepth(15).setScrollFactor(1);
                 objects.decors.push(pond);
+                this.schedulePondJumpFish(pond.x, pondType, objects, rand);
                 placed = true;
                 break;
             }
@@ -540,13 +541,58 @@ class PlatformerScene extends Phaser.Scene {
         this.chunkData.set(chunkIndex, objects);
     }
 
+    schedulePondJumpFish(pondX, pondType, objects, rand) {
+        const pondY = 555;
+        const fish = this.add.image(pondX, pondY, 'fish')
+            .setOrigin(0.5, 1)
+            .setScale(0.95)
+            .setDepth(19)
+            .setVisible(false)
+            .setAlpha(0);
+        objects.jumpFish.push(fish);
+
+        const jump = () => {
+            if (!fish.active) return;
+            const direction = rand() < 0.5 ? -1 : 1;
+            const startX = pondX + (rand() - 0.5) * 42;
+            fish.setPosition(startX, pondY)
+                .setAngle(direction * -18)
+                .setFlipX(direction < 0)
+                .setAlpha(1)
+                .setVisible(true);
+
+            this.tweens.add({
+                targets: fish,
+                x: startX + direction * (24 + rand() * 18),
+                y: pondY - 62,
+                angle: direction * 18,
+                duration: 480,
+                yoyo: true,
+                ease: 'Sine.easeOut',
+                onComplete: () => {
+                    if (fish.active) fish.setVisible(false).setAlpha(0);
+                }
+            });
+        };
+
+        const timer = this.time.addEvent({
+            delay: 2600 + rand() * 4200,
+            callback: jump,
+            callbackScope: this,
+            loop: true
+        });
+        objects.timers.push(timer);
+    }
+
     removeChunk(chunkIndex) {
         if (!this.chunkData.has(chunkIndex)) return;
         const objects = this.chunkData.get(chunkIndex);
+        objects.timers.forEach(timer => timer.remove(false));
         objects.ground.forEach(tile => tile.destroy());
         objects.decors.forEach(d => d.destroy());
         objects.fish.forEach(f => f.destroy());
         objects.toys.forEach(t => t.destroy());
+        objects.jumpFish.forEach(f => f.destroy());
         this.treePlacements = this.treePlacements.filter(t => t.chunkIndex !== chunkIndex);
         this.chunkData.delete(chunkIndex);
         this.spawnedChunks.delete(chunkIndex);

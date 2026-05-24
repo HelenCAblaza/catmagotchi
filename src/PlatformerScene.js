@@ -205,6 +205,7 @@ class PlatformerScene extends Phaser.Scene {
         const placedTrees = [];
         const placedPonds = [];
         const placedDecors = []; // for flowers, bushes, rocks to avoid everything
+        const branchYarnSpots = []; // yarn rewards placed on jumpable tree branches
 
         const treeKeys = ['tree1', 'tree2', 'tree3'];
         const sameTreeTypeMinSpacing = 300;
@@ -237,6 +238,31 @@ class PlatformerScene extends Phaser.Scene {
             return 2.5 * (1 + direction * variance);
         };
 
+        const addBranchPlatforms = (treeX, treeY, treeKey) => {
+            if (!['tree1', 'tree2'].includes(treeKey)) return;
+            if (rand() >= 0.15) return; // only 15% of tree1/tree2 population gets branches
+
+            const branchCount = 2 + Math.floor(rand() * 2); // 2-3 per selected tree
+            const startRight = rand() < 0.5;
+            const offsets = treeKey === 'tree2' ? [30, -28, 24] : [24, -22, 18];
+            const yOffsets = [57, 117, 177]; // jumpable vertical steps from ground upward
+
+            for (let i = 0; i < branchCount; i++) {
+                const side = ((i % 2 === 0) === startRight) ? 1 : -1;
+                const offset = Math.abs(offsets[i]) * side;
+                const branchX = treeX + offset;
+                const branchY = treeY - yOffsets[i];
+                const branch = this.platforms.create(branchX, branchY, 'branch_platform')
+                    .setOrigin(0.5, 0.5)
+                    .setDepth(18)
+                    .refreshBody();
+                branch.body.setSize(62, 8).setOffset(5, 1);
+                branch.refreshBody();
+                objects.ground.push(branch);
+                branchYarnSpots.push({ x: branchX, y: branchY - 7 });
+            }
+        };
+
         const tryPlaceTree = (tx) => {
             // Trees must not overlap other trees
             for (const t of placedTrees) {
@@ -257,9 +283,11 @@ class PlatformerScene extends Phaser.Scene {
             this.treePlacements.push(treeData);
             placedDecors.push({ x: tx, radius: 10 }); // trunk only, let flowers sit at tree base
             const treeY = key === 'tree3' ? 562 : (key === 'tree2' ? 559 : 562); // tree3 lower to touch ground, tree2 a bit higher
+            const treeScale = randomTreeScale();
             const tree = this.add.image(tx, treeY, key)
-                .setOrigin(0.5, 1).setScale(randomTreeScale()).setDepth(15).setScrollFactor(1);
+                .setOrigin(0.5, 1).setScale(treeScale).setDepth(15).setScrollFactor(1);
             objects.decors.push(tree);
+            addBranchPlatforms(tx, treeY, key);
             return true;
         };
 
@@ -421,6 +449,12 @@ class PlatformerScene extends Phaser.Scene {
             });
             return item;
         };
+
+        // Yarn rewards on thin branch platforms from the 15% selected tree1/tree2 population.
+        branchYarnSpots.forEach((spot, spotIndex) => {
+            const yarn = placeCollectible(this.toys, spot.x, spot.y, 'yarn', spotIndex % 2 === 0 ? 7 : -7, 1000, 500);
+            objects.toys.push(yarn);
+        });
 
         // Fish: 1-3 per pond, clustered on/near water instead of random floor spots.
         placedPonds.forEach((pond, pondIndex) => {

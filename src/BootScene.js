@@ -31,6 +31,7 @@ class BootScene extends Phaser.Scene {
         this.createTexture('platform', '#8b7355', 32, 32, 'rect');
         this.createCuteFishTexture('fish');
         this.createCuteYarnTexture('yarn');
+        this.createBranchPlatformTexture('branch_platform');
         this.createTexture('box', '#c4956a', 80, 60, 'rect');
         this.createHomeBgTexture('bg_home');
         this.createPlatformerBgTexture('bg_platformer');
@@ -138,6 +139,25 @@ class BootScene extends Phaser.Scene {
         drawLine(12, 10, 14, 12);
         gfx.fillStyle(0xfff5fa, 0.9);
         gfx.fillCircle(8, 7, 1.2);
+
+        gfx.generateTexture(key, w, h);
+        gfx.destroy();
+    }
+
+    createBranchPlatformTexture(key) {
+        const w = 72, h = 10;
+        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
+
+        // Thin brown branch platform sized to fit inside tree1/tree2 canopies.
+        gfx.fillStyle(0x9a6235, 1);
+        gfx.fillRect(5, 1, 58, 4);
+        gfx.fillStyle(0x6f4325, 1);
+        gfx.fillRect(1, 5, 66, 4);
+        gfx.fillStyle(0xbf8149, 1);
+        gfx.fillRect(17, 0, 32, 2);
+        gfx.fillStyle(0x5b351d, 1);
+        gfx.fillRect(2, 8, 6, 2);
+        gfx.fillRect(61, 7, 6, 2);
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();

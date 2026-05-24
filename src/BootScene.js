@@ -40,6 +40,10 @@ class BootScene extends Phaser.Scene {
         this.createCloudTexture('cloud2');
         this.createCloudTexture('cloud3');
         this.createBirdTexture('bird');
+        this.createButterflyTexture('butterfly');
+        this.createRabbitTexture('rabbit');
+        this.createFrogTexture('frog');
+        this.createRecoveryHeartTexture('recovery_heart');
         this.createHeartTexture('heart');
         this.createStarTexture('star');
 
@@ -446,6 +450,88 @@ class BootScene extends Phaser.Scene {
         gfx.fillCircle(16, 18, 0.6);
         gfx.fillCircle(20, 18, 0.6);
 
+        gfx.generateTexture(key, w, h);
+        gfx.destroy();
+    }
+
+    createButterflyTexture(key) {
+        const w = 24, h = 18;
+        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
+        gfx.fillStyle(0xffb7dc, 1);
+        gfx.fillEllipse(7, 7, 9, 11);
+        gfx.fillStyle(0xc9b7ff, 1);
+        gfx.fillEllipse(17, 7, 9, 11);
+        gfx.fillStyle(0xffd7ee, 1);
+        gfx.fillEllipse(8, 12, 7, 8);
+        gfx.fillStyle(0xe6dcff, 1);
+        gfx.fillEllipse(16, 12, 7, 8);
+        gfx.fillStyle(0x7a5a46, 1);
+        gfx.fillRect(11, 5, 2, 10);
+        gfx.fillCircle(12, 4, 2);
+        gfx.fillStyle(0xffffff, 0.85);
+        gfx.fillCircle(6, 5, 1);
+        gfx.fillCircle(18, 5, 1);
+        gfx.generateTexture(key, w, h);
+        gfx.destroy();
+    }
+
+    createRabbitTexture(key) {
+        const w = 30, h = 24;
+        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
+        gfx.fillStyle(0xffffff, 1);
+        gfx.fillEllipse(15, 16, 20, 12);
+        gfx.fillEllipse(21, 11, 12, 10);
+        gfx.fillEllipse(18, 5, 4, 12);
+        gfx.fillEllipse(24, 5, 4, 12);
+        gfx.fillStyle(0xffc6d8, 1);
+        gfx.fillEllipse(18, 5, 2, 8);
+        gfx.fillEllipse(24, 5, 2, 8);
+        gfx.fillStyle(0x8a5a42, 1);
+        gfx.fillCircle(23, 10, 1.2);
+        gfx.fillStyle(0xffa3bd, 1);
+        gfx.fillCircle(26, 12, 1.1);
+        gfx.fillStyle(0xffffff, 1);
+        gfx.fillCircle(6, 13, 3);
+        gfx.generateTexture(key, w, h);
+        gfx.destroy();
+    }
+
+    createFrogTexture(key) {
+        const w = 28, h = 20;
+        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
+        gfx.fillStyle(0x76d878, 1);
+        gfx.fillEllipse(14, 13, 22, 12);
+        gfx.fillCircle(8, 8, 5);
+        gfx.fillCircle(20, 8, 5);
+        gfx.fillStyle(0xffffff, 1);
+        gfx.fillCircle(8, 7, 2.2);
+        gfx.fillCircle(20, 7, 2.2);
+        gfx.fillStyle(0x59412f, 1);
+        gfx.fillCircle(8, 7, 1);
+        gfx.fillCircle(20, 7, 1);
+        gfx.fillStyle(0xffa9bc, 1);
+        gfx.fillCircle(5, 13, 1.2);
+        gfx.fillCircle(23, 13, 1.2);
+        gfx.fillStyle(0x4fac57, 1);
+        gfx.fillRect(3, 16, 7, 2);
+        gfx.fillRect(18, 16, 7, 2);
+        gfx.generateTexture(key, w, h);
+        gfx.destroy();
+    }
+
+    createRecoveryHeartTexture(key) {
+        const w = 24, h = 24;
+        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
+        gfx.fillStyle(0xfff0a8, 0.95);
+        gfx.fillCircle(12, 12, 10);
+        gfx.fillStyle(0xffffff, 0.9);
+        gfx.fillCircle(9, 8, 2);
+        gfx.fillStyle(0xff6699, 1);
+        gfx.fillCircle(9, 11, 4);
+        gfx.fillCircle(15, 11, 4);
+        gfx.fillTriangle(5, 13, 19, 13, 12, 21);
+        gfx.fillStyle(0xffffff, 0.75);
+        gfx.fillCircle(8, 9, 1);
         gfx.generateTexture(key, w, h);
         gfx.destroy();
     }

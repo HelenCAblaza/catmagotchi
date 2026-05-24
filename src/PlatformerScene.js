@@ -32,6 +32,7 @@ class PlatformerScene extends Phaser.Scene {
         this.platforms = this.physics.add.staticGroup();
         this.fishes = this.physics.add.group();
         this.toys = this.physics.add.group();
+        this.recoveryItems = this.physics.add.group();
         this.spawnChunk(-1); // trees to the left of spawn
         this.spawnChunk(0);
         this.spawnChunk(1);
@@ -70,6 +71,7 @@ class PlatformerScene extends Phaser.Scene {
         // Collectibles
         this.physics.add.overlap(this.player, this.fishes, (p, f) => this.collectFish(p, f));
         this.physics.add.overlap(this.player, this.toys, (p, t) => this.collectToy(p, t));
+        this.physics.add.overlap(this.player, this.recoveryItems, (p, item) => this.collectRecovery(p, item));
 
         // Controls
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -185,7 +187,7 @@ class PlatformerScene extends Phaser.Scene {
         this.spawnedChunks.add(chunkIndex);
 
         const startX = chunkIndex * this.chunkSize;
-        const objects = { ground: [], decors: [], fish: [], toys: [], jumpFish: [], timers: [] };
+        const objects = { ground: [], decors: [], fish: [], toys: [], jumpFish: [], timers: [], ambient: [], recovery: [] };
 
         // Seeded random for deterministic decoration — offset negative chunks so seed stays positive
         let seed = chunkIndex * 16807 + 12345 + (chunkIndex < 0 ? 2147483647 : 0);
@@ -282,7 +284,7 @@ class PlatformerScene extends Phaser.Scene {
             placedTrees.push(treeData);
             this.treePlacements.push(treeData);
             placedDecors.push({ x: tx, radius: 10 }); // trunk only, let flowers sit at tree base
-            const treeY = key === 'tree3' ? 562 : (key === 'tree2' ? 559 : 562); // tree3 lower to touch ground, tree2 a bit higher
+            const treeY = key === 'tree3' ? 558 : (key === 'tree2' ? 559 : 562); // tree3 raised a tiny bit, tree2 a bit higher
             const treeScale = randomTreeScale();
             const tree = this.add.image(tx, treeY, key)
                 .setOrigin(0.5, 1).setScale(treeScale).setDepth(15).setScrollFactor(1);
@@ -538,7 +540,65 @@ class PlatformerScene extends Phaser.Scene {
             }
         }
 
+        this.spawnAmbientCritters(startX, placedPonds, objects, rand);
+
         this.chunkData.set(chunkIndex, objects);
+    }
+
+    spawnAmbientCritters(startX, placedPonds, objects, rand) {
+        const groundY = 555;
+
+        if (rand() < 0.6) {
+            const butterflyCount = 1 + Math.floor(rand() * 3);
+            for (let i = 0; i < butterflyCount; i++) {
+                const butterfly = this.add.image(startX + 120 + rand() * (this.chunkSize - 240), 300 + rand() * 170, 'butterfly')
+                    .setOrigin(0.5)
+                    .setScale(0.75 + rand() * 0.25)
+                    .setDepth(22)
+                    .setAlpha(0.9);
+                this.tweens.add({
+                    targets: butterfly,
+                    y: butterfly.y - 18,
+                    x: butterfly.x + (rand() < 0.5 ? -1 : 1) * (18 + rand() * 18),
+                    angle: (rand() < 0.5 ? -1 : 1) * 8,
+                    duration: 1200 + rand() * 800,
+                    yoyo: true,
+                    repeat: -1,
+                    ease: 'Sine.easeInOut'
+                });
+                objects.ambient.push(butterfly);
+            }
+        }
+
+        if (rand() < 0.18) {
+            const rabbit = this.add.image(startX + 180 + rand() * (this.chunkSize - 360), groundY, 'rabbit')
+                .setOrigin(0.5, 1)
+                .setScale(0.9)
+                .setDepth(18)
+                .setFlipX(rand() < 0.5);
+            this.tweens.add({ targets: rabbit, y: groundY - 5, duration: 900 + rand() * 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+            objects.ambient.push(rabbit);
+        }
+
+        if (placedPonds.length > 0 && rand() < 0.22) {
+            const pond = placedPonds[Math.floor(rand() * placedPonds.length)];
+            const frog = this.add.image(pond.x + (rand() < 0.5 ? -1 : 1) * (36 + rand() * 24), groundY + 2, 'frog')
+                .setOrigin(0.5, 1)
+                .setScale(0.85)
+                .setDepth(18)
+                .setFlipX(rand() < 0.5);
+            this.tweens.add({ targets: frog, y: groundY - 8, duration: 700 + rand() * 500, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+            objects.ambient.push(frog);
+        }
+
+        if (rand() < 0.28) {
+            const recovery = this.recoveryItems.create(startX + 150 + rand() * (this.chunkSize - 300), groundY - 6, 'recovery_heart');
+            recovery.setOrigin(0.5, 1).setDepth(20).setScale(0.95);
+            recovery.body.allowGravity = false;
+            recovery.body.immovable = true;
+            this.tweens.add({ targets: recovery, y: recovery.y - 8, alpha: 0.75, duration: 900 + rand() * 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+            objects.recovery.push(recovery);
+        }
     }
 
     schedulePondJumpFish(pondX, pondType, objects, rand) {
@@ -593,6 +653,8 @@ class PlatformerScene extends Phaser.Scene {
         objects.fish.forEach(f => f.destroy());
         objects.toys.forEach(t => t.destroy());
         objects.jumpFish.forEach(f => f.destroy());
+        objects.ambient.forEach(a => a.destroy());
+        objects.recovery.forEach(item => item.destroy());
         this.treePlacements = this.treePlacements.filter(t => t.chunkIndex !== chunkIndex);
         this.chunkData.delete(chunkIndex);
         this.spawnedChunks.delete(chunkIndex);
@@ -994,6 +1056,18 @@ class PlatformerScene extends Phaser.Scene {
         this.registry.set('stats', stats);
         this.showFloatingText(player.x, player.y - 30, '\ud83e\uddf6 +1');
         this.spawnCollectEffect(x, y, 'star');
+    }
+
+    collectRecovery(player, item) {
+        const x = item.x;
+        const y = item.y;
+        item.destroy();
+        const stats = this.registry.get('stats');
+        stats.energy = Math.min(100, stats.energy + 18);
+        stats.happiness = Math.min(100, stats.happiness + 8);
+        this.registry.set('stats', stats);
+        this.showFloatingText(player.x, player.y - 34, '💖 +energy');
+        this.spawnCollectEffect(x, y, 'heart');
     }
 
     spawnCollectEffect(x, y, textureKey) {

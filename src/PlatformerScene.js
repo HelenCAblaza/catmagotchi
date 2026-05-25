@@ -392,6 +392,10 @@ class PlatformerScene extends Phaser.Scene {
                         .setOrigin(0.5, 1).setScale(0.45 + rand() * 0.3).setDepth(16)
                         .setScrollFactor(1).setTint(tint);
                     objects.decors.push(flower);
+                    // Tiny butterflies only visit about 25% of the flower clusters.
+                    if (i % 4 === 1) {
+                        this.spawnButterflyCluster(fx, fy - 24, objects, rand);
+                    }
                     placed = true;
                     break;
                 }
@@ -541,6 +545,39 @@ class PlatformerScene extends Phaser.Scene {
         this.chunkData.set(chunkIndex, objects);
     }
 
+    spawnButterflyCluster(x, y, objects, rand) {
+        const butterflyKeys = ['butterfly_pink', 'butterfly_blue', 'butterfly_yellow'];
+        const count = 1 + Math.floor(rand() * 2); // 1-2 tiny butterflies max
+
+        for (let i = 0; i < count; i++) {
+            const key = butterflyKeys[Math.floor(rand() * butterflyKeys.length)];
+            const startX = x + (rand() - 0.5) * 34;
+            const startY = y - rand() * 18;
+            const butterfly = this.add.image(startX, startY, key)
+                .setOrigin(0.5, 0.5)
+                .setScale(0.75 + rand() * 0.2)
+                .setDepth(18)
+                .setScrollFactor(1)
+                .setAlpha(0.86);
+            objects.decors.push(butterfly);
+
+            const driftX = 8 + rand() * 10;
+            const driftY = 5 + rand() * 6;
+            const duration = 1150 + rand() * 700;
+            this.tweens.add({
+                targets: butterfly,
+                x: startX + (i % 2 === 0 ? driftX : -driftX),
+                y: startY - driftY,
+                scaleY: 0.45,
+                angle: i % 2 === 0 ? 7 : -7,
+                duration,
+                yoyo: true,
+                repeat: -1,
+                ease: 'Sine.easeInOut'
+            });
+        }
+    }
+
     schedulePondJumpFish(pondX, pondType, objects, rand) {
         const pondY = 555;
         const fish = this.add.image(pondX, pondY, 'fish')
@@ -589,7 +626,10 @@ class PlatformerScene extends Phaser.Scene {
         const objects = this.chunkData.get(chunkIndex);
         objects.timers.forEach(timer => timer.remove(false));
         objects.ground.forEach(tile => tile.destroy());
-        objects.decors.forEach(d => d.destroy());
+        objects.decors.forEach(d => {
+            this.tweens.killTweensOf(d);
+            d.destroy();
+        });
         objects.fish.forEach(f => f.destroy());
         objects.toys.forEach(t => t.destroy());
         objects.jumpFish.forEach(f => f.destroy());

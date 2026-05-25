@@ -40,6 +40,9 @@ class BootScene extends Phaser.Scene {
         this.createCloudTexture('cloud2');
         this.createCloudTexture('cloud3');
         this.createBirdTexture('bird');
+        this.createButterflyTexture('butterfly_pink', 0xffb4d8, 0xffe070);
+        this.createButterflyTexture('butterfly_blue', 0xbfd3ff, 0xdabcff);
+        this.createButterflyTexture('butterfly_yellow', 0xffec91, 0xffaacc);
         this.createHeartTexture('heart');
         this.createStarTexture('star');
 
@@ -139,6 +142,34 @@ class BootScene extends Phaser.Scene {
         drawLine(12, 10, 14, 12);
         gfx.fillStyle(0xfff5fa, 0.9);
         gfx.fillCircle(8, 7, 1.2);
+
+        gfx.generateTexture(key, w, h);
+        gfx.destroy();
+    }
+
+    createButterflyTexture(key, wingColor, lowerWingColor) {
+        const w = 12, h = 10;
+        const gfx = this.make.graphics({ x: 0, y: 0, add: false });
+
+        // Tiny pastel butterfly: no dark outline, just readable soft wings.
+        gfx.fillStyle(wingColor, 1);
+        gfx.fillRect(1, 1, 3, 3);
+        gfx.fillRect(8, 1, 3, 3);
+        gfx.fillStyle(lowerWingColor, 1);
+        gfx.fillRect(2, 5, 2, 2);
+        gfx.fillRect(8, 5, 2, 2);
+
+        // Slim warm body + little antenna pixels.
+        gfx.fillStyle(0x7e5e4b, 1);
+        gfx.fillRect(5, 2, 2, 5);
+        gfx.fillStyle(0x977760, 0.85);
+        gfx.fillRect(4, 0, 1, 1);
+        gfx.fillRect(7, 0, 1, 1);
+
+        // White sparkle pixels so the wings read kawaii instead of bug-like.
+        gfx.fillStyle(0xffffff, 0.9);
+        gfx.fillRect(2, 2, 1, 1);
+        gfx.fillRect(9, 2, 1, 1);
 
         gfx.generateTexture(key, w, h);
         gfx.destroy();
